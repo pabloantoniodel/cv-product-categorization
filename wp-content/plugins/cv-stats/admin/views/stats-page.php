@@ -41,15 +41,29 @@ $unique_ips = array();
 foreach ($logins_today as $login) {
     $ip = $login['ip_address'] ?? 'N/A';
     if (!isset($logins_by_ip[$ip])) {
-        $logins_by_ip[$ip] = 0;
+        $logins_by_ip[$ip] = array(
+            'count' => 0,
+            'users' => array()
+        );
         $unique_ips[] = $ip;
     }
-    $logins_by_ip[$ip]++;
+    $logins_by_ip[$ip]['count']++;
+    
+    // Añadir usuario a la lista (evitar duplicados)
+    $user_key = $login['user_id'];
+    if (!isset($logins_by_ip[$ip]['users'][$user_key])) {
+        $logins_by_ip[$ip]['users'][$user_key] = array(
+            'username' => $login['username'],
+            'display_name' => $login['display_name']
+        );
+    }
 }
 $count_unique_ips = count($unique_ips);
 
 // Ordenar por cantidad de logins descendente
-arsort($logins_by_ip);
+uasort($logins_by_ip, function($a, $b) {
+    return $b['count'] - $a['count'];
+});
 
 // Paginación para Tarjetas Vistas
 $views_per_page = 25;
@@ -283,7 +297,7 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                 <div class="cv-stats-big-number">
                     <?php 
                     if ($count_unique_ips > 0) {
-                        echo round($count_today / $count_unique_ips, 1);
+                        echo number_format(round($count_today / $count_unique_ips, 1), 1);
                     } else {
                         echo '0';
                     }
@@ -300,26 +314,36 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                     <table class="widefat striped">
                         <thead>
                             <tr>
-                                <th>IP Address</th>
-                                <th>Cantidad de Logins</th>
-                                <th>Porcentaje</th>
+                                <th style="width: 20%;">IP Address</th>
+                                <th style="width: 40%;">Usuarios/Comercios</th>
+                                <th style="width: 15%;">Cantidad de Logins</th>
+                                <th style="width: 25%;">Porcentaje</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($logins_by_ip as $ip => $count): ?>
+                            <?php foreach ($logins_by_ip as $ip => $data): ?>
                                 <tr>
                                     <td>
                                         <code style="font-size: 11px;"><?php echo esc_html($ip); ?></code>
                                     </td>
                                     <td>
-                                        <strong><?php echo $count; ?></strong>
+                                        <?php 
+                                        $user_names = array();
+                                        foreach ($data['users'] as $user) {
+                                            $user_names[] = '<strong>' . esc_html($user['display_name']) . '</strong> (' . esc_html($user['username']) . ')';
+                                        }
+                                        echo implode('<br>', $user_names);
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <strong><?php echo $data['count']; ?></strong>
                                     </td>
                                     <td>
                                         <div class="cv-stats-progress-bar">
-                                            <div class="cv-stats-progress-fill" style="width: <?php echo ($count_today > 0) ? round(($count / $count_today) * 100, 1) : 0; ?>%"></div>
+                                            <div class="cv-stats-progress-fill" style="width: <?php echo ($count_today > 0) ? round(($data['count'] / $count_today) * 100, 1) : 0; ?>%"></div>
                                         </div>
                                         <span class="cv-stats-percentage">
-                                            <?php echo ($count_today > 0) ? round(($count / $count_today) * 100, 1) : 0; ?>%
+                                            <?php echo ($count_today > 0) ? round(($data['count'] / $count_today) * 100, 1) : 0; ?>%
                                         </span>
                                     </td>
                                 </tr>
