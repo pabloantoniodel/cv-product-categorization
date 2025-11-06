@@ -1,0 +1,48 @@
+# WordPress core
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/xmlrpc.php
+/readme.html
+/license.txt
+
+# WordPress config
+wp-config.php
+
+# Uploads y cache
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/upgrade/
+/wp-content/backup-db/
+/wp-content/backups/
+
+# Logs
+*.log
+/wp-content/debug.log
+/logs/
+
+# Themes y plugins de terceros (solo mantener custom)
+/wp-content/themes/twentytwenty*/
+/wp-content/themes/shopper/
+/wp-content/plugins/woocommerce/
+/wp-content/plugins/wcfm*/
+/wp-content/plugins/complianz*/
+/wp-content/plugins/wordpress-seo/
+/wp-content/plugins/wp-statistics/
+/wp-content/plugins/indeed-*/
+/wp-content/plugins/ip2location*/
+
+# Mantener solo nuestros plugins custom
+!/wp-content/mu-plugins/cv-*.php
+!/wp-content/plugins/cv-*/
+
+# Sistema
+.DS_Store
+.htaccess
+.maintenance
+Thumbs.db
+
+# Node y dependencias
+node_modules/
+vendor/
+
