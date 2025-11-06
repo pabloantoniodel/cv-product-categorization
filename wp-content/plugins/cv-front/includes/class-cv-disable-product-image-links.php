@@ -16,13 +16,25 @@ if (!defined('ABSPATH')) {
 class CV_Disable_Product_Image_Links {
     
     public function __construct() {
-        // Filtrar contenido de productos antes de mostrarlo
-        add_filter('the_content', array($this, 'remove_image_links_from_product'), 20);
+        // Filtrar contenido de productos con prioridad MUY ALTA (999)
+        // Para ejecutar DESPUÉS de todos los demás filtros
+        add_filter('the_content', array($this, 'remove_image_links_from_product'), 999);
         
         // También aplicar al contenido corto (excerpt)
-        add_filter('woocommerce_short_description', array($this, 'remove_image_links'), 20);
+        add_filter('woocommerce_short_description', array($this, 'remove_image_links'), 999);
+        
+        // Aplicar también directamente a la descripción de WooCommerce
+        add_filter('woocommerce_product_description_heading', array($this, 'init_description_filter'));
         
         error_log('✅ CV Disable Product Image Links: Clase inicializada');
+    }
+    
+    /**
+     * Inicializar filtro de descripción
+     */
+    public function init_description_filter() {
+        add_filter('woocommerce_product_get_description', array($this, 'remove_image_links'), 999);
+        return null; // No cambiar el heading
     }
     
     /**
@@ -45,12 +57,17 @@ class CV_Disable_Product_Image_Links {
             return $content;
         }
         
-        // Patrón para detectar enlaces que contienen imágenes
-        // <a ...><img ... /></a> o <a ...><img ...></a>
-        $pattern = '/<a([^>]*)>\s*(<img[^>]*>)\s*<\/a>/i';
+        // Patrón mejorado para detectar enlaces que contienen imágenes
+        // Captura <a ...><img ...></a> con cualquier contenido entre las etiquetas
+        // Incluyendo espacios, noscript, etc.
+        $pattern = '/<a\s+[^>]*href=[^>]*>\s*(<img[^>]*>.*?<\/noscript>|<img[^>]*>)\s*(?:&nbsp;|\s)*<\/a>/is';
         
-        // Reemplazar <a><img></a> por solo <img>
-        $content = preg_replace($pattern, '$2', $content);
+        // Reemplazar <a><img>...</a> por solo <img>
+        $content = preg_replace($pattern, '$1', $content);
+        
+        // Segundo patrón más simple para casos básicos
+        $pattern2 = '/<a\s+[^>]*>\s*(<img[^>]*>)\s*<\/a>/i';
+        $content = preg_replace($pattern2, '$1', $content);
         
         return $content;
     }

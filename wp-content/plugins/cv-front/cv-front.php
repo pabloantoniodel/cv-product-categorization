@@ -3,7 +3,7 @@
  * Plugin Name: Ciudad Virtual - Frontend Enhancements
  * Plugin URI: https://ciudadvirtual.app
  * Description: Mejoras visuales para el frontend: Sistema de burbujas animadas para geolocalización de tiendas, login moderno de WooCommerce y más
- * Version: 3.2.0
+ * Version: 3.2.1
  * Author: Ciudad Virtual
  * Author URI: https://ciudadvirtual.app
  * License: GPL v2 or later
@@ -14,6 +14,7 @@
  * Requires PHP: 7.2
  * 
  * Changelog:
+ * 3.2.1 - Mejorada regex para eliminar enlaces de imágenes (prioridad 999, patrón mejorado)
  * 3.2.0 - Desactivar enlaces en imágenes de descripción de productos (evita clics fuera)
  * 3.1.1 - Traducción emails de Ultimate Affiliate Pro: Password changed y Password reset
  * 3.1.0 - Pestañas de productos modernas: Gradientes morados, sombras, iconos FontAwesome, responsive
@@ -129,7 +130,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definir constantes del plugin
-define('CV_FRONT_VERSION', '3.2.0');
+define('CV_FRONT_VERSION', '3.2.1');
 define('CV_FRONT_PLUGIN_FILE', __FILE__);
 define('CV_FRONT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CV_FRONT_PLUGIN_URL', plugin_dir_url(__FILE__));
