@@ -271,6 +271,7 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                             <th>Nombre Completo</th>
                             <th>Email</th>
                             <th>Rol</th>
+                            <th>IP de Login</th>
                             <th>Último Login</th>
                         </tr>
                     </thead>
@@ -312,6 +313,11 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                                     
                                     echo implode(', ', $role_names);
                                     ?>
+                                </td>
+                                <td>
+                                    <code style="font-size: 11px;">
+                                        <?php echo esc_html($login['ip_address'] ?? 'N/A'); ?>
+                                    </code>
                                 </td>
                                 <td>
                                     <span class="cv-stats-time">

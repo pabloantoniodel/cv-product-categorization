@@ -78,12 +78,21 @@ class CV_Stats_Login_Tracker {
         $today_start = date('Y-m-d 00:00:00');
         $today_end = date('Y-m-d 23:59:59');
         
+        // Subconsulta para obtener el último login de cada usuario
         $query = $wpdb->prepare("
-            SELECT DISTINCT user_id, MAX(login_time) as last_login
-            FROM {$table_name}
-            WHERE login_time >= %s AND login_time <= %s
-            GROUP BY user_id
-            ORDER BY last_login DESC
+            SELECT 
+                l.user_id, 
+                l.login_time as last_login,
+                l.ip_address,
+                l.user_agent
+            FROM {$table_name} l
+            INNER JOIN (
+                SELECT user_id, MAX(login_time) as max_login
+                FROM {$table_name}
+                WHERE login_time >= %s AND login_time <= %s
+                GROUP BY user_id
+            ) latest ON l.user_id = latest.user_id AND l.login_time = latest.max_login
+            ORDER BY l.login_time DESC
         ", $today_start, $today_end);
         
         $results = $wpdb->get_results($query);
@@ -99,7 +108,9 @@ class CV_Stats_Login_Tracker {
                     'display_name' => $user->display_name,
                     'email' => $user->user_email,
                     'roles' => $user->roles,
-                    'last_login' => $row->last_login
+                    'last_login' => $row->last_login,
+                    'ip_address' => $row->ip_address,
+                    'user_agent' => $row->user_agent
                 );
             }
         }
@@ -123,12 +134,21 @@ class CV_Stats_Login_Tracker {
         
         $table_name = $wpdb->prefix . 'cv_user_logins';
         
+        // Subconsulta para obtener el último login de cada usuario
         $query = $wpdb->prepare("
-            SELECT DISTINCT user_id, MAX(login_time) as last_login
-            FROM {$table_name}
-            WHERE login_time >= %s AND login_time <= %s
-            GROUP BY user_id
-            ORDER BY last_login DESC
+            SELECT 
+                l.user_id, 
+                l.login_time as last_login,
+                l.ip_address,
+                l.user_agent
+            FROM {$table_name} l
+            INNER JOIN (
+                SELECT user_id, MAX(login_time) as max_login
+                FROM {$table_name}
+                WHERE login_time >= %s AND login_time <= %s
+                GROUP BY user_id
+            ) latest ON l.user_id = latest.user_id AND l.login_time = latest.max_login
+            ORDER BY l.login_time DESC
         ", $start_date, $end_date);
         
         $results = $wpdb->get_results($query);
@@ -144,7 +164,9 @@ class CV_Stats_Login_Tracker {
                     'display_name' => $user->display_name,
                     'email' => $user->user_email,
                     'roles' => $user->roles,
-                    'last_login' => $row->last_login
+                    'last_login' => $row->last_login,
+                    'ip_address' => $row->ip_address,
+                    'user_agent' => $row->user_agent
                 );
             }
         }
