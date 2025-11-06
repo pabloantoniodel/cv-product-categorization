@@ -1,0 +1,326 @@
+/**
+ * Estilos del Sistema de Burbujas
+ * 
+ * @package CV_Front
+ * @since 1.0.0
+ */
+
+/* ========================================
+   CONTENEDOR PRINCIPAL
+   ======================================== */
+
+.cv-store-view-wrapper {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ========================================
+   CONTROLES SUPERIORES
+   ======================================== */
+
+.cv-view-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.cv-view-toggle {
+    display: flex;
+    gap: 10px;
+}
+
+.cv-toggle-btn {
+    padding: 12px 24px;
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cv-toggle-btn:hover {
+    border-color: #667eea;
+    color: #667eea;
+    transform: translateY(-2px);
+}
+
+.cv-toggle-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.cv-location-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cv-btn-locate {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cv-btn-locate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67, 233, 123, 0.4);
+}
+
+.cv-radius-input {
+    width: 70px;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.cv-radius-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 600;
+}
+
+/* ========================================
+   CONTENEDOR DE BURBUJAS
+   ======================================== */
+
+.cv-bubbles-container {
+    position: relative;
+    background: #f8f9fa;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#cv-bubbles-canvas {
+    display: block;
+    width: 100%;
+    height: 600px;
+}
+
+.cv-bubbles-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+}
+
+.cv-loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e0e0e0;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: cv-spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes cv-spin {
+    to { transform: rotate(360deg); }
+}
+
+.cv-bubbles-loading p {
+    font-size: 16px;
+    color: #666;
+    font-weight: 600;
+}
+
+.cv-bubbles-info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-size: 14px;
+    color: #666;
+    font-weight: 600;
+}
+
+.cv-bubbles-info span {
+    color: #667eea;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* ========================================
+   TOOLTIP FLOTANTE
+   ======================================== */
+
+.cv-bubble-tooltip {
+    position: absolute;
+    width: 280px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    z-index: 100;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.cv-tooltip-photo-wrap {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.cv-tooltip-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cv-tooltip-name {
+    margin: 15px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+
+.cv-tooltip-distance {
+    margin: 0 15px 5px;
+    font-size: 14px;
+    color: #667eea;
+    font-weight: 600;
+}
+
+.cv-tooltip-location {
+    margin: 0 15px 15px;
+    font-size: 12px;
+    color: #999;
+}
+
+.cv-tooltip-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    pointer-events: all;
+}
+
+.cv-tooltip-btn:hover {
+    background: linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%);
+}
+
+/* ========================================
+   VISTA MAPA
+   ======================================== */
+
+.cv-map-container {
+    min-height: 600px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.cv-map-placeholder {
+    text-align: center;
+    padding: 100px 20px;
+    color: #999;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+    .cv-view-controls {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .cv-view-toggle {
+        width: 100%;
+    }
+    
+    .cv-toggle-btn {
+        flex: 1;
+        justify-content: center;
+    }
+    
+    .cv-location-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    #cv-bubbles-canvas {
+        height: 400px;
+    }
+    
+    .cv-bubble-tooltip {
+        width: 90%;
+        max-width: 280px;
+    }
+    
+    .cv-bubbles-info {
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .cv-store-view-wrapper {
+        padding: 10px;
+    }
+    
+    .cv-view-controls {
+        padding: 15px;
+    }
+    
+    .cv-toggle-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+    
+    #cv-bubbles-canvas {
+        height: 350px;
+    }
+}
+
+
+
+
+

@@ -1,0 +1,1634 @@
+[
+    {
+        "term_id": "215",
+        "name": "Peluquería",
+        "slug": "peluqueria",
+        "count": "43",
+        "prompt": "Professional hair salon interior, modern styling chairs, mirrors, hair products, bright and clean, photorealistic",
+        "filename": "peluqueria.jpg"
+    },
+    {
+        "term_id": "214",
+        "name": "Moda",
+        "slug": "moda",
+        "count": "35",
+        "prompt": "Fashion boutique interior, clothing racks with trendy clothes, mannequins, modern retail store, photorealistic",
+        "filename": "moda.jpg"
+    },
+    {
+        "term_id": "90",
+        "name": "Telefonia",
+        "slug": "telefonia",
+        "count": "24",
+        "prompt": "Modern mobile phone store, smartphones display, latest technology devices, clean retail environment, photorealistic",
+        "filename": "telefonia.jpg"
+    },
+    {
+        "term_id": "213",
+        "name": "Alcohol",
+        "slug": "alcohol",
+        "count": "14",
+        "prompt": "Premium liquor store shelf, bottles of wine and spirits, elegant display, warm lighting, photorealistic",
+        "filename": "alcohol.jpg"
+    },
+    {
+        "term_id": "469",
+        "name": "Mujer",
+        "slug": "mujer",
+        "count": "14",
+        "prompt": "Women fashion store, elegant dresses and accessories, modern boutique interior, photorealistic",
+        "filename": "mujer.jpg"
+    },
+    {
+        "term_id": "557",
+        "name": "Pasteleria",
+        "slug": "pasteleria",
+        "count": "13",
+        "prompt": "Bakery display with delicious pastries, cakes, desserts, warm inviting atmosphere, photorealistic",
+        "filename": "pasteleria.jpg"
+    },
+    {
+        "term_id": "519",
+        "name": "RECORDATORIOS",
+        "slug": "recordatorios",
+        "count": "10",
+        "prompt": "Gift shop with souvenirs, keepsakes, decorative items, colorful display, photorealistic",
+        "filename": "recordatorios.jpg"
+    },
+    {
+        "term_id": "483",
+        "name": "Carne",
+        "slug": "carne",
+        "count": "9",
+        "prompt": "Butcher shop display, fresh meat cuts, professional meat counter, clean environment, photorealistic",
+        "filename": "carne.jpg"
+    },
+    {
+        "term_id": "582",
+        "name": "Tailandeses",
+        "slug": "tailandeses",
+        "count": "9",
+        "prompt": "Thai massage spa interior, relaxing atmosphere, massage beds, zen decoration, photorealistic",
+        "filename": "tailandeses.jpg"
+    },
+    {
+        "term_id": "261",
+        "name": "Zapatos",
+        "slug": "zapatos",
+        "count": "9",
+        "prompt": "Shoe store interior, shelves with various footwear, modern retail display, photorealistic",
+        "filename": "zapatos.jpg"
+    },
+    {
+        "term_id": "418",
+        "name": "Frutas",
+        "slug": "frutas",
+        "count": "8",
+        "prompt": "Fresh fruit market display, colorful fruits arranged beautifully, vibrant and fresh, photorealistic",
+        "filename": "frutas.jpg"
+    },
+    {
+        "term_id": "263",
+        "name": "Deportivas",
+        "slug": "deportivas",
+        "count": "8",
+        "prompt": "Sports shoe store, athletic footwear display, modern retail interior, photorealistic",
+        "filename": "deportivas.jpg"
+    },
+    {
+        "term_id": "575",
+        "name": "Bocadillos",
+        "slug": "bocadillos",
+        "count": "6",
+        "prompt": "Sandwich shop interior, fresh sandwiches display, appetizing food presentation, photorealistic",
+        "filename": "bocadillos.jpg"
+    },
+    {
+        "term_id": "468",
+        "name": "Hombre",
+        "slug": "hombre",
+        "count": "6",
+        "prompt": "Men fashion store, suits and casual wear, modern masculine boutique, photorealistic",
+        "filename": "hombre.jpg"
+    },
+    {
+        "term_id": "574",
+        "name": "Desayunos",
+        "slug": "desayunos",
+        "count": "5",
+        "prompt": "Breakfast cafe, fresh breakfast items, coffee and pastries, cozy morning atmosphere, photorealistic",
+        "filename": "desayunos.jpg"
+    },
+    {
+        "term_id": "480",
+        "name": "FOTOGRAFIAS",
+        "slug": "fotografias",
+        "count": "5",
+        "prompt": "Photography studio, professional camera equipment, modern photo studio setup, photorealistic",
+        "filename": "fotografias.jpg"
+    },
+    {
+        "term_id": "314",
+        "name": "Flores Naturales",
+        "slug": "flores-naturales",
+        "count": "5",
+        "prompt": "Flower shop interior, beautiful fresh flowers arrangements, colorful blooms, photorealistic",
+        "filename": "flores-naturales.jpg"
+    },
+    {
+        "term_id": "484",
+        "name": "Pescado",
+        "slug": "pescado",
+        "count": "5",
+        "prompt": "Fish market display, fresh seafood on ice, professional fishmonger counter, photorealistic",
+        "filename": "pescado.jpg"
+    },
+    {
+        "term_id": "689",
+        "name": "PELUQUERIA",
+        "slug": "peluqueria-2",
+        "count": "4",
+        "prompt": "Professional PELUQUERIA store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "peluqueria-2.jpg"
+    },
+    {
+        "term_id": "421",
+        "name": "Pan",
+        "slug": "pan",
+        "count": "4",
+        "prompt": "Artisan bread bakery, fresh baked bread display, rustic and warm atmosphere, photorealistic",
+        "filename": "pan.jpg"
+    },
+    {
+        "term_id": "577",
+        "name": "Brazo",
+        "slug": "brazo",
+        "count": "4",
+        "prompt": "Tattoo studio interior, tattoo artist working, modern clean studio, artistic atmosphere, photorealistic",
+        "filename": "brazo.jpg"
+    },
+    {
+        "term_id": "450",
+        "name": "MOTOS",
+        "slug": "motos",
+        "count": "4",
+        "prompt": "Motorcycle showroom, modern bikes display, professional motorcycle dealership, photorealistic",
+        "filename": "motos.jpg"
+    },
+    {
+        "term_id": "449",
+        "name": "VEHICULOS",
+        "slug": "vehiculos",
+        "count": "4",
+        "prompt": "Car dealership showroom, new vehicles display, modern automotive retail, photorealistic",
+        "filename": "vehiculos.jpg"
+    },
+    {
+        "term_id": "603",
+        "name": "ALQUILERES",
+        "slug": "alquileres",
+        "count": "4",
+        "prompt": "Real estate office interior, property listings, professional real estate agency, photorealistic",
+        "filename": "alquileres.jpg"
+    },
+    {
+        "term_id": "663",
+        "name": "Hamburguesa",
+        "slug": "hamburguesa",
+        "count": "4",
+        "prompt": "Burger restaurant, gourmet hamburgers, appetizing food presentation, modern fast food, photorealistic",
+        "filename": "hamburguesa.jpg"
+    },
+    {
+        "term_id": "315",
+        "name": "Accesorios Flores",
+        "slug": "accesorios-flores",
+        "count": "4",
+        "prompt": "Florist accessories shop, vases, flower pots, gardening items, boutique display, photorealistic",
+        "filename": "accesorios-flores.jpg"
+    },
+    {
+        "term_id": "318",
+        "name": "Relojes",
+        "slug": "relojes",
+        "count": "4",
+        "prompt": "Watch store display, luxury timepieces, elegant jewelry store interior, photorealistic",
+        "filename": "relojes.jpg"
+    },
+    {
+        "term_id": "661",
+        "name": "Kebab",
+        "slug": "kebab",
+        "count": "3",
+        "prompt": "Kebab restaurant, döner rotating spit, Mediterranean fast food, inviting atmosphere, photorealistic",
+        "filename": "kebab.jpg"
+    },
+    {
+        "term_id": "490",
+        "name": "Pizzas",
+        "slug": "pizzas",
+        "count": "3",
+        "prompt": "Professional Pizzas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "pizzas.jpg"
+    },
+    {
+        "term_id": "680",
+        "name": "KEBAB",
+        "slug": "kebab-menus",
+        "count": "3",
+        "prompt": "Professional KEBAB store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "kebab-menus.jpg"
+    },
+    {
+        "term_id": "589",
+        "name": "Informatica",
+        "slug": "informatica-academia",
+        "count": "3",
+        "prompt": "Professional Informatica store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "informatica-academia.jpg"
+    },
+    {
+        "term_id": "540",
+        "name": "Piensos",
+        "slug": "piensos",
+        "count": "3",
+        "prompt": "Professional Piensos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "piensos.jpg"
+    },
+    {
+        "term_id": "512",
+        "name": "PLAYA",
+        "slug": "playa",
+        "count": "2",
+        "prompt": "Professional PLAYA store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "playa.jpg"
+    },
+    {
+        "term_id": "513",
+        "name": "Toallas",
+        "slug": "toallas",
+        "count": "2",
+        "prompt": "Professional Toallas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "toallas.jpg"
+    },
+    {
+        "term_id": "664",
+        "name": "Tapas",
+        "slug": "tapas",
+        "count": "2",
+        "prompt": "Professional Tapas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "tapas.jpg"
+    },
+    {
+        "term_id": "660",
+        "name": "COMUNION",
+        "slug": "comunion",
+        "count": "2",
+        "prompt": "Professional COMUNION store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "comunion.jpg"
+    },
+    {
+        "term_id": "658",
+        "name": "MADRINA",
+        "slug": "madrina",
+        "count": "2",
+        "prompt": "Professional MADRINA store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "madrina.jpg"
+    },
+    {
+        "term_id": "569",
+        "name": "Software",
+        "slug": "software",
+        "count": "2",
+        "prompt": "Professional Software store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "software.jpg"
+    },
+    {
+        "term_id": "602",
+        "name": "VENTAS",
+        "slug": "ventas",
+        "count": "2",
+        "prompt": "Professional VENTAS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "ventas.jpg"
+    },
+    {
+        "term_id": "497",
+        "name": "FERTILIZANTES",
+        "slug": "fertilizantes",
+        "count": "2",
+        "prompt": "Professional FERTILIZANTES store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "fertilizantes.jpg"
+    },
+    {
+        "term_id": "521",
+        "name": "Ropa bebe",
+        "slug": "ropa-bebe",
+        "count": "2",
+        "prompt": "Professional Ropa bebe store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "ropa-bebe.jpg"
+    },
+    {
+        "term_id": "419",
+        "name": "Verduras",
+        "slug": "verduras",
+        "count": "2",
+        "prompt": "Professional Verduras store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "verduras.jpg"
+    },
+    {
+        "term_id": "701",
+        "name": "Tratamientos Faciales",
+        "slug": "tratamientos-faciales",
+        "count": "2",
+        "prompt": "Professional Tratamientos Faciales store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "tratamientos-faciales.jpg"
+    },
+    {
+        "term_id": "695",
+        "name": "Cosméticos",
+        "slug": "cosmeticos",
+        "count": "2",
+        "prompt": "Professional Cosméticos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "cosmeticos.jpg"
+    },
+    {
+        "term_id": "527",
+        "name": "MOVILES",
+        "slug": "moviles",
+        "count": "2",
+        "prompt": "Professional MOVILES store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "moviles.jpg"
+    },
+    {
+        "term_id": "691",
+        "name": "Mujer",
+        "slug": "mujer-peluqueria-2",
+        "count": "2",
+        "prompt": "Professional Mujer store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "mujer-peluqueria-2.jpg"
+    },
+    {
+        "term_id": "420",
+        "name": "Legumbres",
+        "slug": "legumbres",
+        "count": "2",
+        "prompt": "Professional Legumbres store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "legumbres.jpg"
+    },
+    {
+        "term_id": "470",
+        "name": "Miño",
+        "slug": "mino",
+        "count": "2",
+        "prompt": "Professional Miño store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "mino.jpg"
+    },
+    {
+        "term_id": "313",
+        "name": "Fres de Plastico",
+        "slug": "fres-de-plastico",
+        "count": "2",
+        "prompt": "Professional Fres de Plastico store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "fres-de-plastico.jpg"
+    },
+    {
+        "term_id": "478",
+        "name": "Complemento",
+        "slug": "complemento",
+        "count": "2",
+        "prompt": "Professional Complemento store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "complemento.jpg"
+    },
+    {
+        "term_id": "417",
+        "name": "Carnes",
+        "slug": "carnes",
+        "count": "2",
+        "prompt": "Professional Carnes store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "carnes.jpg"
+    },
+    {
+        "term_id": "321",
+        "name": "Sujetadores",
+        "slug": "sujetadores",
+        "count": "2",
+        "prompt": "Professional Sujetadores store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "sujetadores.jpg"
+    },
+    {
+        "term_id": "539",
+        "name": "MASCOTAS",
+        "slug": "mascotas",
+        "count": "1",
+        "prompt": "Professional MASCOTAS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "mascotas.jpg"
+    },
+    {
+        "term_id": "572",
+        "name": "Tablet",
+        "slug": "tablet-informatica",
+        "count": "1",
+        "prompt": "Professional Tablet store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "tablet-informatica.jpg"
+    },
+    {
+        "term_id": "543",
+        "name": "Correas y accesorios",
+        "slug": "correas-y-accesorios",
+        "count": "1",
+        "prompt": "Professional Correas y accesorios store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "correas-y-accesorios.jpg"
+    },
+    {
+        "term_id": "541",
+        "name": "Vestimenta",
+        "slug": "vestimenta",
+        "count": "1",
+        "prompt": "Professional Vestimenta store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "vestimenta.jpg"
+    },
+    {
+        "term_id": "537",
+        "name": "Cascos",
+        "slug": "cascos",
+        "count": "1",
+        "prompt": "Professional Cascos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "cascos.jpg"
+    },
+    {
+        "term_id": "709",
+        "name": "CRIPTOMONEDAS",
+        "slug": "criptomonedas",
+        "count": "1",
+        "prompt": "Professional CRIPTOMONEDAS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "criptomonedas.jpg"
+    },
+    {
+        "term_id": "556",
+        "name": "Sofá",
+        "slug": "sofa",
+        "count": "1",
+        "prompt": "Professional Sofá store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "sofa.jpg"
+    },
+    {
+        "term_id": "551",
+        "name": "Muebles",
+        "slug": "muebles",
+        "count": "1",
+        "prompt": "Professional Muebles store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "muebles.jpg"
+    },
+    {
+        "term_id": "550",
+        "name": "Mesas",
+        "slug": "mesas",
+        "count": "1",
+        "prompt": "Professional Mesas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "mesas.jpg"
+    },
+    {
+        "term_id": "558",
+        "name": "Helados",
+        "slug": "helados-alimentacion",
+        "count": "1",
+        "prompt": "Professional Helados store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "helados-alimentacion.jpg"
+    },
+    {
+        "term_id": "563",
+        "name": "otros",
+        "slug": "otros",
+        "count": "1",
+        "prompt": "Professional otros store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "otros.jpg"
+    },
+    {
+        "term_id": "549",
+        "name": "Sillas",
+        "slug": "sillas",
+        "count": "1",
+        "prompt": "Professional Sillas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "sillas.jpg"
+    },
+    {
+        "term_id": "545",
+        "name": "Cortinas",
+        "slug": "cortinas",
+        "count": "1",
+        "prompt": "Professional Cortinas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "cortinas.jpg"
+    },
+    {
+        "term_id": "571",
+        "name": "Relojes digitales",
+        "slug": "relojes-digitales",
+        "count": "1",
+        "prompt": "Professional Relojes digitales store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "relojes-digitales.jpg"
+    },
+    {
+        "term_id": "586",
+        "name": "Curso Ingles",
+        "slug": "curso-ingles",
+        "count": "1",
+        "prompt": "Professional Curso Ingles store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "curso-ingles.jpg"
+    },
+    {
+        "term_id": "692",
+        "name": "PLANTAS",
+        "slug": "plantas",
+        "count": "1",
+        "prompt": "Professional PLANTAS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "plantas.jpg"
+    },
+    {
+        "term_id": "693",
+        "name": "FLORES",
+        "slug": "flores-plantas",
+        "count": "1",
+        "prompt": "Professional FLORES store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "flores-plantas.jpg"
+    },
+    {
+        "term_id": "697",
+        "name": "Maquillaje",
+        "slug": "maquillaje",
+        "count": "1",
+        "prompt": "Professional Maquillaje store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "maquillaje.jpg"
+    },
+    {
+        "term_id": "702",
+        "name": "DECORACION",
+        "slug": "decoracion",
+        "count": "1",
+        "prompt": "Professional DECORACION store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "decoracion.jpg"
+    },
+    {
+        "term_id": "704",
+        "name": "ALARMAS",
+        "slug": "alarmas",
+        "count": "1",
+        "prompt": "Professional ALARMAS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "alarmas.jpg"
+    },
+    {
+        "term_id": "706",
+        "name": "CURSOS",
+        "slug": "cursos",
+        "count": "1",
+        "prompt": "Professional CURSOS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "cursos.jpg"
+    },
+    {
+        "term_id": "707",
+        "name": "LIBROS",
+        "slug": "libros",
+        "count": "1",
+        "prompt": "Professional LIBROS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "libros.jpg"
+    },
+    {
+        "term_id": "708",
+        "name": "REDES SOCIALES",
+        "slug": "redes-sociales",
+        "count": "1",
+        "prompt": "Professional REDES SOCIALES store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "redes-sociales.jpg"
+    },
+    {
+        "term_id": "690",
+        "name": "Hombre",
+        "slug": "hombre-peluqueria-2",
+        "count": "1",
+        "prompt": "Professional Hombre store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "hombre-peluqueria-2.jpg"
+    },
+    {
+        "term_id": "681",
+        "name": "Pizzas",
+        "slug": "pizzas-menus",
+        "count": "1",
+        "prompt": "Professional Pizzas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "pizzas-menus.jpg"
+    },
+    {
+        "term_id": "676",
+        "name": "Pelotas",
+        "slug": "pelotas",
+        "count": "1",
+        "prompt": "Professional Pelotas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "pelotas.jpg"
+    },
+    {
+        "term_id": "595",
+        "name": "Cartas",
+        "slug": "cartas",
+        "count": "1",
+        "prompt": "Professional Cartas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "cartas.jpg"
+    },
+    {
+        "term_id": "599",
+        "name": "Tarjeta visita",
+        "slug": "tarjeta-visita",
+        "count": "1",
+        "prompt": "Professional Tarjeta visita store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "tarjeta-visita.jpg"
+    },
+    {
+        "term_id": "607",
+        "name": "Subvenciones",
+        "slug": "subvenciones",
+        "count": "1",
+        "prompt": "Professional Subvenciones store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "subvenciones.jpg"
+    },
+    {
+        "term_id": "656",
+        "name": "NOVIAS",
+        "slug": "novias",
+        "count": "1",
+        "prompt": "Professional NOVIAS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "novias.jpg"
+    },
+    {
+        "term_id": "659",
+        "name": "FIESTA",
+        "slug": "fiesta",
+        "count": "1",
+        "prompt": "Professional FIESTA store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "fiesta.jpg"
+    },
+    {
+        "term_id": "665",
+        "name": "Raciones",
+        "slug": "raciones",
+        "count": "1",
+        "prompt": "Professional Raciones store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "raciones.jpg"
+    },
+    {
+        "term_id": "667",
+        "name": "SERVICIOS",
+        "slug": "servicios",
+        "count": "1",
+        "prompt": "Professional SERVICIOS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "servicios.jpg"
+    },
+    {
+        "term_id": "668",
+        "name": "Energia",
+        "slug": "energia",
+        "count": "1",
+        "prompt": "Professional Energia store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "energia.jpg"
+    },
+    {
+        "term_id": "710",
+        "name": "OTROS",
+        "slug": "otros-libros",
+        "count": "1",
+        "prompt": "Professional OTROS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "otros-libros.jpg"
+    },
+    {
+        "term_id": "525",
+        "name": "Chucherías",
+        "slug": "chucherias",
+        "count": "1",
+        "prompt": "Professional Chucherías store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "chucherias.jpg"
+    },
+    {
+        "term_id": "499",
+        "name": "abonos",
+        "slug": "abonos",
+        "count": "1",
+        "prompt": "Professional abonos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "abonos.jpg"
+    },
+    {
+        "term_id": "524",
+        "name": "Accesorios juegos",
+        "slug": "accesorios-juegos",
+        "count": "1",
+        "prompt": "Professional Accesorios juegos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "accesorios-juegos.jpg"
+    },
+    {
+        "term_id": "507",
+        "name": "Instrumentos teclas",
+        "slug": "instrumentos-teclas",
+        "count": "1",
+        "prompt": "Professional Instrumentos teclas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "instrumentos-teclas.jpg"
+    },
+    {
+        "term_id": "508",
+        "name": "Instrumentos Palos",
+        "slug": "instrumentos-palos",
+        "count": "1",
+        "prompt": "Professional Instrumentos Palos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "instrumentos-palos.jpg"
+    },
+    {
+        "term_id": "446",
+        "name": "neumaticos",
+        "slug": "neumaticos",
+        "count": "1",
+        "prompt": "Professional neumaticos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "neumaticos.jpg"
+    },
+    {
+        "term_id": "471",
+        "name": "Niña",
+        "slug": "nina",
+        "count": "1",
+        "prompt": "Professional Niña store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "nina.jpg"
+    },
+    {
+        "term_id": "475",
+        "name": "Perfume Mujer",
+        "slug": "perfume-mujer",
+        "count": "1",
+        "prompt": "Professional Perfume Mujer store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "perfume-mujer.jpg"
+    },
+    {
+        "term_id": "517",
+        "name": "Bañadores hombre",
+        "slug": "banadores-hombre",
+        "count": "1",
+        "prompt": "Professional Bañadores hombre store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "banadores-hombre.jpg"
+    },
+    {
+        "term_id": "502",
+        "name": "Instrumentos",
+        "slug": "instrumentos",
+        "count": "1",
+        "prompt": "Professional Instrumentos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "instrumentos.jpg"
+    },
+    {
+        "term_id": "505",
+        "name": "Instrumentos Cuerda",
+        "slug": "instrumentos-cuerda",
+        "count": "1",
+        "prompt": "Professional Instrumentos Cuerda store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "instrumentos-cuerda.jpg"
+    },
+    {
+        "term_id": "526",
+        "name": "Souvenir",
+        "slug": "souvenir",
+        "count": "1",
+        "prompt": "Professional Souvenir store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "souvenir.jpg"
+    },
+    {
+        "term_id": "498",
+        "name": "Lamparas",
+        "slug": "lamparas",
+        "count": "1",
+        "prompt": "Professional Lamparas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "lamparas.jpg"
+    },
+    {
+        "term_id": "534",
+        "name": "Fundas móviles",
+        "slug": "fundas-moviles",
+        "count": "1",
+        "prompt": "Professional Fundas móviles store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "fundas-moviles.jpg"
+    },
+    {
+        "term_id": "493",
+        "name": "Indio",
+        "slug": "indio",
+        "count": "1",
+        "prompt": "Professional Indio store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "indio.jpg"
+    },
+    {
+        "term_id": "212",
+        "name": "Refrescos",
+        "slug": "refrescos",
+        "count": "1",
+        "prompt": "Professional Refrescos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "refrescos.jpg"
+    },
+    {
+        "term_id": "262",
+        "name": "Botas",
+        "slug": "botas",
+        "count": "1",
+        "prompt": "Professional Botas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "botas.jpg"
+    },
+    {
+        "term_id": "492",
+        "name": "Mexicano",
+        "slug": "mexicano",
+        "count": "1",
+        "prompt": "Professional Mexicano store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "mexicano.jpg"
+    },
+    {
+        "term_id": "319",
+        "name": "Bisutería",
+        "slug": "bisuteria",
+        "count": "1",
+        "prompt": "Professional Bisutería store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "bisuteria.jpg"
+    },
+    {
+        "term_id": "482",
+        "name": "FOTO Y VIDEO",
+        "slug": "foto-y-video",
+        "count": "1",
+        "prompt": "Professional FOTO Y VIDEO store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "foto-y-video.jpg"
+    },
+    {
+        "term_id": "325",
+        "name": "Camisetas mujer",
+        "slug": "camisetas-mujer",
+        "count": "1",
+        "prompt": "Professional Camisetas mujer store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "camisetas-mujer.jpg"
+    },
+    {
+        "term_id": "506",
+        "name": "Instrumentos Viento",
+        "slug": "instrumentos-viento",
+        "count": "1",
+        "prompt": "Professional Instrumentos Viento store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "instrumentos-viento.jpg"
+    },
+    {
+        "term_id": "500",
+        "name": "Pipas",
+        "slug": "pipas",
+        "count": "1",
+        "prompt": "Professional Pipas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "pipas.jpg"
+    },
+    {
+        "term_id": "322",
+        "name": "Bragas",
+        "slug": "bragas",
+        "count": "1",
+        "prompt": "Professional Bragas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "bragas.jpg"
+    },
+    {
+        "term_id": "669",
+        "name": "Telefonia",
+        "slug": "telefonia-servicios",
+        "count": "0",
+        "prompt": "Professional Telefonia store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "telefonia-servicios.jpg"
+    },
+    {
+        "term_id": "671",
+        "name": "Agua",
+        "slug": "agua",
+        "count": "0",
+        "prompt": "Professional Agua store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "agua.jpg"
+    },
+    {
+        "term_id": "479",
+        "name": "REPORTAJES",
+        "slug": "reportajes",
+        "count": "0",
+        "prompt": "Professional REPORTAJES store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "reportajes.jpg"
+    },
+    {
+        "term_id": "477",
+        "name": "Fragancia",
+        "slug": "fragancia",
+        "count": "0",
+        "prompt": "Professional Fragancia store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "fragancia.jpg"
+    },
+    {
+        "term_id": "670",
+        "name": "Datos",
+        "slug": "datos",
+        "count": "0",
+        "prompt": "Professional Datos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "datos.jpg"
+    },
+    {
+        "term_id": "481",
+        "name": "VIDEO",
+        "slug": "video",
+        "count": "0",
+        "prompt": "Professional VIDEO store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "video.jpg"
+    },
+    {
+        "term_id": "485",
+        "name": "ensaladas",
+        "slug": "ensaladas",
+        "count": "0",
+        "prompt": "Professional ensaladas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "ensaladas.jpg"
+    },
+    {
+        "term_id": "608",
+        "name": "Prestamos",
+        "slug": "prestamos",
+        "count": "0",
+        "prompt": "Professional Prestamos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "prestamos.jpg"
+    },
+    {
+        "term_id": "657",
+        "name": "NOVIOS",
+        "slug": "novios",
+        "count": "0",
+        "prompt": "Professional NOVIOS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "novios.jpg"
+    },
+    {
+        "term_id": "491",
+        "name": "Pasta",
+        "slug": "pasta",
+        "count": "0",
+        "prompt": "Professional Pasta store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "pasta.jpg"
+    },
+    {
+        "term_id": "705",
+        "name": "FORMACION",
+        "slug": "formacion-2",
+        "count": "0",
+        "prompt": "Professional FORMACION store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "formacion-2.jpg"
+    },
+    {
+        "term_id": "489",
+        "name": "Helados",
+        "slug": "helados",
+        "count": "0",
+        "prompt": "Professional Helados store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "helados.jpg"
+    },
+    {
+        "term_id": "488",
+        "name": "Frutas",
+        "slug": "frutas-comida",
+        "count": "0",
+        "prompt": "Professional Frutas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "frutas-comida.jpg"
+    },
+    {
+        "term_id": "487",
+        "name": "Caldos",
+        "slug": "caldos",
+        "count": "0",
+        "prompt": "Professional Caldos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "caldos.jpg"
+    },
+    {
+        "term_id": "662",
+        "name": "Turco",
+        "slug": "turco",
+        "count": "0",
+        "prompt": "Professional Turco store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "turco.jpg"
+    },
+    {
+        "term_id": "486",
+        "name": "Legumbres",
+        "slug": "legumbres-comida",
+        "count": "0",
+        "prompt": "Professional Legumbres store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "legumbres-comida.jpg"
+    },
+    {
+        "term_id": "609",
+        "name": "Alquileres",
+        "slug": "alquileres-ayudas",
+        "count": "0",
+        "prompt": "Professional Alquileres store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "alquileres-ayudas.jpg"
+    },
+    {
+        "term_id": "675",
+        "name": "Ropa",
+        "slug": "ropa-deportes",
+        "count": "0",
+        "prompt": "Professional Ropa store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "ropa-deportes.jpg"
+    },
+    {
+        "term_id": "448",
+        "name": "piezas",
+        "slug": "piezas",
+        "count": "0",
+        "prompt": "Professional piezas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "piezas.jpg"
+    },
+    {
+        "term_id": "447",
+        "name": "Mano de obra",
+        "slug": "mano-de-obra",
+        "count": "0",
+        "prompt": "Professional Mano de obra store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "mano-de-obra.jpg"
+    },
+    {
+        "term_id": "445",
+        "name": "Reparaciones",
+        "slug": "reparaciones",
+        "count": "0",
+        "prompt": "Professional Reparaciones store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "reparaciones.jpg"
+    },
+    {
+        "term_id": "694",
+        "name": "RAMOS",
+        "slug": "ramos",
+        "count": "0",
+        "prompt": "Professional RAMOS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "ramos.jpg"
+    },
+    {
+        "term_id": "444",
+        "name": "Coches",
+        "slug": "coches",
+        "count": "0",
+        "prompt": "Professional Coches store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "coches.jpg"
+    },
+    {
+        "term_id": "696",
+        "name": "Uñas",
+        "slug": "unas",
+        "count": "0",
+        "prompt": "Professional Uñas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "unas.jpg"
+    },
+    {
+        "term_id": "443",
+        "name": "AUTOMOVIL",
+        "slug": "automovil",
+        "count": "0",
+        "prompt": "Professional AUTOMOVIL store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "automovil.jpg"
+    },
+    {
+        "term_id": "324",
+        "name": "Calcetines",
+        "slug": "calcetines",
+        "count": "0",
+        "prompt": "Professional Calcetines store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "calcetines.jpg"
+    },
+    {
+        "term_id": "323",
+        "name": "Calzoncillos",
+        "slug": "calzoncillos",
+        "count": "0",
+        "prompt": "Professional Calzoncillos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "calzoncillos.jpg"
+    },
+    {
+        "term_id": "316",
+        "name": "Bodas Flores",
+        "slug": "bodas-flores",
+        "count": "0",
+        "prompt": "Professional Bodas Flores store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "bodas-flores.jpg"
+    },
+    {
+        "term_id": "688",
+        "name": "Infusiones",
+        "slug": "infusiones",
+        "count": "0",
+        "prompt": "Professional Infusiones store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "infusiones.jpg"
+    },
+    {
+        "term_id": "686",
+        "name": "otros",
+        "slug": "otros-menus",
+        "count": "0",
+        "prompt": "Professional otros store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "otros-menus.jpg"
+    },
+    {
+        "term_id": "476",
+        "name": "Colonia",
+        "slug": "colonia",
+        "count": "0",
+        "prompt": "Professional Colonia store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "colonia.jpg"
+    },
+    {
+        "term_id": "677",
+        "name": "Maquinaria",
+        "slug": "maquinaria",
+        "count": "0",
+        "prompt": "Professional Maquinaria store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "maquinaria.jpg"
+    },
+    {
+        "term_id": "678",
+        "name": "Nutrición",
+        "slug": "nutricion",
+        "count": "0",
+        "prompt": "Professional Nutrición store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "nutricion.jpg"
+    },
+    {
+        "term_id": "679",
+        "name": "MENUS",
+        "slug": "menus",
+        "count": "0",
+        "prompt": "Professional MENUS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "menus.jpg"
+    },
+    {
+        "term_id": "473",
+        "name": "Perfumes",
+        "slug": "perfumes",
+        "count": "0",
+        "prompt": "Professional Perfumes store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "perfumes.jpg"
+    },
+    {
+        "term_id": "474",
+        "name": "Perfume Hombre",
+        "slug": "perfume-hombre",
+        "count": "0",
+        "prompt": "Professional Perfume Hombre store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "perfume-hombre.jpg"
+    },
+    {
+        "term_id": "682",
+        "name": "China",
+        "slug": "china",
+        "count": "0",
+        "prompt": "Professional China store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "china.jpg"
+    },
+    {
+        "term_id": "683",
+        "name": "Mexicana",
+        "slug": "mexicana",
+        "count": "0",
+        "prompt": "Professional Mexicana store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "mexicana.jpg"
+    },
+    {
+        "term_id": "684",
+        "name": "Indu",
+        "slug": "indu",
+        "count": "0",
+        "prompt": "Professional Indu store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "indu.jpg"
+    },
+    {
+        "term_id": "685",
+        "name": "Española",
+        "slug": "espanola",
+        "count": "0",
+        "prompt": "Professional Española store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "espanola.jpg"
+    },
+    {
+        "term_id": "711",
+        "name": "Rotulación",
+        "slug": "rotulacion",
+        "count": "0",
+        "prompt": "Professional Rotulación store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "rotulacion.jpg"
+    },
+    {
+        "term_id": "538",
+        "name": "Ropa",
+        "slug": "ropa",
+        "count": "0",
+        "prompt": "Professional Ropa store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "ropa.jpg"
+    },
+    {
+        "term_id": "554",
+        "name": "Baño",
+        "slug": "bano",
+        "count": "0",
+        "prompt": "Professional Baño store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "bano.jpg"
+    },
+    {
+        "term_id": "555",
+        "name": "Salon",
+        "slug": "salon",
+        "count": "0",
+        "prompt": "Professional Salon store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "salon.jpg"
+    },
+    {
+        "term_id": "523",
+        "name": "Accesorios alimentacion",
+        "slug": "accesorios-alimentacion",
+        "count": "0",
+        "prompt": "Professional Accesorios alimentacion store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "accesorios-alimentacion.jpg"
+    },
+    {
+        "term_id": "522",
+        "name": "Accesorios cuna",
+        "slug": "accesorios-cuna",
+        "count": "0",
+        "prompt": "Professional Accesorios cuna store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "accesorios-cuna.jpg"
+    },
+    {
+        "term_id": "559",
+        "name": "Chuches",
+        "slug": "chuches",
+        "count": "0",
+        "prompt": "Professional Chuches store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "chuches.jpg"
+    },
+    {
+        "term_id": "560",
+        "name": "JOYERIA",
+        "slug": "joyeria",
+        "count": "0",
+        "prompt": "Professional JOYERIA store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "joyeria.jpg"
+    },
+    {
+        "term_id": "561",
+        "name": "Anillos",
+        "slug": "anillos",
+        "count": "0",
+        "prompt": "Professional Anillos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "anillos.jpg"
+    },
+    {
+        "term_id": "562",
+        "name": "collares",
+        "slug": "collares",
+        "count": "0",
+        "prompt": "Professional collares store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "collares.jpg"
+    },
+    {
+        "term_id": "518",
+        "name": "Bañadores mujer",
+        "slug": "banadores-mujer",
+        "count": "0",
+        "prompt": "Professional Bañadores mujer store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "banadores-mujer.jpg"
+    },
+    {
+        "term_id": "564",
+        "name": "Teléfonos analógicos",
+        "slug": "telefonos-analogicos",
+        "count": "0",
+        "prompt": "Professional Teléfonos analógicos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "telefonos-analogicos.jpg"
+    },
+    {
+        "term_id": "565",
+        "name": "Telefono digital",
+        "slug": "telefono-digital",
+        "count": "0",
+        "prompt": "Professional Telefono digital store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "telefono-digital.jpg"
+    },
+    {
+        "term_id": "553",
+        "name": "cocina",
+        "slug": "cocina",
+        "count": "0",
+        "prompt": "Professional cocina store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "cocina.jpg"
+    },
+    {
+        "term_id": "552",
+        "name": "Camas",
+        "slug": "camas",
+        "count": "0",
+        "prompt": "Professional Camas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "camas.jpg"
+    },
+    {
+        "term_id": "533",
+        "name": "Tablet",
+        "slug": "tablet",
+        "count": "0",
+        "prompt": "Professional Tablet store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "tablet.jpg"
+    },
+    {
+        "term_id": "532",
+        "name": "Servicio Técnico",
+        "slug": "servicio-tecnico",
+        "count": "0",
+        "prompt": "Professional Servicio Técnico store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "servicio-tecnico.jpg"
+    },
+    {
+        "term_id": "531",
+        "name": "Baterías",
+        "slug": "baterias-moviles",
+        "count": "0",
+        "prompt": "Professional Baterías store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "baterias-moviles.jpg"
+    },
+    {
+        "term_id": "542",
+        "name": "Juguetes",
+        "slug": "juguetes",
+        "count": "0",
+        "prompt": "Professional Juguetes store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "juguetes.jpg"
+    },
+    {
+        "term_id": "530",
+        "name": "Líneas móviles",
+        "slug": "lineas-moviles",
+        "count": "0",
+        "prompt": "Professional Líneas móviles store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "lineas-moviles.jpg"
+    },
+    {
+        "term_id": "529",
+        "name": "Telefonos",
+        "slug": "telefonos",
+        "count": "0",
+        "prompt": "Professional Telefonos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "telefonos.jpg"
+    },
+    {
+        "term_id": "528",
+        "name": "Baterias",
+        "slug": "baterias",
+        "count": "0",
+        "prompt": "Professional Baterias store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "baterias.jpg"
+    },
+    {
+        "term_id": "546",
+        "name": "Cojines",
+        "slug": "cojines",
+        "count": "0",
+        "prompt": "Professional Cojines store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "cojines.jpg"
+    },
+    {
+        "term_id": "547",
+        "name": "Toallas",
+        "slug": "toallas-hogar",
+        "count": "0",
+        "prompt": "Professional Toallas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "toallas-hogar.jpg"
+    },
+    {
+        "term_id": "548",
+        "name": "Corchas, sabanas, mantas",
+        "slug": "corchas-sabanas-mantas",
+        "count": "0",
+        "prompt": "Professional Corchas, sabanas, mantas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "corchas-sabanas-mantas.jpg"
+    },
+    {
+        "term_id": "536",
+        "name": "Accesorios",
+        "slug": "accesorios-bicicletas",
+        "count": "0",
+        "prompt": "Professional Accesorios store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "accesorios-bicicletas.jpg"
+    },
+    {
+        "term_id": "567",
+        "name": "PC sobremesa",
+        "slug": "pc-sobremesa",
+        "count": "0",
+        "prompt": "Professional PC sobremesa store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "pc-sobremesa.jpg"
+    },
+    {
+        "term_id": "568",
+        "name": "Portatiles",
+        "slug": "portatiles",
+        "count": "0",
+        "prompt": "Professional Portatiles store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "portatiles.jpg"
+    },
+    {
+        "term_id": "587",
+        "name": "Curso idiomas",
+        "slug": "curso-idiomas",
+        "count": "0",
+        "prompt": "Professional Curso idiomas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "curso-idiomas.jpg"
+    },
+    {
+        "term_id": "588",
+        "name": "Carnet conducir",
+        "slug": "carnet-conducir",
+        "count": "0",
+        "prompt": "Professional Carnet conducir store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "carnet-conducir.jpg"
+    },
+    {
+        "term_id": "593",
+        "name": "TAROT",
+        "slug": "tarot",
+        "count": "0",
+        "prompt": "Professional TAROT store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "tarot.jpg"
+    },
+    {
+        "term_id": "594",
+        "name": "Velas -similares",
+        "slug": "velas-similares",
+        "count": "0",
+        "prompt": "Professional Velas -similares store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "velas-similares.jpg"
+    },
+    {
+        "term_id": "501",
+        "name": "MUSICA",
+        "slug": "musica",
+        "count": "0",
+        "prompt": "Professional MUSICA store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "musica.jpg"
+    },
+    {
+        "term_id": "597",
+        "name": "MARKETING",
+        "slug": "marketing",
+        "count": "0",
+        "prompt": "Professional MARKETING store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "marketing.jpg"
+    },
+    {
+        "term_id": "598",
+        "name": "Web",
+        "slug": "web",
+        "count": "0",
+        "prompt": "Professional Web store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "web.jpg"
+    },
+    {
+        "term_id": "600",
+        "name": "Tienda virtual",
+        "slug": "tienda-virtual",
+        "count": "0",
+        "prompt": "Professional Tienda virtual store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "tienda-virtual.jpg"
+    },
+    {
+        "term_id": "601",
+        "name": "QR",
+        "slug": "qr",
+        "count": "0",
+        "prompt": "Professional QR store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "qr.jpg"
+    },
+    {
+        "term_id": "604",
+        "name": "INTERCAMBIOS",
+        "slug": "intercambios",
+        "count": "0",
+        "prompt": "Professional INTERCAMBIOS store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "intercambios.jpg"
+    },
+    {
+        "term_id": "605",
+        "name": "ALQUILER-COMPRA",
+        "slug": "alquiler-compra",
+        "count": "0",
+        "prompt": "Professional ALQUILER-COMPRA store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "alquiler-compra.jpg"
+    },
+    {
+        "term_id": "503",
+        "name": "Conciertos",
+        "slug": "conciertos",
+        "count": "0",
+        "prompt": "Professional Conciertos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "conciertos.jpg"
+    },
+    {
+        "term_id": "504",
+        "name": "Espectaculos",
+        "slug": "espectaculos",
+        "count": "0",
+        "prompt": "Professional Espectaculos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "espectaculos.jpg"
+    },
+    {
+        "term_id": "570",
+        "name": "Hardware",
+        "slug": "hardware",
+        "count": "0",
+        "prompt": "Professional Hardware store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "hardware.jpg"
+    },
+    {
+        "term_id": "516",
+        "name": "Accesorios",
+        "slug": "accesorios",
+        "count": "0",
+        "prompt": "Professional Accesorios store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "accesorios.jpg"
+    },
+    {
+        "term_id": "515",
+        "name": "Cremas",
+        "slug": "cremas",
+        "count": "0",
+        "prompt": "Professional Cremas store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "cremas.jpg"
+    },
+    {
+        "term_id": "573",
+        "name": "Ipad",
+        "slug": "ipad",
+        "count": "0",
+        "prompt": "Professional Ipad store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "ipad.jpg"
+    },
+    {
+        "term_id": "514",
+        "name": "Hinchables",
+        "slug": "hinchables",
+        "count": "0",
+        "prompt": "Professional Hinchables store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "hinchables.jpg"
+    },
+    {
+        "term_id": "578",
+        "name": "Pies",
+        "slug": "pies",
+        "count": "0",
+        "prompt": "Professional Pies store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "pies.jpg"
+    },
+    {
+        "term_id": "579",
+        "name": "Torso",
+        "slug": "torso",
+        "count": "0",
+        "prompt": "Professional Torso store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "torso.jpg"
+    },
+    {
+        "term_id": "580",
+        "name": "Otros",
+        "slug": "otros-tatto",
+        "count": "0",
+        "prompt": "Professional Otros store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "otros-tatto.jpg"
+    },
+    {
+        "term_id": "581",
+        "name": "MASAJES",
+        "slug": "masajes",
+        "count": "0",
+        "prompt": "Professional MASAJES store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "masajes.jpg"
+    },
+    {
+        "term_id": "583",
+        "name": "Chinos",
+        "slug": "chinos",
+        "count": "0",
+        "prompt": "Professional Chinos store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "chinos.jpg"
+    },
+    {
+        "term_id": "584",
+        "name": "Fisioterapia",
+        "slug": "fisioterapia",
+        "count": "0",
+        "prompt": "Professional Fisioterapia store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "fisioterapia.jpg"
+    },
+    {
+        "term_id": "494",
+        "name": "Chino",
+        "slug": "chino",
+        "count": "0",
+        "prompt": "Professional Chino store or business interior, modern and clean, commercial photography style, photorealistic, 4k quality",
+        "filename": "chino.jpg"
+    }
+]

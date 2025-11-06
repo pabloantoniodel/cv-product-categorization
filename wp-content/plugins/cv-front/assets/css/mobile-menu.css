@@ -1,0 +1,291 @@
+/**
+ * Menú móvil - Fondo blanco, enlaces morados, z-index y botón cerrar
+ */
+
+@media (max-width: 768px) {
+    /* Fondo blanco del menú con z-index */
+    #mobile-menu-wrapper {
+        background: #ffffff !important;
+        padding-top: 200px !important;
+        z-index: 9999 !important;
+        min-height: 100vh !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        border-top: none !important;
+    }
+    
+    /* Contenedor del menú */
+    .mobile-menu {
+        width: 100% !important;
+        padding: 20px !important;
+    }
+    
+    /* Lista centrada */
+    .mobile-menu ul.menu {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    /* Botón cerrar (X) arriba - posición absoluta */
+    .cv-mobile-menu-close {
+        position: fixed !important;
+        top: 20px !important;
+        left: 20px !important;
+        font-size: 28px !important;
+        color: #667eea !important;
+        background: transparent !important;
+        border: none !important;
+        cursor: pointer !important;
+        width: 40px !important;
+        height: 40px !important;
+        padding: 0 !important;
+        transition: all 0.3s ease !important;
+        text-align: center !important;
+        z-index: 10000 !important;
+    }
+    
+    .cv-mobile-menu-close:hover {
+        color: #764ba2 !important;
+        transform: rotate(90deg) !important;
+    }
+    
+    /* Logo de la tienda debajo del botón cerrar */
+    .cv-mobile-menu-logo {
+        position: fixed !important;
+        top: 60px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 90% !important;
+        max-width: 300px !important;
+        height: auto !important;
+        text-align: center !important;
+        z-index: 9999 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    .cv-mobile-menu-logo img {
+        width: 100% !important;
+        height: auto !important;
+        display: block !important;
+        margin: 0 auto !important;
+    }
+    
+    /* Items del menú - SIN bordes, menos separados */
+    .mobile-menu ul.menu li {
+        border: none !important;
+        border-bottom: none !important;
+        margin: 4px 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Enlaces en morado - ESTILO BOTÓN */
+    .mobile-menu ul.menu li a {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        background: #ffffff !important;
+        color: #667eea !important;
+        padding: 15px 20px !important;
+        border-radius: 8px !important;
+        margin: 5px 10px !important;
+        text-align: left !important;
+        font-weight: 600 !important;
+        border: 2px solid #667eea !important;
+        min-height: 50px !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        gap: 12px !important;
+    }
+    
+    /* Iconos dentro de los enlaces - Emojis */
+    .mobile-menu ul.menu li a::before {
+        content: '' !important;
+        font-size: 20px !important;
+        width: 24px !important;
+        height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    /* Iconos específicos por posición - Emojis Unicode */
+    .mobile-menu ul.menu li:nth-child(1) a::before {
+        content: '🏪' !important; /* Comercios */
+    }
+    
+    .mobile-menu ul.menu li:nth-child(2) a::before {
+        content: '📱' !important; /* QR TICKET */
+    }
+    
+    .mobile-menu ul.menu li:nth-child(3) a::before {
+        content: '🛍️' !important; /* Todos los productos */
+    }
+    
+    .mobile-menu ul.menu li:nth-child(4) a::before {
+        content: '📖' !important; /* Tutorial */
+    }
+    
+    .mobile-menu ul.menu li:nth-child(5) a::before {
+        content: '💼' !important; /* Market */
+    }
+    
+    .mobile-menu ul.menu li:nth-child(6) a::before {
+        content: '📰' !important; /* Noticias */
+    }
+    
+    /* Colores alternados por botón - NTH CHILD */
+    .mobile-menu ul.menu li:nth-child(1) a {
+        border-color: #667eea !important;
+        color: #667eea !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(1) a:hover {
+        background: #667eea !important;
+        color: #ffffff !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(2) a {
+        border-color: #10b981 !important;
+        color: #10b981 !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(2) a:hover {
+        background: #10b981 !important;
+        color: #ffffff !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(3) a {
+        border-color: #f59e0b !important;
+        color: #f59e0b !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(3) a:hover {
+        background: #f59e0b !important;
+        color: #ffffff !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(4) a {
+        border-color: #8b5cf6 !important;
+        color: #8b5cf6 !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(4) a:hover {
+        background: #8b5cf6 !important;
+        color: #ffffff !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(5) a {
+        border-color: #ec4899 !important;
+        color: #ec4899 !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(5) a:hover {
+        background: #ec4899 !important;
+        color: #ffffff !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(6) a {
+        border-color: #ef4444 !important;
+        color: #ef4444 !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(6) a:hover {
+        background: #ef4444 !important;
+        color: #ffffff !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(7) a {
+        border-color: #06b6d4 !important;
+        color: #06b6d4 !important;
+    }
+    
+    .mobile-menu ul.menu li:nth-child(7) a:hover {
+        background: #06b6d4 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Hover genérico */
+    .mobile-menu ul.menu li a:hover {
+        transform: scale(1.02) !important;
+    }
+    
+    /* Elemento "Mi cuenta" del menú */
+    .cv-menu-myaccount-item {
+        border: none !important;
+        margin: 8px 0 !important;
+    }
+    
+    .cv-menu-myaccount-link {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        margin: 5px 10px !important;
+        text-align: left !important;
+        font-weight: 600 !important;
+        border: 2px solid #000000 !important;
+        min-height: 50px !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        gap: 0 !important;
+    }
+    
+    /* Icono dentro del enlace (ya está en HTML) */
+    .cv-menu-myaccount-link .cv-icon {
+        font-size: 20px !important;
+        display: inline-block !important;
+        margin-right: 8px !important;
+    }
+    
+    .cv-menu-myaccount-link:hover {
+        background: #000000 !important;
+        color: #ffffff !important;
+        transform: scale(1.02) !important;
+    }
+    
+    /* Elemento "Cerrar" del menú - Igual que los demás */
+    .cv-menu-close-item {
+        border: none !important;
+        margin: 8px 0 !important;
+    }
+    
+    .cv-menu-close-link {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #ffffff !important;
+        color: #667eea !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        margin: 5px 10px !important;
+        text-align: center !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        border: 2px solid #667eea !important;
+        min-height: 50px !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        gap: 0 !important;
+    }
+    
+    /* Icono dentro del enlace (ya está en HTML) */
+    .cv-menu-close-link .cv-icon {
+        font-size: 18px !important;
+        display: inline-block !important;
+        margin-right: 4px !important;
+    }
+    
+    .cv-menu-close-link:hover {
+        background: #667eea !important;
+        color: #ffffff !important;
+        transform: scale(1.02) !important;
+    }
+}
+

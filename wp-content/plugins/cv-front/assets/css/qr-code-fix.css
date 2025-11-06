@@ -1,0 +1,49 @@
+/**
+ * Fix para asegurar visibilidad del QR Code en tarjetas
+ */
+
+/* Asegurar que el QR Code sea visible */
+.wpkqcg_qrcode_wrapper,
+.wpkqcg_qrcode_wrapper img,
+#qr-container,
+#qr-container img,
+img#qr,
+canvas[id*="qr"],
+img[alt*="QR"],
+img[alt*="qr"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 auto !important;
+}
+
+/* Sobrescribir estilos inline específicamente para #qr */
+img#qr[src*="blob:"] {
+    display: block !important;
+}
+
+img#qr[style*="display: none"] {
+    display: block !important;
+}
+
+/* Contenedor del QR centrado */
+.wpkqcg_qrcode_wrapper,
+#qr-container {
+    text-align: center !important;
+    padding: 20px !important;
+}
+
+/* Ocultar mensaje de carga cuando QR esté listo */
+#qr-loading {
+    display: none !important;
+}
+
+/* QR visible cuando se carga */
+#qr.loaded,
+img[id="qr"] {
+    display: block !important;
+}
+
+

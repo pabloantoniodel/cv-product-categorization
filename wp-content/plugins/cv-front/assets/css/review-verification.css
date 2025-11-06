@@ -1,0 +1,28 @@
+/**
+ * Estilos para verificación de reseñas
+ */
+
+/* Ocultar mensaje de cookies consent en formulario de reseñas */
+.comment-form-cookies-consent {
+    display: none !important;
+}
+
+/* Estilos para el campo de teléfono */
+.comment-form-phone {
+    margin-bottom: 15px !important;
+}
+
+.comment-form-phone label {
+    display: block !important;
+    margin-bottom: 5px !important;
+    font-weight: 600 !important;
+}
+
+.comment-form-phone input {
+    width: 100% !important;
+    padding: 8px 12px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+}
+
+

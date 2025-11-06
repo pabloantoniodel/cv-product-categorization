@@ -1,0 +1,23 @@
+# Archivos de desarrollo
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Node modules (si se usan herramientas de build)
+node_modules/
+package-lock.json
+
+# Archivos temporales
+*.tmp
+*.bak
+*~
+
+# WordPress
+wp-config.php
+.htaccess
+
+
+
+

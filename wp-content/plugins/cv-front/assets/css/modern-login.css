@@ -1,0 +1,878 @@
+/**
+ * Estilos Modernos para Login de WooCommerce
+ * Ciudad Virtual Frontend Plugin
+ */
+
+/* ============================================
+   ESTILOS GLOBALES DEL SITIO
+   ============================================ */
+
+/* Header del sitio - reducir margen inferior */
+#masthead.site-header,
+.site-header {
+    margin-bottom: 0 !important;
+}
+
+.site-header .col-full {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.shopper-primary-navigation {
+    margin-bottom: 20px !important;
+}
+
+/* Header widget region - ocultar si está vacío */
+.header-widget-region {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.header-widget-region .col-full {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.header-widget-region .widget_block:empty,
+.header-widget-region .widget:empty {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Botones en la página shop - separación superior */
+.post-type-archive-product .button,
+.woocommerce-shop .button,
+body.archive.post-type-archive-product .button,
+.woocommerce-page .button {
+    margin-top: 16px !important;
+}
+
+/* Clase para ocultar mapa sin remover del DOM */
+.cv-map-hidden {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Formulario de geolocalización - centrado y margen inferior */
+.wcfmmp-product-geolocate-search-form,
+.wcfmmp-product-geolocate-wrapper form {
+    margin-bottom: 16px !important;
+    text-align: center !important;
+}
+
+/* Contenedor del filtro de radio - centrado */
+#wcfm_radius_filter_container,
+.wcfm_radius_filter_container {
+    margin: 0 auto !important;
+    text-align: center !important;
+}
+
+/* Input de búsqueda de dirección - centrado */
+.leaflet-control-search.search-exp {
+    margin: 0 auto !important;
+}
+
+/* Slider container - centrado */
+.wcfm_radius_slidecontainer {
+    text-align: center !important;
+    margin: 0 auto !important;
+}
+
+/* Botón "Filtrar" del formulario de geolocalización - color verde y separación */
+form.wcfmmp-product-geolocate-search-form button.button[type="submit"] {
+    margin-top: 16px !important;
+    margin-bottom: 0 !important;
+    padding-top: 14px !important;
+    display: inline-flex !important;
+    width: 100% !important;
+    float: none !important;
+    clear: both !important;
+    background: linear-gradient(135deg, var(--cv-success) 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+}
+
+form.wcfmmp-product-geolocate-search-form button.button[type="submit"]:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Asegurar que el slider tenga espacio después */
+.wcfm_radius_slidecontainer {
+    margin-bottom: 0 !important;
+    display: block !important;
+    clear: both !important;
+}
+
+/* Contenido principal - padding reducido en móviles y tablets */
+@media (max-width: 1024px) {
+    /* Header sin padding ni margin en móviles */
+    #masthead,
+    #masthead.site-header {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    /* Indicador de kilómetros del slider - fijo arriba a la izquierda */
+    .wcfmmp_radius_range_cur,
+    span.wcfmmp_radius_range_cur {
+        position: absolute !important;
+        left: 0 !important;
+        top: -25px !important;
+        height: 20px !important;
+        line-height: 20px !important;
+        padding: 2px 8px !important;
+        font-size: 12px !important;
+        min-height: auto !important;
+        background: var(--cv-success) !important;
+        color: white !important;
+        border-radius: 4px !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Contenedor del slider con posición relativa */
+    .wcfm_radius_slidecontainer {
+        position: relative !important;
+        padding-top: 30px !important;
+    }
+    
+    #content,
+    .site-content {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+    
+    #content .col-full,
+    .site-content .col-full {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    #primary,
+    .content-area {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    
+    /* Productos WooCommerce sin padding extra */
+    .woocommerce,
+    .woocommerce-page {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+/* Estilos globales para todos los botones del sitio */
+button,
+.button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+.wp-element-button,
+.wp-block-button__link,
+a.button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+/* Variables CSS para fácil personalización */
+:root {
+    --cv-primary: #667eea;
+    --cv-primary-dark: #5568d3;
+    --cv-secondary: #764ba2;
+    --cv-success: #10b981;
+    --cv-danger: #ef4444;
+    --cv-text: #1f2937;
+    --cv-text-light: #6b7280;
+    --cv-border: #e5e7eb;
+    --cv-bg: #f9fafb;
+    --cv-white: #ffffff;
+    --cv-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    --cv-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.1);
+    --cv-radius: 16px;
+    --cv-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   ESTILOS ESPECÍFICOS DE LOGIN
+   ============================================ */
+
+/* Contenedor principal del login */
+.cv-login-wrapper {
+    min-height: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: #f5f5f5;
+    padding: 40px 20px;
+    position: relative;
+}
+
+/* Contenedor del formulario */
+.cv-login-container {
+    background: var(--cv-white);
+    border-radius: var(--cv-radius);
+    box-shadow: var(--cv-shadow-lg);
+    max-width: 1000px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Marca/Logo */
+.cv-login-brand {
+    text-align: center;
+    padding: 40px;
+    background: var(--cv-white);
+    color: var(--cv-text);
+    border-bottom: 3px solid var(--cv-primary);
+}
+
+.cv-login-logo {
+    margin: 0 auto 15px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cv-login-logo .cv-logo-img {
+    max-width: 180px;
+    height: auto;
+    max-height: 80px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    /* No aplicar filtro para mantener logo original */
+}
+
+.cv-login-logo h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-align: center;
+}
+
+.cv-login-tagline {
+    margin: 0;
+    font-size: 14px;
+    color: var(--cv-text-light);
+    font-weight: 400;
+}
+
+/* Contenedor de columnas (login y registro) */
+.woocommerce .col2-set {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 0 !important;
+    max-width: none !important;
+}
+
+.woocommerce .col-1,
+.woocommerce .col-2 {
+    width: 100% !important;
+    float: none !important;
+    margin: 0 !important;
+    padding: 40px !important;
+}
+
+.woocommerce .col-1 {
+    border-right: 1px solid var(--cv-border);
+}
+
+/* Contenedor del formulario de login con el botón de registro */
+.woocommerce-form-login-wrapper {
+    padding: 40px !important;
+}
+
+.woocommerce-form-login {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* El botón de registro va después del formulario */
+.woocommerce-form-login ~ a.button,
+.woocommerce-form-login-wrapper > a.button,
+.cv-login-container .woocommerce-form-login-wrapper > a.button {
+    margin-top: 20px !important;
+    width: 100% !important;
+}
+
+/* Títulos de los formularios */
+.woocommerce-form-login h2,
+.woocommerce-form-register h2,
+.woocommerce-form-login-wrapper h2 {
+    margin: 0 0 25px 0 !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    color: var(--cv-text) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.woocommerce-form-login h2::before,
+.woocommerce-form-login-wrapper > h2::before {
+    content: '🔐';
+    font-size: 28px;
+}
+
+.woocommerce-form-register h2::before {
+    content: '✨';
+    font-size: 28px;
+}
+
+/* Campos de formulario */
+.woocommerce-form-login .form-row,
+.woocommerce-form-register .form-row {
+    margin-bottom: 20px !important;
+    padding: 0 !important;
+    position: relative !important;
+}
+
+/* Contenedor específico del password para el botón de ojo */
+.woocommerce-form-login .form-row-wide,
+.woocommerce-form-register .form-row-wide,
+.woocommerce-form-login .woocommerce-form-row,
+.woocommerce-form-register .woocommerce-form-row {
+    position: relative !important;
+}
+
+.woocommerce-form-login .form-row-wide.password-input,
+.woocommerce-form-register .form-row-wide.password-input {
+    position: relative !important;
+    display: block !important;
+}
+
+.woocommerce-form-login label,
+.woocommerce-form-register label {
+    display: block !important;
+    margin-bottom: 8px !important;
+    font-weight: 500 !important;
+    color: var(--cv-text) !important;
+    font-size: 14px !important;
+}
+
+.woocommerce-form-login input[type="text"],
+.woocommerce-form-login input[type="password"],
+.woocommerce-form-login input[type="email"],
+.woocommerce-form-register input[type="text"],
+.woocommerce-form-register input[type="password"],
+.woocommerce-form-register input[type="email"] {
+    width: 100% !important;
+    padding: 12px 45px 12px 16px !important;
+    border: 2px solid var(--cv-border) !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    transition: var(--cv-transition) !important;
+    background: var(--cv-bg) !important;
+    box-sizing: border-box !important;
+}
+
+.woocommerce-form-login input[type="text"]:focus,
+.woocommerce-form-login input[type="password"]:focus,
+.woocommerce-form-login input[type="email"]:focus,
+.woocommerce-form-register input[type="text"]:focus,
+.woocommerce-form-register input[type="password"]:focus,
+.woocommerce-form-register input[type="email"]:focus {
+    border-color: var(--cv-primary) !important;
+    background: var(--cv-white) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1) !important;
+}
+
+/* Checkbox de recordar */
+.woocommerce-form-login .form-row-first {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.woocommerce-form-login input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+}
+
+.woocommerce-form-login .woocommerce-form__label-for-checkbox {
+    margin: 0 !important;
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
+/* Botón de mostrar/ocultar contraseña */
+.woocommerce-form-login .password-input,
+.woocommerce-form-register .password-input {
+    position: relative !important;
+}
+
+.woocommerce-form-login button.woocommerce-Button--alt,
+.woocommerce-form-register button.woocommerce-Button--alt {
+    width: 100% !important;
+}
+
+/* Botón de ojo minimalista dentro del input */
+button.show-password-input,
+.woocommerce-form-login button.show-password-input,
+.woocommerce-form-register button.show-password-input,
+p button.show-password-input,
+.form-row button.show-password-input {
+    position: absolute !important;
+    right: 12px !important;
+    top: 38px !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 8px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: auto !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    z-index: 10 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: var(--cv-transition) !important;
+    border-radius: 6px !important;
+    margin: 0 !important;
+}
+
+/* Icono de ojo */
+button.show-password-input::before {
+    content: '👁' !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    color: var(--cv-text-light) !important;
+    transition: var(--cv-transition) !important;
+}
+
+button.show-password-input:hover,
+.woocommerce-form-login button.show-password-input:hover,
+.woocommerce-form-register button.show-password-input:hover,
+p button.show-password-input:hover,
+.form-row button.show-password-input:hover {
+    background: rgba(102, 126, 234, 0.1) !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+button.show-password-input:hover::before,
+.woocommerce-form-login button.show-password-input:hover::before,
+.woocommerce-form-register button.show-password-input:hover::before {
+    color: var(--cv-primary) !important;
+}
+
+button.show-password-input:focus,
+.woocommerce-form-login button.show-password-input:focus,
+.woocommerce-form-register button.show-password-input:focus,
+p button.show-password-input:focus,
+.form-row button.show-password-input:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+}
+
+button.show-password-input:active,
+.woocommerce-form-login button.show-password-input:active,
+.woocommerce-form-register button.show-password-input:active,
+p button.show-password-input:active,
+.form-row button.show-password-input:active {
+    background: rgba(102, 126, 234, 0.15) !important;
+    transform: scale(0.95) !important;
+}
+
+/* Ocultar texto del botón si lo hay */
+button.show-password-input span,
+button.show-password-input .screen-reader-text,
+.woocommerce-form-login button.show-password-input span,
+.woocommerce-form-register button.show-password-input span {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0) !important;
+}
+
+/* Asegurar que el span del ojo esté posicionado correctamente */
+.password-toggle {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    cursor: pointer !important;
+    color: var(--cv-text-light) !important;
+    transition: var(--cv-transition) !important;
+    font-size: 18px !important;
+    padding: 4px !important;
+    z-index: 10 !important;
+}
+
+.password-toggle:hover {
+    color: var(--cv-primary) !important;
+}
+
+/* Botones */
+.woocommerce-form-login .button,
+.woocommerce-form-register .button,
+.woocommerce button.button,
+.woocommerce-form-register button[type="submit"],
+.woocommerce-form-login button[type="submit"] {
+    width: 100% !important;
+    padding: 14px 24px !important;
+    background: linear-gradient(135deg, var(--cv-primary) 0%, var(--cv-secondary) 100%) !important;
+    color: var(--cv-white) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: var(--cv-transition) !important;
+    text-transform: none !important;
+    letter-spacing: 0.3px !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+    min-height: auto !important;
+}
+
+.woocommerce-form-login .button:hover,
+.woocommerce-form-register .button:hover,
+.woocommerce button.button:hover,
+.woocommerce-form-register button[type="submit"]:hover,
+.woocommerce-form-login button[type="submit"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+    background: linear-gradient(135deg, var(--cv-primary-dark) 0%, var(--cv-secondary) 100%) !important;
+}
+
+.woocommerce-form-login .button:active,
+.woocommerce-form-register .button:active,
+.woocommerce-form-register button[type="submit"]:active,
+.woocommerce-form-login button[type="submit"]:active {
+    transform: translateY(0) !important;
+}
+
+/* Asegurar que botones de WooCommerce tengan el estilo correcto */
+.woocommerce .woocommerce-form-register__submit,
+.woocommerce .woocommerce-button {
+    width: 100% !important;
+    padding: 14px 24px !important;
+    background: linear-gradient(135deg, var(--cv-primary) 0%, var(--cv-secondary) 100%) !important;
+    color: var(--cv-white) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: var(--cv-transition) !important;
+    text-transform: none !important;
+    letter-spacing: 0.3px !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+}
+
+/* Botón de registrarse en el footer del login */
+.cv-login-container > a.button,
+.cv-login-container a.button[href*="registr"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 14px 24px !important;
+    background: linear-gradient(135deg, var(--cv-success) 0%, #059669 100%) !important;
+    color: var(--cv-white) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: var(--cv-transition) !important;
+    text-transform: none !important;
+    letter-spacing: 0.3px !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Ocultar botón que enlaza a asesores.ciudadvirtual.es */
+a.button[href*="asesores.ciudadvirtual.es"],
+a[href*="asesores.ciudadvirtual.es"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.cv-login-container > a.button:hover,
+.cv-login-container a.button[href*="registr"]:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+}
+
+.cv-login-container > a.button:active,
+.cv-login-container a.button[href*="registr"]:active {
+    transform: translateY(0) !important;
+}
+
+/* Contenedor wrapper para el botón de registro con separador */
+.woocommerce-form-login + a.button,
+.cv-login-container > a.button[href*="registr"] {
+    margin-top: 30px !important;
+    position: relative !important;
+}
+
+/* Separador visual antes del botón de registro */
+.woocommerce-form-login + a.button::before,
+.cv-login-container > a.button[href*="registr"]::before {
+    content: '' !important;
+    display: block !important;
+    width: 80px !important;
+    height: 3px !important;
+    background: linear-gradient(90deg, transparent, var(--cv-border), transparent) !important;
+    margin: 0 auto 20px auto !important;
+    position: absolute !important;
+    top: -20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+/* Link de olvide contraseña */
+.woocommerce-form-login .lost_password {
+    text-align: center !important;
+    margin-top: 15px !important;
+}
+
+.woocommerce-form-login .lost_password a {
+    color: var(--cv-primary) !important;
+    text-decoration: none !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transition: var(--cv-transition) !important;
+}
+
+.woocommerce-form-login .lost_password a:hover {
+    color: var(--cv-primary-dark) !important;
+    text-decoration: underline !important;
+}
+
+/* Mensajes de error y éxito */
+.woocommerce-error,
+.woocommerce-message,
+.woocommerce-info {
+    border-radius: 10px !important;
+    border-left-width: 4px !important;
+    padding: 15px 20px !important;
+    margin-bottom: 20px !important;
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.woocommerce-error {
+    background: #fef2f2 !important;
+    border-left-color: var(--cv-danger) !important;
+    color: var(--cv-danger) !important;
+}
+
+.woocommerce-message {
+    background: #f0fdf4 !important;
+    border-left-color: var(--cv-success) !important;
+    color: var(--cv-success) !important;
+}
+
+.woocommerce-info {
+    background: #eff6ff !important;
+    border-left-color: var(--cv-primary) !important;
+    color: var(--cv-primary) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cv-login-wrapper {
+        padding: 20px 10px;
+    }
+    
+    .cv-login-brand {
+        padding: 30px;
+    }
+    
+    .woocommerce-form-login-wrapper {
+        padding: 30px 20px !important;
+    }
+    
+    .woocommerce .col2-set {
+        grid-template-columns: 1fr;
+    }
+    
+    .woocommerce .col-1 {
+        border-right: none;
+        border-bottom: 1px solid var(--cv-border);
+    }
+    
+    .woocommerce .col-1,
+    .woocommerce .col-2 {
+        padding: 30px 20px !important;
+    }
+    
+    .woocommerce-form-login h2,
+    .woocommerce-form-register h2 {
+        font-size: 20px !important;
+    }
+    
+    /* Botón de registro en móvil mantiene 100% de ancho */
+    .cv-login-container > a.button,
+    .cv-login-container a.button[href*="registr"],
+    .woocommerce-form-login-wrapper > a.button {
+        width: 100% !important;
+        margin-top: 30px !important;
+    }
+}
+
+/* Animación de carga en botones */
+.woocommerce-form-login .button.loading::after,
+.woocommerce-form-register .button.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--cv-white);
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    to { transform: rotate(360deg); }
+}
+
+
+/* Botón flotante para volver arriba (solo móviles) */
+.cv-scroll-top-btn {
+    position: fixed !important;
+    left: 16px !important;
+    bottom: 20px !important;
+    width: 48px !important;
+    height: 48px !important;
+    background: linear-gradient(135deg, var(--cv-success) 0%, #059669 100%) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+    z-index: 9999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: scale(0.8) !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+}
+
+.cv-scroll-top-btn.visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: scale(1) !important;
+}
+
+.cv-scroll-top-btn:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5) !important;
+    transform: scale(1.1) !important;
+}
+
+.cv-scroll-top-btn:active {
+    transform: scale(0.95) !important;
+}
+
+/* Ocultar en desktop */
+@media (min-width: 769px) {
+    .cv-scroll-top-btn {
+        display: none !important;
+    }
+}
+
+/* Dashboard cuando ya está logueado */
+.woocommerce-account .woocommerce-MyAccount-navigation {
+    background: var(--cv-white);
+    border-radius: var(--cv-radius);
+    box-shadow: var(--cv-shadow);
+    padding: 20px;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation li {
+    margin-bottom: 5px;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation li a {
+    display: block;
+    padding: 12px 16px;
+    color: var(--cv-text);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: var(--cv-transition);
+    font-weight: 500;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation li a:hover,
+.woocommerce-account .woocommerce-MyAccount-navigation li.is-active a {
+    background: linear-gradient(135deg, var(--cv-primary) 0%, var(--cv-secondary) 100%);
+    color: var(--cv-white);
+    transform: translateX(5px);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content {
+    background: var(--cv-white);
+    border-radius: var(--cv-radius);
+    box-shadow: var(--cv-shadow);
+    padding: 30px;
+}
+

@@ -1,0 +1,58 @@
+/* Estilos modernos para botones en listas de productos */
+
+/* Botón "Consultar" en listas de productos */
+.cv-inmobiliaria-loop-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    text-align: center !important;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3) !important;
+    width: 100% !important;
+    height: 30px !important;
+    line-height: 14px !important;
+}
+
+.cv-inmobiliaria-loop-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
+    color: #ffffff !important;
+}
+
+.cv-inmobiliaria-loop-btn i {
+    margin-right: 4px;
+    font-size: 12px;
+}
+
+/* Botones originales en listas - mismo estilo moderno */
+.woocommerce ul.products li.product .loop-addtocart-btn-wrapper .button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    text-align: center !important;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3) !important;
+    width: 100% !important;
+    height: 30px !important;
+    line-height: 14px !important;
+}
+
+.woocommerce ul.products li.product .loop-addtocart-btn-wrapper .button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
+    color: #ffffff !important;
+}

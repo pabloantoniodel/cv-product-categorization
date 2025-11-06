@@ -1,0 +1,144 @@
+/**
+ * Mejorar visibilidad del campo de cantidad en productos
+ */
+
+/* Label "Cantidad" más visible - SIN GRADIENTE */
+.quantity label,
+.woocommerce .quantity label,
+.woocommerce-page .quantity label,
+label[for="quantity"],
+.cart .quantity label,
+.single-product .quantity label {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    color: #667eea !important;
+    margin-bottom: 8px !important;
+    margin-right: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    position: relative !important;
+    z-index: 999 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Si no hay label, añadir texto "Cantidad:" con CSS */
+.quantity:not(:has(label))::before,
+.single-product .quantity:not(:has(label))::before {
+    content: "CANTIDAD: " !important;
+    display: inline-block !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    color: #667eea !important;
+    margin-right: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Input de cantidad más visible y moderno */
+.quantity input.qty,
+.woocommerce .quantity input.qty,
+.woocommerce-page .quantity input.qty,
+input[type="number"].qty,
+.single-product .quantity input,
+input.input-text.qty.text,
+input[type="number"][name="quantity"] {
+    width: 80px !important;
+    height: 45px !important;
+    padding: 10px 15px !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    border: 3px solid #667eea !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: textfield !important;
+}
+
+/* Focus state del input */
+.quantity input.qty:focus,
+.woocommerce .quantity input.qty:focus,
+input[type="number"].qty:focus {
+    outline: none !important;
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+    background: #ffffff !important;
+}
+
+/* Hover state */
+.quantity input.qty:hover,
+input[type="number"].qty:hover {
+    border-color: #9ca3af !important;
+}
+
+/* Botones +/- más visibles si los hay */
+.quantity .qty-button,
+.quantity button {
+    background: #667eea !important;
+    color: white !important;
+    border: none !important;
+    width: 35px !important;
+    height: 35px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.quantity .qty-button:hover,
+.quantity button:hover {
+    background: #764ba2 !important;
+    transform: scale(1.05) !important;
+}
+
+/* Container de cantidad */
+.quantity,
+.woocommerce .quantity {
+    margin-bottom: 15px !important;
+}
+
+/* Mejorar visibilidad en móviles */
+@media (max-width: 768px) {
+    .quantity label {
+        font-size: 13px !important;
+        margin-bottom: 6px !important;
+    }
+    
+    .quantity input.qty,
+    input[type="number"].qty {
+        width: 70px !important;
+        height: 42px !important;
+        font-size: 15px !important;
+    }
+}
+
+/* Placeholder del input */
+.quantity input.qty::placeholder,
+input[type="number"].qty::placeholder {
+    color: #9ca3af !important;
+    opacity: 0.7 !important;
+}
+
+/* Deshabilitar flechas nativas de Chrome (opcional, por estética) */
+/* Si prefieres mantener las flechas, comenta estas líneas */
+/*
+.quantity input.qty::-webkit-inner-spin-button,
+.quantity input.qty::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity input.qty {
+    -moz-appearance: textfield;
+}
+*/
+

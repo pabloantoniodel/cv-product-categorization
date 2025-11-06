@@ -1,0 +1,325 @@
+/**
+ * CV Video Gallery Styles
+ * Galería moderna de videos de YouTube con miniaturas
+ */
+
+.cv-video-gallery {
+    width: 100%;
+    margin: 30px 0;
+}
+
+/* Grid de videos */
+.cv-video-grid {
+    display: grid;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.cv-video-grid-2 {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+.cv-video-grid-3 {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.cv-video-grid-4 {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* Item individual de video */
+.cv-video-item {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.cv-video-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Thumbnail del video */
+.cv-video-thumbnail {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* Ratio 16:9 */
+    overflow: hidden;
+    background: #000;
+}
+
+.cv-video-thumbnail img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.cv-video-item:hover .cv-video-thumbnail img {
+    transform: scale(1.05);
+}
+
+/* Overlay de play */
+.cv-video-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.cv-video-item:hover .cv-video-play-overlay {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.cv-video-play-icon {
+    width: 80px;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+/* Duración/etiqueta */
+.cv-video-duration {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+}
+
+/* Información del video */
+.cv-video-info {
+    padding: 20px;
+}
+
+.cv-video-title {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    line-height: 1.4;
+    min-height: 50px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cv-video-watch-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.cv-video-watch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.cv-video-watch-btn:active {
+    transform: translateY(0);
+}
+
+/* Modal para reproducir video */
+.cv-video-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999999;
+}
+
+.cv-video-modal.active {
+    display: block;
+}
+
+.cv-video-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(8px);
+}
+
+.cv-video-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 1200px;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.cv-video-modal-close {
+    position: absolute;
+    top: -50px;
+    right: 30px;
+    background: rgba(255, 0, 0, 0.9);
+    border: 4px solid rgba(255, 255, 255, 1);
+    color: white;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    z-index: 10000000;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+    font-size: 42px;
+    font-weight: bold;
+    line-height: 1;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.cv-video-modal-close:hover {
+    background: rgba(255, 0, 0, 1);
+    transform: scale(1.15);
+    box-shadow: 0 8px 35px rgba(255, 0, 0, 0.7);
+    border-width: 5px;
+}
+
+.cv-video-modal-close:active {
+    transform: scale(0.95);
+}
+
+/* Responsive móvil */
+@media (max-width: 768px) {
+    .cv-video-modal-close {
+        top: 50%;
+        transform: translateY(-50%);
+        right: 10px;
+        width: 70px;
+        height: 70px;
+        font-size: 40px;
+    }
+    
+    .cv-video-modal-close:hover {
+        transform: translateY(-50%) scale(1.15);
+    }
+    
+    .cv-video-modal-close:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+}
+
+@media (max-width: 480px) {
+    .cv-video-modal-close {
+        top: 50%;
+        transform: translateY(-50%);
+        right: 8px;
+        width: 65px;
+        height: 65px;
+        font-size: 38px;
+    }
+    
+    .cv-video-modal-close:hover {
+        transform: translateY(-50%) scale(1.15);
+    }
+    
+    .cv-video-modal-close:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+}
+
+.cv-video-player-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* Ratio 16:9 */
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+#cv-video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cv-video-grid-2,
+    .cv-video-grid-3,
+    .cv-video-grid-4 {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .cv-video-modal-content {
+        width: 95%;
+    }
+    
+    .cv-video-modal-close {
+        top: -45px;
+        right: -5px;
+    }
+    
+    .cv-video-title {
+        font-size: 16px;
+        min-height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .cv-video-play-icon {
+        width: 60px;
+    }
+    
+    .cv-video-info {
+        padding: 15px;
+    }
+    
+    .cv-video-watch-btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}
+

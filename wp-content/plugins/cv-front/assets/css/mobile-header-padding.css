@@ -1,0 +1,29 @@
+/**
+ * Padding superior para iconos de carrito y menú hamburguesa en móviles
+ */
+
+@media (max-width: 768px) {
+    /* Botón del carrito */
+    .cart-toggle,
+    button.cart-toggle,
+    a.cart-toggle {
+        padding-top: 16px !important;
+    }
+    
+    /* Botón hamburguesa / menú móvil */
+    .mobile-menu-toggle,
+    .hamburger-menu,
+    .menu-toggle,
+    button.menu-toggle,
+    .mobile-nav-toggle {
+        padding-top: 16px !important;
+    }
+    
+    /* Contenedor de iconos en header móvil */
+    .header-icons,
+    .mobile-header-icons,
+    .mobile-navigation {
+        padding-top: 16px !important;
+    }
+}
+

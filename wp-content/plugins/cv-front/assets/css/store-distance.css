@@ -1,0 +1,262 @@
+/**
+ * Estilos modernos para header de tienda
+ * Incluye: Título, botón CAPTURA TICKET, código y distancia
+ * Responsive: móvil y desktop
+ */
+
+/* ========== CONTENEDOR HEADER - Más altura ========== */
+#wcfmmp-store #wcfm_store_header {
+    min-height: 450px !important;
+    height: auto !important;
+    padding-bottom: 30px !important;
+}
+
+#wcfmmp-store #wcfm_store_header .header_wrapper {
+    min-height: 450px !important;
+}
+
+#wcfmmp-store #wcfm_store_header .header_area {
+    min-height: 450px !important;
+}
+
+.address.rgt {
+    padding: 20px !important;
+    min-height: 350px !important;
+}
+
+/* Media query para desktop (768px o más) */
+@media (min-width: 768px) {
+    #wcfmmp-store #wcfm_store_header {
+        min-height: 450px !important;
+    }
+    
+    #wcfmmp-store #wcfm_store_header .header_wrapper {
+        min-height: 450px !important;
+    }
+    
+    #wcfmmp-store #wcfm_store_header .header_area {
+        min-height: 450px !important;
+    }
+    
+    .address.rgt {
+        min-height: 350px !important;
+    }
+}
+
+/* ========== TÍTULO DE LA TIENDA ========== */
+.wcfm_store_title {
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    color: #2c3e50 !important;
+    margin-bottom: 15px !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.5px;
+}
+
+@media (max-width: 767px) {
+    .address.rgt {
+        padding: 15px !important;
+        min-height: auto !important;
+    }
+    
+    .wcfm_store_title {
+        font-size: 24px !important;
+        margin-bottom: 12px !important;
+    }
+}
+
+/* ========== CONTENEDOR display:inline - Flexbox columna ========== */
+div[style*="display:inline"],
+#cv-captura-ticket-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+}
+
+div[style*="display:inline"] > div,
+#cv-captura-ticket-container > div {
+    float: none !important;
+    width: auto !important;
+}
+
+@media (max-width: 767px) {
+    div[style*="display:inline"],
+    #cv-captura-ticket-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ========== QUITAR <br><br> DESPUÉS DEL CONTENEDOR ========== */
+div[style*="display:inline"] + br {
+    display: none !important;
+}
+
+div[style*="display:inline"] + br + br {
+    display: none !important;
+}
+
+/* ========== DISTANCIA SEPARADA (debajo del contenedor) ========== */
+.wcfmmp_store_header_distance_wrapper {
+    display: block !important;
+    float: none !important;
+    clear: both !important;
+    margin-top: 10px !important;
+    margin-bottom: 0 !important;
+    width: 100% !important;
+}
+
+.wcfmmp_store_header_distance {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 13px !important;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.wcfmmp_store_header_distance .wcfmfa {
+    font-size: 16px;
+    color: #ff4444 !important;
+}
+
+.wcfmmp_store_header_distance:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 767px) {
+    .wcfmmp_store_header_distance {
+        font-size: 12px !important;
+        padding: 5px 12px !important;
+        display: inline-flex;
+    }
+}
+
+/* ========== INFORMACIÓN ADICIONAL (teléfono, web, etc) ========== */
+.header_store_name {
+    margin-top: 8px !important;
+    clear: both;
+}
+
+.store_info_parallal {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px !important;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 8px;
+    margin-right: 8px !important;
+    margin-bottom: 6px !important;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    transition: all 0.3s ease;
+}
+
+.store_info_parallal:hover {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: #667eea;
+    transform: translateY(-1px);
+}
+
+.store_info_parallal .wcfmfa {
+    color: #667eea;
+    font-size: 16px;
+}
+
+.store_info_parallal a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.store_info_parallal a:hover {
+    color: #667eea;
+}
+
+@media (max-width: 767px) {
+    .store_info_parallal {
+        display: flex;
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+/* ========== BOTONES CAPTURA TICKET ========== */
+div[style*="display:inline"] a.button,
+#cv-captura-ticket-container a.button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+    font-size: 13px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    text-align: center;
+}
+
+div[style*="display:inline"] a.button:hover,
+#cv-captura-ticket-container a.button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4) !important;
+}
+
+@media (max-width: 767px) {
+    #cv-captura-ticket-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    #cv-captura-ticket-container > div {
+        width: 100% !important;
+    }
+    
+    #cv-captura-ticket-container a.button {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ========== BOTONES SECUNDARIOS (Tarjeta, WhatsApp, etc) ========== */
+.store-phone {
+    margin: 4px 0 !important;
+}
+
+.store-phone a.button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+    font-size: 13px !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+}
+
+.store-phone a.button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4) !important;
+}
+
+@media (max-width: 767px) {
+    .store-phone a.button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+

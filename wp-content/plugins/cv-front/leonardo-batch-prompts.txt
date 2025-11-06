@@ -1,0 +1,119 @@
+# LEONARDO.AI - BATCH PROMPTS
+# Copia y pega estos prompts en Leonardo.AI
+    # Configuración: Modelo=Leonardo Diffusion XL, Tamaño=SQUARE (1:1) 512x512, Style=Photorealistic
+
+# ========================================
+# TOP 30 CATEGORÍAS (Prioridad Alta)
+# ========================================
+
+# 1. PELUQUERÍA (43 productos) - peluqueria.jpg
+Professional hair salon interior, modern styling chairs, mirrors, hair products, bright and clean, photorealistic, 4k professional photography
+
+# 2. MODA (35 productos) - moda.jpg
+Fashion boutique interior, clothing racks with trendy clothes, mannequins, modern retail store, photorealistic, 4k professional photography
+
+# 3. TELEFONIA (24 productos) - telefonia.jpg
+Modern mobile phone store, smartphones display, latest technology devices, clean retail environment, photorealistic, 4k professional photography
+
+# 4. ALCOHOL (14 productos) - alcohol.jpg
+Premium liquor store shelf, bottles of wine and spirits, elegant display, warm lighting, photorealistic, 4k professional photography
+
+# 5. MUJER (14 productos) - mujer.jpg
+Women fashion store, elegant dresses and accessories, modern boutique interior, photorealistic, 4k professional photography
+
+# 6. PASTELERIA (13 productos) - pasteleria.jpg
+Bakery display with delicious pastries, cakes, desserts, warm inviting atmosphere, photorealistic, 4k professional photography
+
+# 7. RECORDATORIOS (10 productos) - recordatorios.jpg
+Gift shop with souvenirs, keepsakes, decorative items, colorful display, photorealistic, 4k professional photography
+
+# 8. CARNE (9 productos) - carne.jpg
+Butcher shop display, fresh meat cuts, professional meat counter, clean environment, photorealistic, 4k professional photography
+
+# 9. TAILANDESES (9 productos) - tailandeses.jpg
+Thai massage spa interior, relaxing atmosphere, massage beds, zen decoration, photorealistic, 4k professional photography
+
+# 10. ZAPATOS (9 productos) - zapatos.jpg
+Shoe store interior, shelves with various footwear, modern retail display, photorealistic, 4k professional photography
+
+# 11. FRUTAS (8 productos) - frutas.jpg
+Fresh fruit market display, colorful fruits arranged beautifully, vibrant and fresh, photorealistic, 4k professional photography
+
+# 12. DEPORTIVAS (8 productos) - deportivas.jpg
+Sports shoe store, athletic footwear display, modern retail interior, photorealistic, 4k professional photography
+
+# 13. BOCADILLOS (6 productos) - bocadillos.jpg
+Sandwich shop interior, fresh sandwiches display, appetizing food presentation, photorealistic, 4k professional photography
+
+# 14. HOMBRE (6 productos) - hombre.jpg
+Men fashion store, suits and casual wear, modern masculine boutique, photorealistic, 4k professional photography
+
+# 15. DESAYUNOS (5 productos) - desayunos.jpg
+Breakfast cafe, fresh breakfast items, coffee and pastries, cozy morning atmosphere, photorealistic, 4k professional photography
+
+# 16. FOTOGRAFIAS (5 productos) - fotografias.jpg
+Photography studio, professional camera equipment, modern photo studio setup, photorealistic, 4k professional photography
+
+# 17. FLORES NATURALES (5 productos) - flores-naturales.jpg
+Flower shop interior, beautiful fresh flowers arrangements, colorful blooms, photorealistic, 4k professional photography
+
+# 18. PESCADO (5 productos) - pescado.jpg
+Fish market display, fresh seafood on ice, professional fishmonger counter, photorealistic, 4k professional photography
+
+# 19. PELUQUERIA 2 (4 productos) - peluqueria-2.jpg
+Barber shop interior, vintage barber chairs, grooming tools, masculine atmosphere, photorealistic, 4k professional photography
+
+# 20. PAN (4 productos) - pan.jpg
+Artisan bread bakery, fresh baked bread display, rustic and warm atmosphere, photorealistic, 4k professional photography
+
+# 21. BRAZO (4 productos) - brazo.jpg
+Tattoo studio interior, tattoo artist working, modern clean studio, artistic atmosphere, photorealistic, 4k professional photography
+
+# 22. MOTOS (4 productos) - motos.jpg
+Motorcycle showroom, modern bikes display, professional motorcycle dealership, photorealistic, 4k professional photography
+
+# 23. VEHICULOS (4 productos) - vehiculos.jpg
+Car dealership showroom, new vehicles display, modern automotive retail, photorealistic, 4k professional photography
+
+# 24. ALQUILERES (4 productos) - alquileres.jpg
+Real estate office interior, property listings, professional real estate agency, photorealistic, 4k professional photography
+
+# 25. HAMBURGUESA (4 productos) - hamburguesa.jpg
+Burger restaurant, gourmet hamburgers, appetizing food presentation, modern fast food, photorealistic, 4k professional photography
+
+# 26. ACCESORIOS FLORES (4 productos) - accesorios-flores.jpg
+Florist accessories shop, vases, flower pots, gardening items, boutique display, photorealistic, 4k professional photography
+
+# 27. RELOJES (4 productos) - relojes.jpg
+Watch store display, luxury timepieces, elegant jewelry store interior, photorealistic, 4k professional photography
+
+# 28. KEBAB (3 productos) - kebab.jpg
+Kebab restaurant, döner rotating spit, Mediterranean fast food, inviting atmosphere, photorealistic, 4k professional photography
+
+# 29. PIZZAS (3 productos) - pizzas.jpg
+Italian pizzeria, wood-fired oven, fresh pizzas, authentic Italian restaurant, photorealistic, 4k professional photography
+
+# 30. INFORMATICA (3 productos) - informatica.jpg
+Computer store interior, laptops and technology, modern electronics retail, photorealistic, 4k professional photography
+
+# ========================================
+# INSTRUCCIONES:
+# ========================================
+# CONFIGURACIÓN EN LEONARDO.AI:
+# - Modelo: Leonardo Diffusion XL (o Phoenix)
+# - Tamaño: SQUARE (1:1) - 512x512 px (se redimensionará a 300x300)
+# - Number of Images: 1-4 (más variaciones = más opciones)
+# - Prompt Magic: ON
+# - Quality: HIGH
+#
+# PASOS:
+# 1. Copia SOLO el texto del prompt (sin el número ni nombre de archivo)
+# 2. Pégalo en Leonardo.AI
+# 3. Genera 1-4 variaciones
+# 4. Descarga la mejor
+# 5. Renómbrala según el nombre indicado (ej: peluqueria.jpg)
+# 6. Guárdala en: wp-content/uploads/category-images/
+# 7. Cuando tengas todas, ejecuta: php upload-category-images.php
+#
+# NOTA: Las imágenes se redimensionarán automáticamente a 300x300 al subirlas
+

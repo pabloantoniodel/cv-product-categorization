@@ -1,0 +1,276 @@
+/**
+ * Títulos modernos para .entry-title
+ * Diseño con gradientes, sombras y efectos visuales
+ */
+
+/* Ocultar breadcrumb en todas las páginas */
+.woocommerce-breadcrumb {
+    display: none !important;
+}
+
+/* Quitar margin-top del botón de contacto */
+#from_my_function,
+.button#from_my_function,
+div#from_my_function {
+    margin-top: 0 !important;
+}
+
+/* Ocultar buscador y logo en Mi cuenta (móvil) cuando no está logueado */
+@media (max-width: 768px) {
+    body.woocommerce-account:not(.logged-in) .custom-product-search {
+        display: none !important;
+    }
+    
+    body.woocommerce-account:not(.logged-in) .cv-login-brand {
+        display: none !important;
+    }
+    
+    /* Iconos de carrito y hamburguesa con colores y tamaño optimizado */
+    .cart-toggle i,
+    .menu-toggle i,
+    button.cart-toggle i.fa,
+    button.menu-toggle i.fa {
+        font-size: 1.8em !important;
+        transform: scale(1.35) !important;
+        color: #667eea !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    /* Efecto hover en iconos */
+    .cart-toggle:hover i,
+    .menu-toggle:hover i,
+    button.cart-toggle:hover i.fa,
+    button.menu-toggle:hover i.fa {
+        color: #764ba2 !important;
+        transform: scale(1.45) !important;
+    }
+    
+    /* Ajustar tamaño de botones contenedores */
+    .cart-toggle,
+    .menu-toggle,
+    button.cart-toggle,
+    button.menu-toggle {
+        width: 50px !important;
+        height: 50px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: transparent !important;
+        transition: all 0.3s ease !important;
+    }
+}
+
+/* Título principal moderno */
+.entry-title {
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    margin-bottom: 1rem !important;
+    position: relative !important;
+    padding-bottom: 15px !important;
+    
+    /* Gradiente de texto */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    
+    /* Sombra sutil */
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    
+    /* Animación suave al cargar */
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Línea decorativa debajo del título */
+.entry-title:after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    margin-top: 10px;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+    animation: expandWidth 0.8s ease-out 0.3s both;
+}
+
+/* Variante para páginas específicas - Solo desktop */
+@media (min-width: 769px) {
+    .page .entry-title {
+        text-align: left !important;
+    }
+}
+
+.single-product .entry-title,
+.woocommerce-page .entry-title {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.single-product .entry-title:after,
+.woocommerce-page .entry-title:after {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+}
+
+/* Títulos de categorías */
+.tax-product_cat .entry-title,
+.product-category .entry-title {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    text-align: center !important;
+}
+
+.tax-product_cat .entry-title:after,
+.product-category .entry-title:after {
+    background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Títulos de tiendas */
+.store-page .entry-title,
+.wcfmmp-store .entry-title {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.store-page .entry-title:after,
+.wcfmmp-store .entry-title:after {
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes expandWidth {
+    from {
+        width: 0;
+        opacity: 0;
+    }
+    to {
+        width: 80px;
+        opacity: 1;
+    }
+}
+
+/* Efecto hover en títulos clickeables */
+a .entry-title,
+.entry-title a {
+    transition: all 0.3s ease;
+    text-decoration: none !important;
+}
+
+a:hover .entry-title,
+.entry-title a:hover {
+    filter: drop-shadow(0 4px 12px rgba(102, 126, 234, 0.4));
+    transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .entry-title {
+        font-size: 1.1rem !important;
+        padding-bottom: 12px !important;
+        text-align: center !important;
+    }
+    
+    .entry-title:after {
+        width: 50px;
+        height: 3px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .entry-title {
+        font-size: 1rem !important;
+        text-align: center !important;
+    }
+    
+    .entry-title:after {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        width: 40px;
+    }
+}
+
+/* Variantes de color adicionales */
+
+/* Títulos en páginas de archivo */
+.archive .entry-title {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.archive .entry-title:after {
+    background: linear-gradient(90deg, #fa709a 0%, #fee140 100%);
+}
+
+/* Títulos en búsquedas */
+.search-results .entry-title {
+    background: linear-gradient(135deg, #30cfd0 0%, #330867 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+.search-results .entry-title:after {
+    background: linear-gradient(90deg, #30cfd0 0%, #330867 100%);
+}
+
+/* Efecto de brillo al pasar el cursor */
+.entry-title {
+    position: relative;
+    overflow: hidden;
+}
+
+.entry-title:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+    pointer-events: none;
+}
+
+.entry-title:hover:before {
+    left: 100%;
+}
+
+/* Soporte para títulos en posts */
+.single-post .entry-title {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+/* Modo oscuro (si se implementa en el futuro) */
+@media (prefers-color-scheme: dark) {
+    .entry-title {
+        filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.1));
+    }
+}
+
