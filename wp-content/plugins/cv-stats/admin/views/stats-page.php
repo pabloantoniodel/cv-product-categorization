@@ -35,6 +35,22 @@ $period_label = $is_single_day ? date('d/m/Y', strtotime($date_from)) : date('d/
 $logins_today = CV_Stats_Login_Tracker::get_logins_by_date_range($period_start, $period_end);
 $count_today = count($logins_today);
 
+// Agrupar logins por IP
+$logins_by_ip = array();
+$unique_ips = array();
+foreach ($logins_today as $login) {
+    $ip = $login['ip_address'] ?? 'N/A';
+    if (!isset($logins_by_ip[$ip])) {
+        $logins_by_ip[$ip] = 0;
+        $unique_ips[] = $ip;
+    }
+    $logins_by_ip[$ip]++;
+}
+$count_unique_ips = count($unique_ips);
+
+// Ordenar por cantidad de logins descendente
+arsort($logins_by_ip);
+
 // Paginación para Tarjetas Vistas
 $views_per_page = 25;
 $views_paged = isset($_GET['views_paged']) ? max(1, intval($_GET['views_paged'])) : 1;
@@ -257,24 +273,79 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
         <div class="cv-stats-summary-grid">
             <div class="cv-stats-summary-item">
                 <div class="cv-stats-big-number"><?php echo $count_today; ?></div>
-                <div class="cv-stats-big-label">Total Logins Hoy</div>
+                <div class="cv-stats-big-label">Total Logins</div>
+            </div>
+            <div class="cv-stats-summary-item">
+                <div class="cv-stats-big-number"><?php echo $count_unique_ips; ?></div>
+                <div class="cv-stats-big-label">IPs Diferentes</div>
+            </div>
+            <div class="cv-stats-summary-item">
+                <div class="cv-stats-big-number">
+                    <?php 
+                    if ($count_unique_ips > 0) {
+                        echo round($count_today / $count_unique_ips, 1);
+                    } else {
+                        echo '0';
+                    }
+                    ?>
+                </div>
+                <div class="cv-stats-big-label">Promedio Logins/IP</div>
             </div>
         </div>
         
+        <?php if (count($logins_by_ip) > 0): ?>
+            <div class="cv-stats-card" style="margin-top: 20px;">
+                <h3>🌐 Logins Agrupados por IP</h3>
+                <div class="cv-stats-table-container">
+                    <table class="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>IP Address</th>
+                                <th>Cantidad de Logins</th>
+                                <th>Porcentaje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($logins_by_ip as $ip => $count): ?>
+                                <tr>
+                                    <td>
+                                        <code style="font-size: 11px;"><?php echo esc_html($ip); ?></code>
+                                    </td>
+                                    <td>
+                                        <strong><?php echo $count; ?></strong>
+                                    </td>
+                                    <td>
+                                        <div class="cv-stats-progress-bar">
+                                            <div class="cv-stats-progress-fill" style="width: <?php echo ($count_today > 0) ? round(($count / $count_today) * 100, 1) : 0; ?>%"></div>
+                                        </div>
+                                        <span class="cv-stats-percentage">
+                                            <?php echo ($count_today > 0) ? round(($count / $count_today) * 100, 1) : 0; ?>%
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php endif; ?>
+        
         <?php if ($count_today > 0): ?>
-            <div class="cv-stats-table-container">
-                <table class="widefat striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Usuario</th>
-                            <th>Nombre Completo</th>
-                            <th>Email</th>
-                            <th>Rol</th>
-                            <th>IP de Login</th>
-                            <th>Último Login</th>
-                        </tr>
-                    </thead>
+            <div style="margin-top: 30px;">
+                <h3>📋 Detalle de Usuarios Conectados</h3>
+                <div class="cv-stats-table-container">
+                    <table class="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Nombre Completo</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>IP de Login</th>
+                                <th>Último Login</th>
+                            </tr>
+                        </thead>
                     <tbody>
                         <?php foreach ($logins_today as $login): ?>
                             <tr>
@@ -328,6 +399,7 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
             </div>
         <?php else: ?>
             <div class="cv-stats-empty-state">

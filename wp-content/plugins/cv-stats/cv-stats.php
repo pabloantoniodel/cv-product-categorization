@@ -3,7 +3,7 @@
  * Plugin Name: Ciudad Virtual - Estadísticas
  * Plugin URI: https://ciudadvirtual.app
  * Description: Panel de estadísticas avanzadas para el dashboard de WordPress (incluye rastreo de búsquedas con detección de país mejorada)
- * Version: 1.3.2
+ * Version: 1.3.3
  * Author: Ciudad Virtual
  * Author URI: https://ciudadvirtual.app
  * License: GPL v2 or later
