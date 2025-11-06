@@ -1,0 +1,66 @@
+<?php
+/**
+ * Plugin Name: CV - Configuración Sitemap Yoast
+ * Description: Prioriza las páginas del menú principal en el sitemap
+ * Version: 1.0.1
+ * Author: Ciudad Virtual
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+class CV_Yoast_Sitemap_Config {
+    
+    // URLs del menú principal (máxima prioridad)
+    private $main_menu_pages = array(
+        'comercios',
+        'qr',
+        'shop',
+        'categorias-de-producto',
+        'tutorial',
+        'noticias-cv',
+        'contacto',
+    );
+    
+    public function __construct() {
+        // Solo modificar si Yoast SEO está activo
+        if (!defined('WPSEO_VERSION')) {
+            return;
+        }
+        
+        // Modificar prioridad de páginas del menú
+        add_filter('wpseo_sitemap_entry', array($this, 'set_main_menu_priority'), 10, 3);
+    }
+    
+    /**
+     * Dar máxima prioridad a páginas del menú principal
+     */
+    public function set_main_menu_priority($url, $type, $post) {
+        // Solo para páginas
+        if ($type !== 'post' || !is_object($post)) {
+            return $url;
+        }
+        
+        // Verificar si es una página del menú principal
+        $post_slug = isset($post->post_name) ? $post->post_name : '';
+        
+        if (in_array($post_slug, $this->main_menu_pages)) {
+            // Agregar prioridad si no existe
+            if (!isset($url['pri'])) {
+                $url['pri'] = 1.0;
+            }
+            // Cambiar frecuencia a diaria
+            if (!isset($url['chf'])) {
+                $url['chf'] = 'daily';
+            }
+        }
+        
+        return $url;
+    }
+}
+
+// Inicializar solo si Yoast está instalado
+if (class_exists('WPSEO_Options')) {
+    new CV_Yoast_Sitemap_Config();
+}
