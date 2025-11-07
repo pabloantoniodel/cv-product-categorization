@@ -267,6 +267,16 @@ class CV_Category_Modal {
             justify-content: space-between;
             align-items: center;
         }
+        .cv-search-result-text {
+            flex: 1;
+            margin-right: 12px;
+        }
+        .cv-search-result-text mark {
+            background: #fff3b0;
+            color: inherit;
+            padding: 0 2px;
+            border-radius: 3px;
+        }
         .cv-search-result-item:hover {
             background: #e7f3ff;
             border-color: #667eea;
@@ -363,19 +373,55 @@ class CV_Category_Modal {
     private function get_js() {
         return "
         (function() {
-            if (window.cvCategoryModalInitialized) {
-                console.log('⛔ CV Category Modal: Ya inicializado');
-                return;
+            function isProductsPage() {
+                var href = window.location.href || '';
+                if (href.indexOf('products-manage') !== -1 || href.indexOf('wcfm-products') !== -1) {
+                    return true;
+                }
+                if (document.querySelector('#product_cats_checklist') || document.querySelector('.wcfm_product_manager_cats_checklist_fields')) {
+                    return true;
+                }
+                return false;
             }
-            window.cvCategoryModalInitialized = true;
-            console.log('🚀 CV Category Modal v3.1.0 - Inicializando...');
-            
+
             jQuery(document).ready(function($) {
+                if (!isProductsPage()) {
+                    console.log('⏭️ CV Category Modal: No es la página de gestión de productos, saliendo');
+                    return;
+                }
+
+                if ($('#cv-open-modal').length) {
+                    console.log('⛔ CV Category Modal: Botón ya existe, no se duplica');
+                    return;
+                }
+
+                console.log('🚀 CV Category Modal v3.1.0 - Inicializando...');
                 console.log('✅ jQuery ready - v3.1.0');
                 console.log('📍 URL:', window.location.href);
                 
                 var allCategories = [];
                 var selectedCategories = [];
+
+		function normalizeString(str) {
+			if (!str) return '';
+			return str.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+		}
+
+		function escapeRegExp(string) {
+			return string.replace(/[.*+?^\${}()|\[\]\\\/]/g, '\\$&');
+		}
+
+		function highlightQuery(text, query) {
+			if (!text || !query || query.length < 2) {
+				return text || '';
+			}
+			try {
+				var regex = new RegExp(escapeRegExp(query), 'gi');
+				return text.replace(regex, '<mark>$&</mark>');
+			} catch (error) {
+				return text;
+			}
+		}
                 
                 // Esperar a que el contenedor de categorías exista
                 var initAttempts = 0;
@@ -543,7 +589,7 @@ class CV_Category_Modal {
                     selectedCategories.forEach(function(cat) {
                         var displayName = cat.path || cat.name;
                         html += '<div class=\"cv-selected-tag\" data-cat-id=\"' + cat.id + '\" title=\"' + displayName + '\">' +
-                            cat.name +
+                            displayName +
                             '<button class=\"cv-selected-tag-remove\" data-cat-id=\"' + cat.id + '\">×</button>' +
                             '</div>';
                     });
@@ -564,19 +610,18 @@ class CV_Category_Modal {
                         return;
                     }
                     
-                    // BUSCAR con debugging ULTRA detallado
                     var matches = [];
-                    var queryLower = query.toLowerCase();
+                    var normalizedQuery = normalizeString(query);
                     
-                    console.log('🔎 Filtrando', allCategories.length, 'categorías. Query:', queryLower);
+                    console.log('🔎 Filtrando', allCategories.length, 'categorías. Query normalizada:', normalizedQuery);
                     
-                    for (var i = 0; i < allCategories.length; i++) {
-                        var cat = allCategories[i];
-                        var pathLower = (cat.path || '').toLowerCase();
-                        var nameLower = (cat.name || '').toLowerCase();
+                    allCategories.forEach(function(cat) {
+                        var pathSource = cat.path || cat.name || '';
+                        var normalizedPath = normalizeString(pathSource);
+                        var normalizedName = normalizeString(cat.name || '');
                         
-                        var foundInPath = pathLower.indexOf(queryLower) !== -1;
-                        var foundInName = nameLower.indexOf(queryLower) !== -1;
+                        var foundInPath = normalizedPath.indexOf(normalizedQuery) !== -1;
+                        var foundInName = normalizedName.indexOf(normalizedQuery) !== -1;
                         
                         if (foundInPath || foundInName) {
                             matches.push(cat);
@@ -584,7 +629,7 @@ class CV_Category_Modal {
                                 console.log('✅ #' + matches.length + ':', cat.name, '(path:', cat.path + ')');
                             }
                         }
-                    }
+                    });
                     
                     console.log('📊 Total encontrados:', matches.length);
                     
@@ -599,17 +644,28 @@ class CV_Category_Modal {
                         var isSelected = selectedCategories.some(function(s) { return s.id == cat.id; });
                         var selectedClass = isSelected ? ' selected' : '';
                         var badge = isSelected ? '✓ Seleccionada' : 'Click para agregar';
+                        var displayPath = cat.path || cat.name || '';
+                        var highlightedPath = highlightQuery(displayPath, query);
+                        var childLabel = highlightQuery(cat.name || '', query);
+                        var parentLabel = '';
+                        if (cat.path && cat.path !== cat.name) {
+                            var segments = cat.path.split('→');
+                            if (segments.length > 1) {
+                                parentLabel = highlightQuery(segments.slice(0, -1).join(' → ').trim(), query);
+                            }
+                        }
                         
                         html += '<div class=\"cv-search-result-item' + selectedClass + '\" data-cat-id=\"' + cat.id + '\">' +
-                            '<div><strong>' + cat.name + '</strong>';
+                            '<div class=\"cv-search-result-text\"><strong class=\"cv-search-path\">' + highlightedPath + '</strong>';
                         
-                        // Mostrar path solo si es diferente del nombre (tiene padre)
-                        if (cat.path !== cat.name) {
-                            html += '<br><small style=\"color:#999;\">' + cat.path + '</small>';
+                        if (parentLabel) {
+                            html += '<small style=\"color:#666;display:block;margin-top:4px;\">' + parentLabel + '</small>';
+                        } else if (cat.path && cat.path !== cat.name) {
+                            html += '<small style=\"color:#666;display:block;margin-top:4px;\">' + childLabel + '</small>';
                         }
                         
                         html += '</div>' +
-                            '<span style=\"font-size:12px;color:#666;\">' + badge + '</span>' +
+                            '<span style=\"font-size:12px;color:#666;white-space:nowrap;\">' + badge + '</span>' +
                             '</div>';
                     });
                     
