@@ -2,7 +2,7 @@
 /**
  * Plugin Name: CV - Categorizador Modal WCFM
  * Description: Busca en MÚLTIPLES fuentes (checklist + ocultas + select).
- * Version: 3.3.0
+ * Version: 3.3.1
  * Author: Ciudad Virtual
  */
 
@@ -425,8 +425,8 @@ class CV_Category_Modal {
                     return;
                 }
 
-                        console.log('🚀 CV Category Modal v3.3.0 - Inicializando...');
-                        console.log('✅ jQuery ready - v3.3.0');
+                        console.log('🚀 CV Category Modal v3.3.1 - Inicializando...');
+                        console.log('✅ jQuery ready - v3.3.1');
                 console.log('📍 URL:', window.location.href);
                 
                 var allCategories = [];
@@ -976,21 +976,9 @@ class CV_Category_Modal {
                         if (parentLabel) {
                             primaryLabel += ' (' + highlightQuery(parentLabel, query) + ')';
                         }
-                        var secondaryLabel = '';
-                        if (cat.path) {
-                            if (cat.path !== cat.name) {
-                                secondaryLabel = '<small style=\"color:#666;display:block;margin-top:4px;\">' + highlightQuery(cat.path, query) + '</small>';
-                            }
-                        }
 
                         html += '<div class=\"cv-search-result-item' + selectedClass + '\" data-cat-id=\"' + cat.id + '\">' +
-                            '<div class=\"cv-search-result-text\"><strong>' + primaryLabel + '</strong>';
-
-                        if (secondaryLabel) {
-                            html += secondaryLabel;
-                        }
-
-                        html += '</div>' +
+                            '<div class=\"cv-search-result-text\"><strong>' + primaryLabel + '</strong></div>' +
                             '<span style=\"font-size:12px;color:#666;white-space:nowrap;\">' + badge + '</span>' +
                             '</div>';
                     });
