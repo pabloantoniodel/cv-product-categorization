@@ -402,6 +402,120 @@ class CV_Category_Modal {
                 var allCategories = [];
                 var selectedCategories = [];
 
+		function getParentNameFromPath(path) {
+			if (!path) {
+				return null;
+			}
+			var parts = path.split('→').map(function(part) {
+				return part.trim();
+			}).filter(function(part) { return part.length > 0; });
+			if (parts.length > 1) {
+				return parts[parts.length - 2];
+			}
+			return null;
+		}
+
+		function getMetaFromCheckbox($checkbox) {
+			var meta = { name: '', path: '', parentId: null, parentName: null };
+			if (!$checkbox || !$checkbox.length) {
+				return meta;
+			}
+			var name = $checkbox.siblings('span').first().text().trim();
+			if (!name) {
+				name = $checkbox.parent().text().trim();
+			}
+			meta.name = name;
+			var pathParts = [];
+			if (name) {
+				pathParts.push(name);
+			}
+			var $currentLi = $checkbox.closest('li');
+			var depth = 0;
+			while ($currentLi.length && depth < 10) {
+				var $parentLi = $currentLi.parent().closest('li');
+				if (!$parentLi.length) {
+					break;
+				}
+				var parentName = $parentLi.find('> label > span').first().text().trim();
+				if (!parentName) {
+					parentName = $parentLi.find('> span > span').first().text().trim();
+				}
+				if (parentName) {
+					pathParts.unshift(parentName);
+					if (meta.parentId === null) {
+						var $parentCheckbox = $parentLi.find('> label > input[type=\"checkbox\"]').first();
+						if ($parentCheckbox.length) {
+							meta.parentId = $parentCheckbox.val();
+							meta.parentName = parentName;
+						}
+					}
+					}
+				}
+				$currentLi = $parentLi;
+				depth++;
+			}
+			if (pathParts.length) {
+				meta.path = pathParts.join(' → ');
+			} else if (name) {
+				meta.path = name;
+			}
+			if (!meta.parentName) {
+				meta.parentName = getParentNameFromPath(meta.path);
+			}
+			return meta;
+		}
+
+		function findCategoryById(catId) {
+			var idStr = String(catId);
+			return allCategories.find(function(cat) {
+				return String(cat.id) === idStr;
+			});
+		}
+
+		function addToSelectedFromCat(cat, options) {
+			if (!cat) {
+				return;
+			}
+			var idStr = String(cat.id);
+			var exists = selectedCategories.some(function(item) {
+				return String(item.id) === idStr;
+			});
+			if (!exists) {
+				selectedCategories.push({
+					id: cat.id,
+					name: cat.name,
+					path: cat.path,
+					parentId: cat.parentId || null,
+					parentName: cat.parentName || null
+				});
+			}
+			if (!options || !options.skipHighlight) {
+				var $resultItem = $('#cv-search-results .cv-search-result-item[data-cat-id=\"' + cat.id + '\"]');
+				if ($resultItem.length) {
+					$resultItem.addClass('selected');
+				}
+			}
+		}
+
+		function removeSelectedCategory(catId) {
+			var idStr = String(catId);
+			selectedCategories = selectedCategories.filter(function(item) {
+				return String(item.id) !== idStr;
+			});
+			$('#cv-search-results .cv-search-result-item[data-cat-id=\"' + catId + '\"]').removeClass('selected');
+		}
+
+		function ensureParentSelected(cat) {
+			if (!cat || !cat.parentId) {
+				return;
+			}
+			var parentCat = findCategoryById(cat.parentId);
+			if (parentCat) {
+				addToSelectedFromCat(parentCat, { skipHighlight: false });
+				ensureParentSelected(parentCat);
+			}
+		}
+ 
 		function normalizeString(str) {
 			if (!str) return '';
 			return str.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -469,38 +583,37 @@ class CV_Category_Modal {
                     
                     // MÉTODO 1: Desde el checklist visible
                     $('#product_cats_checklist input[type=\"checkbox\"]').each(function() {
-                        var \$checkbox = $(this);
-                        var id = \$checkbox.val();
-                        var name = \$checkbox.siblings('span').first().text().trim();
-                        
-                        if (id && name) {
-                            // Construir path jerárquico completo
-                            var path = name;
-                            var \$parent = \$checkbox.closest('li').parent().closest('li');
-                            var depth = 0;
-                            
-                            while (\$parent.length && depth < 5) {
-                                var parentName = \$parent.find('> label > span').first().text().trim();
-                                if (!parentName) {
-                                    parentName = \$parent.find('> span > span').first().text().trim();
-                                }
-                                if (parentName && parentName.length > 0) {
-                                    path = parentName + ' → ' + path;
-                                }
-                                \$parent = \$parent.parent().closest('li');
-                                depth++;
-                            }
-                            
-                            allCategories.push({
+                        var $checkbox = $(this);
+                        var id = $checkbox.val();
+                        if (!id) {
+                            return;
+                        }
+
+                        var meta = getMetaFromCheckbox($checkbox);
+                        var name = meta.name || $checkbox.siblings('span').first().text().trim();
+                        if (!name) {
+                            name = 'Categoría ' + id;
+                        }
+
+                        if (!allCategories.some(function(cat) { return String(cat.id) === String(id); })) {
+                            var catData = {
                                 id: id,
                                 name: name,
-                                path: path,
-                                element: \$checkbox
-                            });
+                                path: meta.path || name,
+                                parentId: meta.parentId,
+                                parentName: meta.parentName,
+                                element: $checkbox
+                            };
+                            allCategories.push(catData);
                             checklistCount++;
-                            
-                            if (\$checkbox.is(':checked')) {
-                                selectedCategories.push({id: id, name: name, path: path});
+
+                            if ($checkbox.is(':checked')) {
+                                addToSelectedFromCat(catData, { skipHighlight: true });
+                            }
+                        } else if ($checkbox.is(':checked')) {
+                            var existingCat = findCategoryById(id);
+                            if (existingCat) {
+                                addToSelectedFromCat(existingCat, { skipHighlight: true });
                             }
                         }
                     });
@@ -509,19 +622,36 @@ class CV_Category_Modal {
                     
                     // MÉTODO 2: Buscar en TODO el DOM por si hay categorías ocultas
                     $('input[type=\"checkbox\"][name*=\"product_cat\"]').each(function() {
-                        var \$checkbox = $(this);
-                        var id = \$checkbox.val();
-                        var name = \$checkbox.next('span').text().trim() || \$checkbox.siblings('span').text().trim() || \$checkbox.parent().text().trim();
-                        
-                        // Evitar duplicados
-                        if (id && name && !allCategories.some(function(c) { return c.id == id; })) {
-                            allCategories.push({
-                                id: id,
-                                name: name,
-                                path: name,
-                                element: \$checkbox
-                            });
-                            hiddenCount++;
+                        var $checkbox = $(this);
+                        var id = $checkbox.val();
+                        if (!id) {
+                            return;
+                        }
+
+                        if (allCategories.some(function(c) { return String(c.id) === String(id); })) {
+                            return;
+                        }
+
+                        var $originalCheckbox = $('#product_cats_checklist input[value=\"' + id + '\"]').first();
+                        var meta = getMetaFromCheckbox($originalCheckbox.length ? $originalCheckbox : $checkbox);
+                        var name = meta.name || $checkbox.next('span').text().trim() || $checkbox.siblings('span').text().trim() || $checkbox.parent().text().trim();
+                        if (!name) {
+                            name = 'Categoría ' + id;
+                        }
+
+                        var catData = {
+                            id: id,
+                            name: name,
+                            path: meta.path || name,
+                            parentId: meta.parentId,
+                            parentName: meta.parentName,
+                            element: $originalCheckbox.length ? $originalCheckbox : $checkbox
+                        };
+                        allCategories.push(catData);
+                        hiddenCount++;
+
+                        if ($checkbox.is(':checked') || ($originalCheckbox.length && $originalCheckbox.is(':checked'))) {
+                            addToSelectedFromCat(catData, { skipHighlight: true });
                         }
                     });
                     
@@ -529,19 +659,34 @@ class CV_Category_Modal {
                     
                     // MÉTODO 3: Desde el select (si existe)
                     $('#product_cats option').each(function() {
-                        var \$option = $(this);
-                        var id = \$option.val();
-                        var name = \$option.text().trim();
-                        
-                        if (id && name && !allCategories.some(function(c) { return c.id == id; })) {
-                            allCategories.push({
-                                id: id,
-                                name: name,
-                                path: name,
-                                element: \$option
-                            });
-                            selectCount++;
+                        var $option = $(this);
+                        var id = $option.val();
+                        if (!id) {
+                            return;
                         }
+
+                        if (allCategories.some(function(c) { return String(c.id) === String(id); })) {
+                            return;
+                        }
+
+                        var name = $option.text().trim();
+                        if (!name) {
+                            name = 'Categoría ' + id;
+                        }
+
+                        var $originalCheckbox = $('#product_cats_checklist input[value=\"' + id + '\"]').first();
+                        var meta = getMetaFromCheckbox($originalCheckbox.length ? $originalCheckbox : null);
+
+                        var catData = {
+                            id: id,
+                            name: name,
+                            path: meta.path || name,
+                            parentId: meta.parentId,
+                            parentName: meta.parentName,
+                            element: $originalCheckbox.length ? $originalCheckbox : $option
+                        };
+                        allCategories.push(catData);
+                        selectCount++;
                     });
                     
                     console.log('📦 Desde select:', selectCount);
@@ -568,6 +713,14 @@ class CV_Category_Modal {
                     window.cvAllCategories = allCategories;
                     console.log('💾 Todas las categorías guardadas en: window.cvAllCategories');
                     
+                    selectedCategories.slice().forEach(function(cat) {
+                        var fullCat = findCategoryById(cat.id);
+                        if (fullCat) {
+                            addToSelectedFromCat(fullCat, { skipHighlight: true });
+                            ensureParentSelected(fullCat);
+                        }
+                    });
+
                     updateSelectedCount();
                 }
                 
@@ -587,9 +740,14 @@ class CV_Category_Modal {
                     
                     var html = '';
                     selectedCategories.forEach(function(cat) {
-                        var displayName = cat.path || cat.name;
-                        html += '<div class=\"cv-selected-tag\" data-cat-id=\"' + cat.id + '\" title=\"' + displayName + '\">' +
-                            displayName +
+                        var parentLabel = cat.parentName || getParentNameFromPath(cat.path);
+                        var label = cat.name;
+                        if (parentLabel) {
+                            label += ' (' + parentLabel + ')';
+                        }
+                        var titleText = cat.path || label;
+                        html += '<div class=\"cv-selected-tag\" data-cat-id=\"' + cat.id + '\" title=\"' + titleText + '\">' +
+                            label +
                             '<button class=\"cv-selected-tag-remove\" data-cat-id=\"' + cat.id + '\">×</button>' +
                             '</div>';
                     });
@@ -644,26 +802,23 @@ class CV_Category_Modal {
                         var isSelected = selectedCategories.some(function(s) { return s.id == cat.id; });
                         var selectedClass = isSelected ? ' selected' : '';
                         var badge = isSelected ? '✓ Seleccionada' : 'Click para agregar';
-                        var displayPath = cat.path || cat.name || '';
-                        var highlightedPath = highlightQuery(displayPath, query);
-                        var childLabel = highlightQuery(cat.name || '', query);
-                        var parentLabel = '';
-                        if (cat.path && cat.path !== cat.name) {
-                            var segments = cat.path.split('→');
-                            if (segments.length > 1) {
-                                parentLabel = highlightQuery(segments.slice(0, -1).join(' → ').trim(), query);
-                            }
-                        }
-                        
-                        html += '<div class=\"cv-search-result-item' + selectedClass + '\" data-cat-id=\"' + cat.id + '\">' +
-                            '<div class=\"cv-search-result-text\"><strong class=\"cv-search-path\">' + highlightedPath + '</strong>';
-                        
+                        var parentLabel = cat.parentName || getParentNameFromPath(cat.path);
+                        var primaryLabel = highlightQuery(cat.name || '', query);
                         if (parentLabel) {
-                            html += '<small style=\"color:#666;display:block;margin-top:4px;\">' + parentLabel + '</small>';
-                        } else if (cat.path && cat.path !== cat.name) {
-                            html += '<small style=\"color:#666;display:block;margin-top:4px;\">' + childLabel + '</small>';
+                            primaryLabel += ' (' + highlightQuery(parentLabel, query) + ')';
                         }
-                        
+                        var secondaryLabel = '';
+                        if (cat.path && cat.path !== cat.name) {
+                            secondaryLabel = '<small style=\"color:#666;display:block;margin-top:4px;\">' + highlightQuery(cat.path, query) + '</small>';
+                        }
+
+                        html += '<div class=\"cv-search-result-item' + selectedClass + '\" data-cat-id=\"' + cat.id + '\">' +
+                            '<div class=\"cv-search-result-text\"><strong>' + primaryLabel + '</strong>';
+
+                        if (secondaryLabel) {
+                            html += secondaryLabel;
+                        }
+
                         html += '</div>' +
                             '<span style=\"font-size:12px;color:#666;white-space:nowrap;\">' + badge + '</span>' +
                             '</div>';
@@ -704,34 +859,37 @@ class CV_Category_Modal {
                 // Click en resultado de búsqueda
                 $(document).on('click', '.cv-search-result-item', function() {
                     var catId = $(this).data('cat-id');
-                    var cat = allCategories.find(function(c) { return c.id == catId; });
-                    
-                    if (!cat) return;
-                    
-                    var index = selectedCategories.findIndex(function(s) { return s.id == catId; });
-                    
-                    if (index === -1) {
-                        selectedCategories.push({id: cat.id, name: cat.name, path: cat.path});
-                        $(this).addClass('selected');
-                    } else {
-                        selectedCategories.splice(index, 1);
-                        $(this).removeClass('selected');
+                    var cat = findCategoryById(catId);
+                    if (!cat) {
+                        return;
                     }
-                    
+
+                    var alreadySelected = selectedCategories.some(function(s) { return String(s.id) === String(catId); });
+
+                    if (!alreadySelected) {
+                        addToSelectedFromCat(cat, { skipHighlight: false });
+                        ensureParentSelected(cat);
+                    } else {
+                        removeSelectedCategory(catId);
+                    }
+
                     updateSelectedCount();
                     renderSelected();
+
+                    var activeQuery = $('#cv-category-search-input').val();
+                    if (activeQuery && activeQuery.length >= 2) {
+                        searchCategories(activeQuery);
+                    }
                 });
                 
                 // Remover categoría seleccionada
                 $(document).on('click', '.cv-selected-tag-remove', function(e) {
                     e.stopPropagation();
                     var catId = $(this).data('cat-id');
-                    
-                    selectedCategories = selectedCategories.filter(function(s) { return s.id != catId; });
+                    removeSelectedCategory(catId);
                     updateSelectedCount();
                     renderSelected();
-                    
-                    // Actualizar resultados de búsqueda si están visibles
+
                     var query = $('#cv-category-search-input').val();
                     if (query.length >= 2) {
                         searchCategories(query);
