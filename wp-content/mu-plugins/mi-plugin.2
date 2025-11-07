@@ -1,0 +1,111 @@
+<?php
+error_log('Mi-plugin ejecutado ✓: ' . date('Y-m-d H:i:s'));
+/*
+Plugin Name: Asociación de Productos Afiliados WCFM
+Description: Permite a los vendedores asociar productos de otros a su tienda sin clonarlos, sólo referencia y sin edición.
+Author: Tu Nombre
+*/
+
+// --- Shortcode para mostrar catálogo de propios + afiliados ---
+add_shortcode('productos_afiliados_escaparate', function($atts) {
+    error_log('Shortcode productos_afiliados_escaparate ejecutado para seller: ' . get_query_var('author'));
+    $afiliado_id = get_query_var('author');
+    if (!$afiliado_id) $afiliado_id = get_current_user_id();
+    $propios = get_posts([
+        'post_type' => 'product',
+        'posts_per_page' => 48,
+        'post_status' => 'publish',
+        'author' => $afiliado_id,
+        'fields' => 'ids'
+    ]);
+    $afiliados = array_filter((array)get_user_meta($afiliado_id, 'productos_asociados', true));
+    $total = array_unique(array_merge($propios, $afiliados));
+    if (!$total) return '<p>No hay productos en este escaparate.</p>';
+    $q = new WP_Query([
+        'post_type' => 'product',
+        'post__in' => $total,
+        'posts_per_page' => 48,
+        'post_status' => 'publish'
+    ]);
+    $out = '<div class="productos_grid">';
+    while($q->have_posts()) { $q->the_post();
+        $is_afiliado = in_array(get_the_ID(), $afiliados);
+        $url = get_permalink();
+        if ($is_afiliado) $url .= '?afiliado=' . $afiliado_id;
+        $out .= '<div class="producto">';
+        if ($is_afiliado) $out .= '<span class="badge_afiliado" style="background:orange;padding:2px 6px;border-radius:3px;">Afiliado</span>';
+        $out .= '<h3>' . esc_html(get_the_title()) . '</h3>';
+        $out .= '<a href="' . esc_url($url) . '" class="boton-comprar">Ver producto</a>';
+        $out .= '</div>';
+    }
+    $out .= '</div>';
+    wp_reset_postdata();
+    return $out;
+});
+
+// --- Acción AJAX para asociar producto sin clonarlo ---
+add_action('wp_ajax_asociar_producto_afiliado', function(){
+    error_log('AJAX asociación producto afiliado ejecutado para usuario: ' . get_current_user_id());
+    if (!is_user_logged_in()) wp_send_json_error('No autorizado');
+    $user_id = get_current_user_id();
+    $producto_id = intval($_POST['producto_id']);
+    $asociados = (array)get_user_meta($user_id, 'productos_asociados', true);
+    if (!in_array($producto_id, $asociados)) {
+        $asociados[] = $producto_id;
+        update_user_meta($user_id, 'productos_asociados', $asociados);
+    }
+    wp_send_json_success('Producto afiliado añadido');
+});
+
+// --- Shortcode para botón “Añadir a mi tienda como afiliado” ---
+add_shortcode('boton_afiliado_producto', function($atts){
+    if (!is_user_logged_in() || !current_user_can('wcfm_vendor')) return '';
+    global $post;
+    $producto_id = $post ? $post->ID : 0;
+    if (!$producto_id) return '';
+    ob_start(); ?>
+    <button id="asociar-producto-afiliado" data-product="<?php echo esc_attr($producto_id); ?>">
+        Añadir a mi tienda como afiliado
+    </button>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('asociar-producto-afiliado');
+        if (btn) btn.addEventListener('click', function(){
+            var pid = this.getAttribute('data-product');
+            fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'action=asociar_producto_afiliado&producto_id=' + pid
+            }).then(r => r.json()).then(data => {
+                alert(data.success ? '¡Producto afiliado añadido!' : 'Error: ' + data.data);
+            });
+        });
+    });
+    </script>
+    <?php
+    return ob_get_clean();
+});
+
+// --- Bloquea edición productos que no pertenezcan al vendedor ---
+add_filter('wcfm_is_allow_wc_products_manage', function($allow, $product_id){
+    $current_user = get_current_user_id();
+    $owner_id = get_post_field('post_author', $product_id);
+    if ($owner_id != $current_user) $allow = false;
+    return $allow;
+}, 99, 2);
+
+// --- Opcional: redirecciona si intentan editar producto ajeno ---
+add_action('load-post.php', function(){
+    if (isset($_GET['post'])) {
+        $post_id = intval($_GET['post']);
+        $current_user = get_current_user_id();
+        $owner_id = get_post_field('post_author', $post_id);
+        if ($owner_id != $current_user && !current_user_can('manage_options')) {
+            wp_redirect(home_url('/no-permisos')); exit;
+        }
+    }
+});
+
+
+

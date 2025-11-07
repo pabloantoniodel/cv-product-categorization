@@ -135,5 +135,22 @@ Filtrar por: /?s=
 
 ---
 
+## [2025-11-06] - Mejoras en estadísticas
+
+### Añadido
+- ✅ **Columna "IP de Login"** en tabla de Usuarios Conectados
+  - Ahora se muestra la IP desde la cual cada usuario se logueó
+  - Incluye IP y user agent en los datos de login
+  - Vista mejorada con formato `<code>` para IPs
+
+### Cambiado
+- 🔧 `CV_Stats_Login_Tracker` actualizado
+  - Función `get_logins_by_date_range()` ahora retorna IP y user agent
+  - Función `get_todays_logins()` actualizada para consistencia
+  - Consultas optimizadas con subconsultas JOIN
+- 🔧 Plugin `cv-stats` actualizado a v1.3.2
+
+---
+
 **Última actualización:** 2025-11-06
 

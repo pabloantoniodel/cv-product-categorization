@@ -1,0 +1,110 @@
+#payment-detail-modal h2 {
+  font-size: 1.6em;
+  font-weight: 700;
+}
+
+.modal {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  z-index: 7001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15px;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 5px;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close-button:hover {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-body {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.payment-detail-box {
+  flex: 50%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.payment-detail-label {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.payment-status-btn {
+  padding: 3px 5px;
+}
+
+.payment-status-btn.refunded {
+  border: 1px solid #6C8CA1;
+  border-radius: 3px;
+  background-color: #f4f4ff;
+}
+
+.no-items td {
+  background: white;
+}
+.no-items .empty-list-table-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.no-items .empty-list-table-container img {
+  max-width: 400px;
+}
+
+.ur-membership-filter-container .select2-selection__rendered {
+  width: 120px;
+}
+
+body.user-registration #user-registration-pro-filters-row .search-box {
+  width: 275px;
+}
+body.user-registration #user-registration-pro-filters-row .payment-status {
+  width: 200px;
+}
+body.user-registration #user-registration-pro-filters-row .module {
+  width: 200px;
+}
+body.user-registration #ur-membership-payment-history-form .tablenav .bulkactions .select2-container {
+  width: 220px !important;
+}
+body.user-registration #ur-membership-order-create-form {
+  width: 100%;
+  max-width: 100%;
+}

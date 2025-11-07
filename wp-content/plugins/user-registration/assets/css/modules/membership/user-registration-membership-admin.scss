@@ -1,0 +1,1398 @@
+@import 'utility/mixins';
+@import './../../variables/variables';
+@import './../../components/button';
+
+#payment-detail-modal {
+	h2 {
+		font-size: 1.6em;
+		font-weight: 700;
+	}
+}
+
+.modal {
+	display: none;
+	flex-direction: column;
+	position: fixed;
+	z-index: 7001;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 15px;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 600px;
+	border-radius: 5px;
+}
+
+.close-button {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+
+	&:hover,
+	&:focus {
+		color: black;
+		text-decoration: none;
+		cursor: pointer;
+	}
+}
+
+.modal-body {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
+
+.payment-detail-box {
+	flex: 50%;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 15px;
+}
+
+.payment-detail-label {
+	font-weight: 600;
+	font-size: 15px;
+	margin-bottom: 5px;
+}
+
+.payment-status-btn {
+	padding: 3px 5px;
+
+	&.pending {
+		border: 1px solid #f0a64f;
+		border-radius: 3px;
+		background: #fff4f4;
+	}
+
+	&.completed {
+		border: 1px solid #a0e39a;
+		border-radius: 3px;
+		background: #f5fff4;
+	}
+
+	&.failed {
+		border: 1px solid #fab9b9;
+		border-radius: 3px;
+		background: #fff4f4;
+	}
+}
+
+.ur-membership-header {
+	margin-left: -20px;
+	background: white;
+	position: sticky;
+	top: 32px;
+	z-index: 700;
+
+	.membership-menu-left {
+		gap: 20px;
+		flex: 1;
+	}
+
+	.membership-menu-right {
+		gap: 12px;
+
+		img {
+			all: unset;
+			height: 25px;
+			max-width: 100% !important;
+			animation: bounceAnimation 2s ease-in-out infinite;
+		}
+
+		.urm-membership-tutorial {
+			background: #269728;
+			padding: 8px 16px;
+			color: white !important;
+			font-size: 14px !important;
+			border-radius: 4px;
+			transition: all .3s;
+
+			&:hover {
+				background: #128b15;
+			}
+
+			&:after {
+				content: none;
+			}
+
+
+		}
+	}
+
+	a {
+		text-decoration: none !important;;
+	}
+}
+
+@keyframes bounceAnimation {
+	0% {
+		transform: translateX(-5px);
+	}
+	50% {
+		transform: translateX(5px);
+	}
+	100% {
+		transform: translateX(-5px);
+	}
+}
+
+.field-amount {
+	position: relative;
+
+	span {
+		position: absolute;
+		top: 6px;
+		left: 10px;
+		font-weight: 600;
+	}
+
+	input {
+		padding-left: 20px !important;
+	}
+}
+
+.user-registration-list-table-heading {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 20px 0;
+}
+
+
+// Membership Admin Side Design Fix
+.user-registration {
+	.ur-membership-header {
+		margin-left: 0;
+		padding-left: 24px !important;
+		padding-right: 24px !important;
+		border-bottom: 1px solid #e2e8f0;
+
+		.membership-menu {
+			&-left {
+				width: 100%;
+				padding: 0 !important;
+				gap: 4px;
+
+				img {
+					max-width: 36px !important;
+					padding: 18px 24px 18px 0;
+					border-right: 1px solid #E2E8F0;
+					margin-right: 28px;
+				}
+
+				a {
+					font-size: 16px !important;
+					line-height: 26px;
+					color: #64748B;
+					position: relative;
+					padding: 23px 20px;
+
+					&::after {
+						content: "";
+						background: #475bb2;
+						width: 0px;
+						height: 3px;
+						position: absolute;
+						bottom: 0;
+						left: 0;
+						transition: all .3s;
+					}
+
+					&.row-title {
+						color: #475BB2;
+
+						&:after {
+							width: 100%;
+						}
+					}
+
+					&:hover {
+						&::after {
+							width: 100%;
+						}
+					}
+
+					&:focus {
+						box-shadow: none;
+						outline: none;
+					}
+				}
+			}
+
+			&-right {
+				padding: 0 !important;
+
+				a {
+					font-size: 16px;
+					line-height: 26px;
+					font-weight: 500;
+					color: #64748B;
+					transition: all .3s;
+
+					&:hover {
+						color: #475BB2;
+					}
+				}
+			}
+		}
+	}
+
+	#user-registration-list-table-page {
+		margin: $spacing_24px;
+		padding: $spacing_24px $spacing_28px;
+		box-sizing: border-box;
+
+		.user-registration-list-table-heading {
+			margin-top: 0;
+			margin-bottom: $spacing_24px;
+
+			h1 {
+				margin: 0;
+				color: $grey-500;
+				font-size: 22px;
+				font-weight: $semi_bold;
+				line-height: 32px;
+			}
+
+			.ur-button-primary {
+				border-radius: 3px;
+				border-color: #475BB2;
+				background: #475BB2;
+				color: #ffffff;
+				padding: 8px 20px 8px 16px;
+				color: #ffffff;
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 24px;
+				transition: all .3s;
+
+				&:hover {
+					background: #38488e;
+					border-color: #38488e;
+				}
+			}
+		}
+
+		#user-registration-list-filters-row {
+			form {
+				gap: $spacing_16px;
+
+				> p {
+					display: none;
+				}
+
+				> div {
+					position: relative;
+
+					select {
+						width: 200px;
+					}
+
+					input[type="search"] {
+						@include form-field-style;
+						width: 100%;
+						padding: 10px 40px 10px 14px;
+
+						&::placeholder {
+							color: #999;
+							font-size: 14px;
+							font-weight: 400;
+							line-height: 24px;
+						}
+
+						&:focus {
+							box-shadow: none;
+							outline: none;
+							border-color: #475BB2;
+						}
+					}
+
+					#search-submit {
+						top: 50% !important;
+						transform: translateY(-50%);
+						right: 14px !important;
+					}
+				}
+
+				button[type="submit"] {
+					padding: 8px 14px;
+					font-size: 14px;
+					line-height: 20px;
+					color: #475BB2;
+					border-color: #475BB2;
+					background: #F6F7F7;
+					font-weight: 500;
+				}
+			}
+		}
+
+		#user-registration-users-action-form {
+			.wp-list-table {
+				thead {
+					tr {
+						td {
+							width: 40px;
+						}
+
+						th {
+							&#username {
+								width: 210px;
+							}
+
+							&#membership {
+								width: 150px;
+							}
+
+							#payment_status {
+								width: 160px;
+							}
+
+							#user_registered {
+								width: 200px;
+							}
+
+							#actions {
+								width: 130px;
+							}
+						}
+					}
+				}
+
+				tbody {
+					tr {
+						th {
+							vertical-align: middle;
+							padding-bottom: 12px;
+						}
+
+						td {
+							vertical-align: middle;
+
+							&.username {
+								display: flex;
+								align-items: center;
+								gap: 10px;
+
+								img {
+									margin: 0;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		#membership-list {
+			.tablenav {
+				&-pages {
+					margin-top: 5px;
+					margin-bottom: 0;
+				}
+			}
+
+			.wp-list-table.memberships {
+				thead {
+					tr {
+						td {
+							width: 40px;
+						}
+
+						th {
+							&#title {
+								width: 320px;
+							}
+
+							&#members {
+								width: 120px;
+							}
+
+							&#status {
+								width: 100px;
+							}
+
+							&#action {
+								width: 180px;
+							}
+						}
+					}
+				}
+
+				tbody {
+					tr {
+						&:nth-child(odd) {
+							background: #F8F8FA;
+						}
+
+						td {
+							font-size: 14px;
+							line-height: 24px;
+							color: #383838;
+
+							strong {
+								margin: 0;
+
+								.ur-edit-title {
+									a {
+										line-height: 24px;
+										font-weight: 400;
+									}
+								}
+							}
+
+							&.membership_type {
+								.user-registration-badge {
+									padding: 0;
+									background: none;
+									font-size: 14px;
+									text-transform: capitalize;
+									color: #383838;
+									font-weight: 500;
+								}
+							}
+
+							&.action {
+								.row-actions {
+									.user-registration-switch {
+										@include form-toggle;
+									}
+
+									.edit {
+										font-size: 14px;
+										line-height: 24px;
+									}
+								}
+							}
+						}
+
+						&.no-items {
+							background: #ffffff;
+
+							td {
+								padding: 0;
+
+								.empty-list-table-container {
+									text-align: center;
+									margin-top: 30px;
+									margin-bottom: 30px;
+
+									img {
+										width: 300px;
+									}
+
+									h3 {
+										margin-top: 16px;
+										margin-bottom: 8px;
+										color: #222222;
+										font-size: 22px;
+										font-weight: 600;
+										line-height: 32px;
+									}
+
+									p {
+										color: #6B6B6B;
+										font-size: 14px;
+										font-weight: 400;
+										line-height: 24px;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				tfoot {
+					tr {
+						td,
+						th {
+							border-top: $border_width solid $border_color;
+						}
+
+						th {
+							font-size: 14px;
+							font-weight: 600;
+							line-height: 24px;
+							color: #383838;
+
+							a {
+								padding: 12px 8px;
+								display: flex;
+								align-items: center;
+								gap: 8px;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		#user-registration-members-list-form {
+			.wp-list-table.users {
+				tbody {
+					tr {
+						&.no-items {
+							background: #ffffff;
+
+							td {
+								padding: 0;
+
+								.empty-list-table-container {
+									text-align: center;
+									margin-top: 30px;
+									margin-bottom: 30px;
+
+									img {
+										width: 300px;
+									}
+
+									h3 {
+										margin-top: 16px;
+										margin-bottom: 8px;
+										color: #222222;
+										font-size: 22px;
+										font-weight: 600;
+										line-height: 32px;
+									}
+
+									p {
+										color: #6B6B6B;
+										font-size: 14px;
+										font-weight: 400;
+										line-height: 24px;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.ur-membership {
+		.ur-membership-tab-contents-wrapper {
+			background-color: unset;
+
+			#ur-membership-create-form {
+				max-width: 100%;
+				width: 100%;
+			}
+
+			.user-registration-card {
+				padding: $spacing_24px $spacing_28px;
+				border: $border_width solid $border_color;
+				border-radius: $border_radius_13;
+				background: $white;
+
+				&__header {
+					padding: 0;
+					gap: $spacing_18px;
+					padding-bottom: $spacing_20px;
+					border-bottom: $border_width solid $border_color;
+					margin-bottom: $spacing_28px;
+
+					a {
+						@include back-button;
+					}
+
+					h3 {
+						margin: 0;
+						color: #222222;
+						font-size: 22px;
+						font-weight: 600;
+						line-height: 32px;
+					}
+				}
+
+				&__body {
+					padding: 0;
+
+					#ur-membership-main-fields {
+						display: flex;
+						flex-direction: column;
+						gap: 24px;
+						margin-bottom: 32px;
+
+						.ur-membership-input-container {
+							padding: 0 !important;
+							align-items: center;
+							margin-top: 0 !important;
+
+							&:has(.ur-field[data-field-key="textarea"]) {
+								align-items: unset;
+
+								.wp-editor-wrap {
+									.wp-media-buttons {
+										display: flex;
+										gap: 12px;
+										margin-bottom: 12px;
+
+										.button {
+											display: flex;
+											align-items: center;
+											padding: 0 12px 0 10px;
+											gap: 4px;
+											margin-right: 0;
+
+											span {
+												display: flex;
+												align-items: center;
+												justify-content: center;
+												padding-top: 1px;
+												margin: 0;
+
+												&.dashicons {
+													&::before {
+														line-height: 18px;
+													}
+												}
+											}
+										}
+
+										#ur-smart-tags-selector {
+											margin-left: auto;
+										}
+									}
+
+									.wp-editor-container {
+										.mce-top-part {
+											&::before {
+												box-shadow: none;
+											}
+										}
+
+										.mce-container-body {
+											iframe {
+												height: 200px !important;
+											}
+										}
+
+										// .mce-toolbar-grp {
+										// 	border-bottom: 0;
+										// }
+									}
+								}
+							}
+
+							.ur-label {
+								margin-bottom: 0;
+								// margin-bottom: 300px;
+
+								label {
+									margin-bottom: 0;
+									color: #383838;
+									font-size: 15px;
+									font-weight: 500;
+									line-height: 21px;
+								}
+							}
+
+							.ur-field {
+								.wp-editor-wrap {
+									.wp-editor-container {
+										.mce-container {
+											border-bottom: 0;
+										}
+
+										.mce-container-body {
+											iframe {
+												height: 200px !important;
+											}
+										}
+
+										textarea {
+											border: 0;
+										}
+									}
+								}
+							}
+
+							.user-registration-switch {
+								@include form-toggle;
+							}
+						}
+					}
+
+					#ur-membership-plan-and-price-section {
+						margin: 0 !important;
+						padding: 0 !important;
+
+						.user-registration-card {
+
+							&__body {
+								.ur-membership-selection-container {
+									padding: 0 !important;
+
+									.ur-label {
+										label {
+											margin-bottom: 0 !important;
+											font-size: 15px;
+											line-height: 21px;
+											color: $grey-400;
+										}
+									}
+
+									.ur-input-type-select {
+										.ur-field {
+											gap: 16px;
+											flex-wrap: wrap;
+
+											.ur-membership-types {
+												max-width: 230px;
+												margin-bottom: 0;
+												border-radius: 4px;
+												border: 1px solid #E9E9E9;
+												background: #FFF;
+												padding: 12px 14px;
+												cursor: pointer;
+
+												.ur-membership-type {
+													&-title {
+														gap: 8px;
+														margin-bottom: 12px;
+
+														label {
+															padding: 0 !important;
+															font-size: 16px;
+															line-height: 24px;
+															cursor: pointer;
+														}
+
+														input[type="radio"]:checked::before {
+															background: $primary_color;
+														}
+													}
+
+													&-description {
+														p {
+															color: #383838;
+															font-size: 14px !important;
+															font-weight: 400;
+															line-height: 20px;
+															margin: 0;
+														}
+													}
+												}
+
+												&:has(input[type="radio"]:checked) {
+													border-color: $primary_color;
+												}
+											}
+
+											.ur-membership-upgrade-types {
+												width: 100%;
+												max-width: 220px;
+												margin-bottom: 0;
+												border-radius: $border_radius_4;
+												border: $border_width solid $border-color;
+												background: $white;
+												padding: $spacing_16px;
+												cursor: pointer;
+												display: flex;
+												align-items: center;
+												gap: $spacing_12px;
+
+												.ur-membership-upgrade-type {
+													&-title {
+														gap: $spacing_8px;
+														margin-bottom: $spacing_12px;
+
+														label {
+															padding: 0 !important;
+															font-size: 16px;
+															line-height: 24px;
+														}
+													}
+
+													&-full {
+														&--label {
+															padding: 0;
+														}
+													}
+												}
+
+												.ur-membership-type-title {
+													gap: $spacing_8px;
+
+													input[type="radio"],
+													.ur-membership-upgrade-type-full--label {
+														cursor: pointer;
+													}
+
+													input[type="radio"] {
+														&:checked::before {
+															background: $primary_color;
+														}
+													}
+												}
+
+												&:has(input[type="radio"]:checked) {
+													border-color: $primary_color;
+												}
+
+												&:has(input:disabled) {
+													cursor: not-allowed;
+
+													.ur-membership-type-title {
+														input[type="radio"],
+														.ur-membership-upgrade-type-full--label {
+															cursor: not-allowed;
+														}
+													}
+												}
+											}
+										}
+									}
+
+									.ur-label {
+										margin-bottom: 0;
+									}
+
+									.ur-input-type-membership-upgrade-path {
+										.select2 {
+											&-selection {
+												&__rendered {
+													flex-wrap: wrap;
+												}
+											}
+										}
+									}
+									.user-registration-switch {
+										@include form-toggle;
+									}
+								}
+							}
+						}
+
+						> .user-registration-card {
+							padding: 0;
+							border: 0;
+							margin-top: 80px;
+						}
+					}
+
+					#ur-membership-upgrade-action:checked {
+						background: $primary_color;
+						border-color: $primary_color;
+
+					}
+					#paid-plan-container {
+						display: flex;
+						flex-direction: column;
+						gap: $spacing_24px;
+						margin-top: $spacing_24px;
+
+						.ur-membership-selection-container {
+							align-items: center;
+							margin-top: 0 !important;
+
+							.ur-label {
+								margin-bottom: 0;
+							}
+
+							.ur-field {
+								span {
+									top: 50%;
+									transform: translateY(-50%);
+									font-size: 16px;
+								}
+
+								input[type="number"] {
+									padding-left: $spacing_24px !important;
+								}
+							}
+						}
+
+						.ur-membership-subscription-field-container {
+							.ur-membership-selection-container {
+								.ur-field {
+									gap: $spacing_12px;
+								}
+							}
+
+							.ur-membership-input-container {
+								margin-top: $spacing_24px !important;
+								padding: 0 !important;
+
+								.ur-label {
+									margin-bottom: 0;
+
+									label {
+										margin-bottom: 0;
+										font-size: 15px;
+										line-height: 21px;
+										color: $grey-400;
+									}
+								}
+
+								.user-registration-switch {
+									@include form-toggle;
+								}
+							}
+
+							.trial-container {
+								margin-top: $spacing_16px;
+
+								&--wrapper {
+									max-width: 650px;
+									background: #f4f4f4;
+									margin-left: 0 !important;
+									padding: $spacing_20px !important;
+									border-radius: $border_radius_4;
+
+									.ur-label {
+										margin-bottom: 0;
+										width: 260px !important;
+
+										label {
+											margin-bottom: 0;
+											font-size: 15px;
+											line-height: 21px;
+											color: $grey-400;
+										}
+									}
+
+									.ur-field {
+										flex: 1;
+										gap: $spacing_12px;
+
+										input[type="number"] {
+											width: 100px;
+										}
+
+										select {
+											flex: 1;
+										}
+									}
+								}
+							}
+						}
+					}
+
+					#payment-gateway-container {
+						margin-top: 60px;
+
+						.user-registration-card {
+							border-radius: $border_radius_7;
+
+							&__header {
+								h3 {
+									font-size: 20px;
+									line-height: 30px;
+								}
+							}
+
+							&__body {
+								.user-registration-payment__items {
+									border: $border_width solid $border_color;
+									border-radius: $border_radius_5;
+									padding: $spacing_16px $spacing_20px;
+									transition: all .3s ease-in-out;
+									cursor: pointer;
+
+									&:hover {
+										background: #f6f6f6;
+									}
+
+									h2 {
+										margin: 0;
+										font-size: 15px;
+										line-height: 25px;
+										color: $grey-400;
+									}
+
+									.user-registration-switch {
+										@include form-toggle;
+									}
+
+									.payment-option-body {
+										border-top: $border_width solid $border-color;
+										margin-top: $spacing_14px;
+										display: flex;
+										flex-direction: column;
+										gap: $spacing_10px;
+
+										a {
+											font-weight: $medium;
+											color: $primary_color;
+
+											&:focus {
+												outline: none;
+												box-shadow: none;
+											}
+										}
+
+										.ur-membership-input-container {
+											padding: 0 !important;
+											align-items: center;
+
+											.ur-label {
+												margin-bottom: 0;
+
+												label {
+													margin-bottom: 0;
+													font-size: 14px;
+													line-height: 20px;
+													color: $grey-400;
+												}
+											}
+										}
+
+										.ur-membership-selection-container {
+											align-items: center;
+
+											.ur-label {
+												margin-bottom: 0;
+
+												label {
+													margin-bottom: 0;
+													font-size: 14px;
+													line-height: 20px;
+													color: $grey-400;
+												}
+											}
+											.user-registration-switch {
+												@include form-toggle;
+											}
+										}
+									}
+								}
+
+								.payment-option-body {
+									margin-top: $spacing_20px;
+								}
+							}
+						}
+					}
+				}
+
+				hr {
+					display: none;
+				}
+
+				.submit {
+					@include form-footer-button;
+				}
+			}
+		}
+	}
+}
+
+.ur-membership-tab-contents-wrapper {
+	max-width: 100%;
+	margin: $spacing_24px;
+	display: block;
+	padding: 0;
+
+	#ur-membership-create-form {
+		.user-registration-card {
+			padding: $spacing_24px $spacing_28px;
+			border: $border_width solid $border_color;
+			background: $white;
+			border-radius: $border_radius_13;
+		}
+	}
+}
+
+#ur-membership-create-form {
+	.user-registration-card {
+		#ur-membership-form-container {
+			gap: $spacing_32px;
+			padding-bottom: $spacing_32px;
+
+			#ur-member-form {
+				&-left {
+					width: 70%;
+
+					#left-title {
+						padding-bottom: $spacing_20px;
+						margin-bottom: $spacing_28px;
+						border-bottom: $border_width solid $border-color;
+						gap: $spacing_18px;
+
+						a {
+							@include back-button;
+						}
+
+						h3 {
+							margin: 0;
+						}
+					}
+
+					#left-body {
+						display: flex;
+						flex-direction: column;
+						gap: $spacing_24px;
+
+						.ur-membership-input-container {
+							padding: 0 !important;
+							align-items: center;
+
+							.ur-label {
+								margin-bottom: 0;
+
+								label {
+									color: #383838;
+									font-size: 15px;
+									font-weight: 500;
+									line-height: 21px;
+								}
+							}
+
+							.user-registration-switch {
+								@include form-toggle;
+							}
+						}
+					}
+				}
+
+				&-right {
+					width: 30%;
+					gap: $spacing_32px;
+					display: flex;
+					flex-direction: column;
+					.right-container {
+						border-radius: $border_radius_7;
+						height: fit-content;
+						padding: $spacing_20px $spacing_24px;
+						border: $border_width solid $border-color;
+
+						&#select-plan-container {
+							background: #F8F8FA;
+						}
+
+						&#plan-detail-container {
+							.form-row {
+								display: flex;
+								align-items: flex-end;
+								justify-content: space-around;
+								width: 100%;
+
+								.ur-label {
+									flex: 1;
+									margin: 0;
+								}
+								span {
+									flex: 1;
+									&.user-registration-badge {
+										font-size: 13px;
+										line-height: 18px;
+										border-radius: 30px;
+										padding: 4px 12px;
+									}
+									&.user-registration-badge {
+										&--active {
+											color: #3aa530;
+											background: #def8db;
+										}
+
+										&--pending {
+											color: #ee9936;
+											background: #fff3e7;
+										}
+
+										&--failed,
+										&--canceled {
+											color: #f25656;
+											background: #ffe8e8;
+										}
+
+										&--inactive {
+											background: #e7e7e7;
+											color: #383838;
+										}
+
+										&--trial {
+											color: #ff8300;
+											background: #fff0e0;
+										}
+
+										&--expired {
+											background: #e7e7e7;
+											color: #a1a1a1;
+										}
+									}
+								}
+							}
+						}
+						.right-title {
+							padding-bottom: $spacing_16px;
+							margin-bottom: $spacing_24px;
+							border-bottom: $border_width solid $border-color;
+
+							h3 {
+								margin: 0 !important;
+								color: $grey-400;
+								font-size: 20px;
+								font-weight: $semi_bold;
+								line-height: 30px;
+							}
+						}
+
+						.right-body {
+							gap: $spacing_24px;
+
+							.form-row {
+								margin-top: 0 !important;
+
+								label {
+									color: $grey-400;
+									font-size: 15px;
+									font-weight: $medium;
+									line-height: 21px;
+								}
+
+								input {
+									&[type="date"] {
+										background: 0 0;
+										background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M7.5 6.545V2.91c0-.502.403-.909.9-.909s.9.407.9.91v3.635c0 .503-.403.91-.9.91a.905.905 0 0 1-.9-.91Zm7.2 0V2.91c0-.502.403-.909.9-.909s.9.407.9.91v3.635c0 .503-.403.91-.9.91a.905.905 0 0 1-.9-.91Z'/%3E%3Cpath d='M19.2 6.545a.905.905 0 0 0-.9-.909H5.7c-.497 0-.9.407-.9.91v12.727c0 .502.403.909.9.909h12.6c.497 0 .9-.407.9-.91V6.546ZM21 19.273C21 20.779 19.791 22 18.3 22H5.7C4.209 22 3 20.779 3 19.273V6.545C3 5.04 4.209 3.818 5.7 3.818h12.6c1.491 0 2.7 1.221 2.7 2.727v12.728Z'/%3E%3Cpath d='M20.1 9.273c.497 0 .9.407.9.909s-.403.909-.9.909H3.9a.905.905 0 0 1-.9-.91c0-.501.403-.908.9-.908h16.2Z'/%3E%3C/svg%3E");
+										background-size: 18px 18px;
+										background-position: right 12px center;
+										background-repeat: no-repeat;
+										background-color: $white;
+
+										&::-webkit-calendar-picker-indicator {
+											appearance: none;
+											opacity: 0;
+											-webkit-appearance: none;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.submit {
+			@include form-footer-button;
+		}
+	}
+}
+
+
+.user-registration-switch {
+	gap: 10px;
+
+	.ur-pg-arrow {
+		width: 20px;
+		transform: rotate(90deg);
+		transition: transform 250ms ease-in-out 25ms;
+
+		&.expand {
+			transform: rotate(-90deg);
+		}
+	}
+}
+
+#ur-membership-plan-and-price-section .upgradable-type {
+	position: relative;
+	color: #bababa;
+
+	.ur-membership-type-title,
+	.ur-membership-type-description {
+		opacity: 0.5;
+	}
+
+	&::before {
+		opacity: 1;
+		content: "";
+		background-image: url("../../../images/icons/ur-pro-icon.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 100%;
+		position: absolute;
+		right: $spacing_12px;
+		border-radius: $border_radius_2;
+		width: 18px;
+		height: 18px;
+	}
+}
+
+.urmg-loader {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+.urmg-shortcode {
+	display: flex;
+	line-height: 1;
+}
+
+.user-registration-membership_page_user-registration-members {
+	background-color: #fafafa;
+}
+
+.user-registration-membership_page_user-registration-membership {
+	background-color: #fafafa;
+
+	table {
+		&.membership_groups {
+			th {
+				&#title {
+					width: 200px;
+				}
+
+				&#shortcode {
+					width: 220px;
+				}
+
+				&#status {
+					width: 100px;
+				}
+
+				&#action {
+					width: 200px;
+				}
+			}
+		}
+	}
+
+	.user-registration-help-tip {
+		&::after {
+			width: 8px;
+			height: 15px;
+		}
+	}
+}
+.tooltipster-base.tooltipster-bottom {
+	margin-top: -30px /* Adjust gap for bottom-positioned tooltips */
+}
+
+.wp-list-table {
+	&.memberships {
+		tfoot {
+			tr {
+				th, td {
+					border-top: none;
+				}
+			}
+		}
+	}
+
+	&.users{
+		td {
+			vertical-align: middle;
+
+			p {
+				margin: 7px 0 5px;
+			}
+		}
+	}
+}
+

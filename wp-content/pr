@@ -1,0 +1,65 @@
+<?php
+
+function mostrar_categorias_productos($term_ids) {
+    // Obtener todas las categorías de productos en WooCommerce
+    $categories = get_terms([
+        'taxonomy' => 'product_cat',
+        'include' => $term_ids, // Filtrar por los term_id proporcionados
+        'orderby' => 'name', // Ordenar alfabéticamente por nombre
+        'order' => 'ASC', // Orden ascendente
+    ]);
+
+    // Agregar las categorías adicionales con term_id = 9999 (personaliza según tus necesidades)
+    $additional_categories = [
+        (object) [
+            'term_id' => 99991,
+            'name' => 'Nueva Categoría 1',
+            'slug' => 'nueva-categoria-1',
+        ],
+        (object) [
+            'term_id' => 99992,
+            'name' => 'Nueva Categoría 2',
+            'slug' => 'nueva-categoria-2',
+        ],
+        (object) [
+            'term_id' => 99993,
+            'name' => 'Nueva Categoría 3',
+            'slug' => 'nueva-categoria-3',
+        ],
+        (object) [
+            'term_id' => 99994,
+            'name' => 'Nueva Categoría 4',
+            'slug' => 'nueva-categoria-4',
+        ],
+    ];
+     $filtered_categories = array_filter($categories, function ($category) use ($term_ids) {
+        return in_array($category->term_id, $term_ids);
+    });
+    
+     print_r($filtered_categories);
+    // Fusionar las categorías existentes con las adicionales
+    $all_categories = array_merge($filtered_categories, $additional_categories);
+
+    // Imprimir la salida visual en bruto
+    echo '<pre>';
+    print_r($all_categories);
+    echo '</pre>';
+}
+// Obtengo todas las categorias por get_current_user_id
+function obten_cat_usuario($user_id ){
+    global $wpdb;
+    //retorna un array de contactos con sus categorias correspondientes
+    $query="SELECT telefono,categorie_id,user_id  from wp_cvapp_user_categories where telefono IS NOT NULL and user_id=".$user_id . " GROUP by telefono";
+    $enquiry_query_result = $wpdb->get_results($query);	
+    //print ($query);
+    print_r($enquiry_query_result);
+    // Bucle para recoger las categorias  en la funcion ya dividida por telefonos 
+    
+    return array(99991);
+}
+// Ejemplo de uso: Mostrar categorías con term_id 1, 2 y 9999
+$user_id=812;
+//print($user_id);
+$term_ids_ejemplo = obten_cat_usuario($user_id);
+mostrar_categorias_productos($term_ids_ejemplo);
+

@@ -1,0 +1,622 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Plugins - Kaya QR Code Generator\n"
+"POT-Creation-Date: 2024-03-07 16:56+0100\n"
+"PO-Revision-Date: 2024-03-07 16:56+0100\n"
+"Last-Translator: \n"
+"Language-Team: kayastudio\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;esc_attr__;esc_html__\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: includes/kayastudio-admin-page-sidebar.php:19
+#: includes/kayastudio-admin-page.php:19
+#: includes/wpkqcg-admin-page-sidebar.php:19 includes/wpkqcg-admin-page.php:19
+#: lib/class.crud_qrcode_generator.php:49
+#: lib/class.crud_qrcode_generator.php:122
+#: lib/class.crud_qrcode_generator.php:138
+#: lib/class.crud_qrcode_generator.php:158
+#: lib/class.crud_qrcode_generator.php:193 lib/functions-database.php:26
+#: lib/functions-database.php:70 lib/functions-database.php:100
+msgid "You do not have sufficient permissions."
+msgstr "Vous ne disposez pas des autorisations suffisantes."
+
+#: includes/kayastudio-admin-page-sidebar.php:26
+#: includes/kayastudio-admin-page-sidebar.php:37
+msgid "Donate"
+msgstr "Faire un don"
+
+#: includes/kayastudio-admin-page-sidebar.php:29
+msgid "Support the advancement of this plugin"
+msgstr "Soutenir l'avancement de cette extension"
+
+#: includes/kayastudio-admin-page-sidebar.php:31
+msgid ""
+"You can give to support this plugin development and to encourage the "
+"developer for making open source softwares."
+msgstr ""
+"Vous pouvez donner pour soutenir le développement de cette extension et "
+"encourager le développeur à créer des logiciels open source."
+
+#: includes/kayastudio-admin-page-sidebar.php:34
+msgid "Make a donation with Paypal:"
+msgstr "Faites un don avec Paypal:"
+
+#: includes/kayastudio-admin-page-sidebar.php:40
+msgid "Make a donation with Bitcoin:"
+msgstr "Faites un don avec Bitcoin:"
+
+#: includes/kayastudio-admin-page.php:61
+msgid "WordPress plugins by Kaya Studio"
+msgstr "Extensions WordPress par Kaya Studio"
+
+#: includes/kayastudio-admin-page.php:63
+msgid ""
+"Kaya Studio is managed by a freelance web developer. These plugins are "
+"developed in his free time and for the love of making useful open source "
+"softwares."
+msgstr ""
+"Kaya Studio est géré par un développeur Web indépendant. Ces extensions sont "
+"développées pendant son temps libre et pour l'amour de créer des logiciels "
+"open source utiles."
+
+#: includes/kayastudio-admin-page.php:66
+msgid "Discover all the WordPress plugins developed by Kaya Studio."
+msgstr "Découvrez toutes les extensions WordPress développées par Kaya Studio."
+
+#: includes/kayastudio-admin-page.php:69
+msgid "All plugins by Kaya Studio"
+msgstr "Toutes les extensions de Kaya Studio"
+
+#: includes/kayastudio-admin-page.php:69
+msgid "All plugins"
+msgstr "Toutes les extensions"
+
+#: includes/wpkqcg-admin-page-sidebar.php:26
+msgid "Reviews"
+msgstr "Avis"
+
+#: includes/wpkqcg-admin-page-sidebar.php:29
+#: includes/wpkqcg-admin-page-sidebar.php:34 kaya-qr-code-generator.php:148
+msgid "Rate and review this plugin at WordPress.org"
+msgstr "Notez et évaluez cette extension sur WordPress.org"
+
+#: includes/wpkqcg-admin-page-sidebar.php:31
+msgid ""
+"Please take the time to let me know about your experience and rate this "
+"plugin."
+msgstr ""
+"Veuillez prendre le temps de me faire part de votre expérience et de noter "
+"cette extension."
+
+#: includes/wpkqcg-admin-page-sidebar.php:34 kaya-qr-code-generator.php:148
+msgid "Rate this plugin"
+msgstr "Notez cette extension"
+
+#: includes/wpkqcg-admin-page.php:22
+#, php-format
+msgid "%1$s - Version %2$s"
+msgstr "%1$s - Version %2$s"
+
+#: includes/wpkqcg-admin-page.php:37 lib/class.admin_dashboard_wpkqcg.php:50
+#: lib/class.admin_dashboard_wpkqcg.php:51
+msgid "QR Code Generator"
+msgstr "Générateur de QR code"
+
+#: includes/wpkqcg-admin-page.php:39 lib/class.admin_dashboard_wpkqcg.php:69
+msgid ""
+"Generate QR Code through Widgets and Shortcodes, without any dependencies."
+msgstr ""
+"Générez des QR codes via des widgets et des codes courts, sans aucune "
+"dépendance."
+
+#: includes/wpkqcg-admin-page.php:42
+msgid "Use built-in Widgets in \"Appearance > Widgets\"."
+msgstr "Utilisez les widgets intégrés dans \"Apparence> Widgets\"."
+
+#: includes/wpkqcg-admin-page.php:45
+msgid "Use shortcodes like this:"
+msgstr "Utilisez des codes courts comme ceci :"
+
+#: includes/wpkqcg-admin-page.php:50
+msgid "Basic shortcode for a static content:"
+msgstr "Code court de base pour un contenu statique :"
+
+#: includes/wpkqcg-admin-page.php:51
+msgid "My encoded content"
+msgstr "Mon contenu encodé"
+
+#: includes/wpkqcg-admin-page.php:54
+msgid "Basic shortcode for a dynamic content:"
+msgstr "Code court de base pour un contenu dynamique :"
+
+#: includes/wpkqcg-admin-page.php:60
+msgid ""
+"Or use the following shortcode generator assistant to assist you on the "
+"shortcode structure construction. The generated shortcode must be pasted in "
+"a “shortcode block” or directly in the page content."
+msgstr ""
+"Ou utilisez l'assistant générateur de codes courts suivant pour vous aider "
+"dans la construction de la structure de codes courts. Le code court généré "
+"doit être collé dans un «bloc code court» ou directement dans le contenu de "
+"la page."
+
+#: includes/wpkqcg-admin-page.php:61
+msgid ""
+"The shortcode generator assistant is also available in pages, posts, "
+"WooCommerce products or in any public custom post type, the generator is "
+"under the administration primary content of your page / post / product."
+msgstr ""
+"L'assistant générateur de codes courts est également disponible dans les "
+"pages, les articles, les produits WooCommerce ou dans tout type de "
+"publication personnalisé public, le générateur est sous le contenu principal "
+"de l'administration de votre page / article / produit."
+
+#: includes/wpkqcg-admin-page.php:66 kaya-qr-code-generator.php:120
+#: lib/class.admin_dashboard_wpkqcg.php:67
+msgid "QR Code Generator settings"
+msgstr "Paramètres du générateur de QR code"
+
+#: includes/wpkqcg-admin-page.php:76
+msgid "Save Changes"
+msgstr "Sauvegarder les modifications"
+
+#: includes/wpkqcg-admin-page.php:77
+msgid "Reset settings"
+msgstr "Réinitialiser les paramètres"
+
+#: includes/wpkqcg-admin-page.php:78
+msgid "Do you want to delete the current settings?"
+msgstr "Voulez-vous supprimer les paramètres actuels ?"
+
+#: includes/wpkqcg-admin-page.php:130
+msgid "Activate"
+msgstr "Activer"
+
+#: includes/wpkqcg-admin-page.php:135
+msgid "Normal location"
+msgstr "Emplacement normal"
+
+#: includes/wpkqcg-admin-page.php:136
+msgid "Advanced location"
+msgstr "Emplacement avancé"
+
+#: includes/wpkqcg-admin-page.php:141
+msgid "High priority"
+msgstr "Priorité haute"
+
+#: includes/wpkqcg-admin-page.php:142
+msgid "Core priority"
+msgstr "Priorité du noyau"
+
+#: includes/wpkqcg-admin-page.php:143
+msgid "Default priority"
+msgstr "Priorité par défaut"
+
+#: includes/wpkqcg-admin-page.php:144
+msgid "Low priority"
+msgstr "Priorité basse"
+
+#: includes/wpkqcg-admin-page.php:164
+msgid "Generator assistant settings"
+msgstr "Paramètres de l'assistant générateur"
+
+#: includes/wpkqcg-admin-page.php:169
+msgid "Display the shortcode generator assistant to:"
+msgstr "Afficher l'assistant du générateur de shortcode pour :"
+
+#: includes/wpkqcg-admin-page.php:177
+msgid "Display the shortcode generator assistant in:"
+msgstr "Afficher l'assistant du générateur de shortcode dans :"
+
+#: includes/wpkqcg-admin-page.php:185
+msgid "Reduced shortcode generator assistant in editor:"
+msgstr "Assistant générateur de shortcode réduit dans l'éditeur :"
+
+#: includes/wpkqcg-admin-page.php:193
+msgid ""
+"Meta box display context of the shortcode generator assistant in the editor:"
+msgstr ""
+"Contexte d'affichage de la méta boîte de l'assistant générateur de shortcode "
+"dans l'éditeur :"
+
+#: includes/wpkqcg-admin-page.php:201
+msgid ""
+"Meta box display priority of the shortcode generator assistant in the editor:"
+msgstr ""
+"Priorité d'affichage de la méta boîte de l'assistant générateur de shortcode "
+"dans l'éditeur :"
+
+#: includes/wpkqcg-admin-page.php:209
+msgid "QR Code image settings"
+msgstr "Paramètres d'image du QR code"
+
+#: includes/wpkqcg-admin-page.php:214
+msgid "Default color for QR Code image:"
+msgstr "Couleur par défaut pour l'image du QR code"
+
+#: includes/wpkqcg-admin-page.php:215
+msgid "Used if no color is specified in shortcode/widget."
+msgstr "Utilisé si aucune couleur n'est spécifiée dans le shortcode/widget."
+
+#: includes/wpkqcg-admin-page.php:223
+msgid "Default background color for QR Code image:"
+msgstr "Couleur d'arrière-plan par défaut pour l'image du QR code"
+
+#: includes/wpkqcg-admin-page.php:224
+msgid "Used if no background color is specified in shortcode/widget."
+msgstr ""
+"Utilisé si aucune couleur d'arrière-plan n'est spécifiée dans le shortcode/"
+"widget."
+
+#: includes/wpkqcg-admin-page.php:247
+msgid "Shortcode generator assistant"
+msgstr "Assistant générateur de codes courts"
+
+#: includes/wpkqcg-admin-page.php:283 lib/class.metabox_qrcodemetabox.php:157
+#: lib/functions.php:266
+msgid "Download QR Code"
+msgstr "Télécharger le QR Code"
+
+#: includes/wpkqcg-admin-page.php:288
+msgid ""
+"The QR Code preview is not available in plugin options page with the "
+"permalink as content."
+msgstr ""
+"L'aperçu du QR code n'est pas disponible dans la page d'options de "
+"l'extension avec le lien permanent comme contenu."
+
+#: includes/wpkqcg-admin-page.php:293 lib/class.metabox_qrcodemetabox.php:167
+msgid "The QR Code preview is not available with a dynamic content."
+msgstr "L'aperçu du QR code n'est pas disponible avec un contenu dynamique."
+
+#: includes/wpkqcg-admin-page.php:298 lib/class.metabox_qrcodemetabox.php:189
+msgid "Shortcode Generated:"
+msgstr "Code court généré :"
+
+#: includes/wpkqcg-admin-page.php:300 lib/class.metabox_qrcodemetabox.php:188
+msgid "QR Code Preview:"
+msgstr "Aperçu du QR code :"
+
+#: includes/wpkqcg-admin-page.php:302 lib/class.metabox_qrcodemetabox.php:195
+msgid "Shortcode settings:"
+msgstr "Paramètres du code court :"
+
+#: kaya-qr-code-generator.php:120
+msgid "Settings"
+msgstr "Paramètres"
+
+#: kaya-qr-code-generator.php:121
+msgid "Other plugins by Kaya Studio"
+msgstr "Autres extensions de Kaya Studio"
+
+#: kaya-qr-code-generator.php:121
+msgid "Other plugins"
+msgstr "Autres extensions"
+
+#: kaya-qr-code-generator.php:149
+msgid "Donate to support the advancement of this plugin"
+msgstr "Faites un don pour soutenir l'avancement de cette extension"
+
+#: kaya-qr-code-generator.php:149
+msgid "Donate to this plugin"
+msgstr "Faire un don à cette extension"
+
+#: lib/class.admin_dashboard_wpkqcg.php:203
+msgid "Error!"
+msgstr "Erreur !"
+
+#: lib/class.admin_dashboard_wpkqcg.php:209
+msgid "Success!"
+msgstr "Succès !"
+
+#: lib/class.crud_qrcode_generator.php:182
+msgid "Saving QR Code Generator settings"
+msgstr "Enregistrement des paramètres du générateur de QR code"
+
+#: lib/class.crud_qrcode_generator.php:205
+msgid "Reset QR Code Generator settings"
+msgstr "Réinitialiser les paramètres du générateur de QR code"
+
+#: lib/class.forms.php:65
+msgid "No layout found for field type:"
+msgstr "Aucune disposition trouvée pour le type de champ :"
+
+#: lib/class.forms_qrcode.php:34
+msgid "Title"
+msgstr "Titre"
+
+#: lib/class.forms_qrcode.php:42
+msgid "Title:"
+msgstr "Titre :"
+
+#: lib/class.forms_qrcode.php:43
+msgid "Displayed as widget title or as heading 2 for shortcodes."
+msgstr "Affiché comme titre de widget ou comme titre 2 pour les codes courts."
+
+#: lib/class.forms_qrcode.php:50
+msgid "Title Alignment:"
+msgstr "Alignement du titre :"
+
+#: lib/class.forms_qrcode.php:51
+msgid "Horizontal alignment of the title."
+msgstr "Alignement horizontal du titre."
+
+#: lib/class.forms_qrcode.php:53 lib/class.forms_qrcode.php:167
+#: lib/class.forms_qrcode.php:253
+msgid "None"
+msgstr "Aucun"
+
+#: lib/class.forms_qrcode.php:54 lib/class.forms_qrcode.php:168
+#: lib/class.forms_qrcode.php:254
+msgid "Left"
+msgstr "Gauche"
+
+#: lib/class.forms_qrcode.php:55 lib/class.forms_qrcode.php:169
+#: lib/class.forms_qrcode.php:255
+msgid "Center"
+msgstr "Centre"
+
+#: lib/class.forms_qrcode.php:56 lib/class.forms_qrcode.php:170
+#: lib/class.forms_qrcode.php:256
+msgid "Right"
+msgstr "Droite"
+
+#: lib/class.forms_qrcode.php:64
+msgid "Content"
+msgstr "Contenu"
+
+#: lib/class.forms_qrcode.php:72
+msgid "Content to encode in QR Code:"
+msgstr "Contenu à encoder dans le QR code :"
+
+#: lib/class.forms_qrcode.php:73
+msgid ""
+"Leave empty to use current page url, or enter content to be encoded in QR "
+"Code."
+msgstr ""
+"Laissez vide pour utiliser l'URL de la page courante, ou entrez le contenu à "
+"encoder dans le QR code."
+
+#: lib/class.forms_qrcode.php:80
+msgid "Use dynamic content (other shortcodes)"
+msgstr "Utiliser du contenu dynamique (autres codes courts)"
+
+#: lib/class.forms_qrcode.php:86
+msgid "Query string:"
+msgstr "Chaîne de requête :"
+
+#: lib/class.forms_qrcode.php:87
+msgid ""
+"Query string added to the automatic current page url (without the \"?\" "
+"code). Only available with empty content to encode."
+msgstr ""
+"Chaîne de requête ajoutée à l'URL automatique de la page courante (sans le "
+"code \"?\"). Uniquement disponible avec un contenu à encoder vide."
+
+#: lib/class.forms_qrcode.php:94
+msgid "Anchor link:"
+msgstr "Lien d'ancrage :"
+
+#: lib/class.forms_qrcode.php:95
+msgid ""
+"Anchor link added to the automatic current page url (without the \"#\" "
+"code). Only available with empty content to encode."
+msgstr ""
+"Lien d'ancrage ajouté à l'URL automatique de la page courante (sans le code "
+"\"#\"). Uniquement disponible avec un contenu à encoder vide."
+
+#: lib/class.forms_qrcode.php:103
+msgid "Image"
+msgstr "Image"
+
+#: lib/class.forms_qrcode.php:111
+msgid "Information repetition level:"
+msgstr "Niveau de répétition de l'information :"
+
+#: lib/class.forms_qrcode.php:112
+msgid "Ability to correct read errors."
+msgstr "Possibilité de corriger les erreurs de lecture."
+
+#: lib/class.forms_qrcode.php:114
+msgid "Low ~7%"
+msgstr "Faible ~7%"
+
+#: lib/class.forms_qrcode.php:115
+msgid "Medium ~15%"
+msgstr "Moyen ~15%"
+
+#: lib/class.forms_qrcode.php:116
+msgid "Quarter ~25%"
+msgstr "Quart ~25%"
+
+#: lib/class.forms_qrcode.php:117
+msgid "High ~30%"
+msgstr "Haut ~30%"
+
+#: lib/class.forms_qrcode.php:124
+msgid "Size:"
+msgstr "Taille :"
+
+#: lib/class.forms_qrcode.php:125
+msgid "Leave empty for automatic size, or enter size in px."
+msgstr "Laissez vide pour une taille automatique, ou entrez une taille en px."
+
+#: lib/class.forms_qrcode.php:131
+msgid "Border width level:"
+msgstr "Niveau de largeur de bordure :"
+
+#: lib/class.forms_qrcode.php:132
+msgid "Sets the thickness of the image margin. Default level: 4."
+msgstr "Définit l'épaisseur de la marge de l'image. Niveau par défaut : 4."
+
+#: lib/class.forms_qrcode.php:150
+msgid "Color:"
+msgstr "Couleur :"
+
+#: lib/class.forms_qrcode.php:151
+msgid "Leave empty for default color, or use Hex color code as \"#000000\"."
+msgstr ""
+"Laissez vide pour la couleur par défaut, ou utilisez un code de couleur "
+"hexadécimal comme \"#000000\"."
+
+#: lib/class.forms_qrcode.php:157
+msgid "Background Color:"
+msgstr "Couleur d’arrière-plan :"
+
+#: lib/class.forms_qrcode.php:158
+msgid ""
+"Leave empty for default color, or use Hex color code as \"#FFFFFF\". You can "
+"set a transparent background with \"#FFFFFF00\"."
+msgstr ""
+"Laissez vide pour la couleur par défaut ou utilisez un code de couleur "
+"hexadécimal comme \"#FFFFFF\". Vous pouvez définir un fond transparent avec "
+"\"#FFFFFF00\"."
+
+#: lib/class.forms_qrcode.php:164
+msgid "Image Alignment:"
+msgstr "Alignement de l'image :"
+
+#: lib/class.forms_qrcode.php:165
+msgid "Horizontal alignment of the QR Code image."
+msgstr "Alignement horizontal de l'image du QR Code."
+
+#: lib/class.forms_qrcode.php:177
+msgid "Add shadows to QR Code image"
+msgstr "Ajouter des ombres à l'image du QR code"
+
+#: lib/class.forms_qrcode.php:183
+msgid "Remove plugin style from QR code image"
+msgstr "Supprimer le style du plugin de l'image du QR code"
+
+#: lib/class.forms_qrcode.php:189
+msgid "Image alternate text:"
+msgstr "Texte alternatif de l'image :"
+
+#: lib/class.forms_qrcode.php:190
+msgid "Leave empty for default image alternate text \"QR Code\"."
+msgstr ""
+"Laisser vide pour le texte alternatif de l'image par défaut \"QR code\"."
+
+#: lib/class.forms_qrcode.php:198
+msgid "Clickable link"
+msgstr "Lien cliquable"
+
+#: lib/class.forms_qrcode.php:206
+msgid "Destination URL:"
+msgstr "URL de destination :"
+
+#: lib/class.forms_qrcode.php:207
+msgid "QR Code image clickable link. URL with http://"
+msgstr "Lien cliquable sur l'image du QR code. URL avec http://"
+
+#: lib/class.forms_qrcode.php:214
+msgid "Open link in a new window"
+msgstr "Ouvrir le lien dans une nouvelle fenêtre"
+
+#: lib/class.forms_qrcode.php:220
+msgid ""
+"Use automatic current page URL or QR Code content URL as clickable link."
+msgstr ""
+"Utilisez l'URL automatique de la page actuelle ou l'URL du contenu du QR "
+"code comme lien cliquable."
+
+#: lib/class.forms_qrcode.php:221
+msgid "Only available with empty destination URL."
+msgstr "Uniquement disponible avec une URL de destination vide."
+
+#: lib/class.forms_qrcode.php:228
+msgid "Download button"
+msgstr "Bouton de téléchargement"
+
+#: lib/class.forms_qrcode.php:236
+msgid "Add a button to download the QR Code image"
+msgstr "Ajouter un bouton pour télécharger l'image du QR Code"
+
+#: lib/class.forms_qrcode.php:242
+msgid "Button text:"
+msgstr "Texte du bouton :"
+
+#: lib/class.forms_qrcode.php:243
+msgid "Leave empty for default text \"Download QR Code\"."
+msgstr "Laissez vide pour le texte par défaut « Télécharger le QR code\"."
+
+#: lib/class.forms_qrcode.php:250
+msgid "Button Alignment:"
+msgstr "Alignement du bouton :"
+
+#: lib/class.forms_qrcode.php:251
+msgid "Horizontal alignment of the button."
+msgstr "Alignement horizontal du bouton."
+
+#: lib/class.metabox_qrcodemetabox.php:87
+msgid "Kaya QR Code Generator"
+msgstr "Kaya QR Code Generator"
+
+#: lib/class.metabox_qrcodemetabox.php:138
+msgid "Important notice:"
+msgstr "Avis important :"
+
+#: lib/class.metabox_qrcodemetabox.php:139
+msgid ""
+"This is a shortcode generator assistant used to assist you on the shortcode "
+"structure construction, it is not used as custom fields for the post and "
+"don’t affect anything in the page content."
+msgstr ""
+"Il s’agit d’un assistant de création de codes courts utilisé pour vous aider "
+"dans la construction de la structure du code court, il n’est pas utilisé "
+"comme champs personnalisés pour la publication et n’affecte en rien le "
+"contenu de la page."
+
+#: lib/class.metabox_qrcodemetabox.php:141
+msgid ""
+"The generated shortcode must be pasted in a “shortcode block” or directly in "
+"the page content."
+msgstr ""
+"Le code court généré doit être collé dans un «bloc code court» ou "
+"directement dans le contenu de la page."
+
+#: lib/class.metabox_qrcodemetabox.php:162
+msgid ""
+"The post must be saved for a QR Code preview with the permalink as content."
+msgstr ""
+"La publication doit être sauvegardé pour un aperçu du QR code avec le lien "
+"permanent comme contenu."
+
+#: lib/class.metabox_qrcodemetabox.php:178
+msgid "Show / Hide the Shortcode generator assistant"
+msgstr "Afficher / Masquer l'assistant du générateur de Shortcode"
+
+#: lib/class.widgets_qrcodewidget.php:37
+msgid "Simple QR Code generator"
+msgstr "Simple QR Code generator"
+
+#: lib/functions-admin.php:261
+msgid "Super Admin"
+msgstr "Super administrateur"
+
+#~ msgid "Options"
+#~ msgstr "Options"
+
+#, php-format
+#~ msgid ""
+#~ "This shortcode generator assistant is also available in %1$sthe plugin "
+#~ "options page%2$s."
+#~ msgstr ""
+#~ "Cet assistant de génération de codes courts est également disponible dans "
+#~ "%1$sla page d'options de l'extension%2$s."
+
+#~ msgid "Kaya Studio developer"
+#~ msgstr "Développeur Kaya Studio"
+
+#~ msgid "QR Code image clickable link as the automatic current page url."
+#~ msgstr ""
+#~ "Lien cliquable sur l'image du QR code comme URL de la page courante "
+#~ "automatique."
