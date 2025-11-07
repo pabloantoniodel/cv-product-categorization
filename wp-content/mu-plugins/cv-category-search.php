@@ -2,7 +2,7 @@
 /**
  * Plugin Name: CV - Categorizador Modal WCFM
  * Description: Busca en MÚLTIPLES fuentes (checklist + ocultas + select).
- * Version: 3.3.3
+ * Version: 3.3.4
  * Author: Ciudad Virtual
  */
 
@@ -425,8 +425,8 @@ class CV_Category_Modal {
                     return;
                 }
 
-                        console.log('🚀 CV Category Modal v3.3.3-CLEAN - Inicializando...');
-                        console.log('✅ jQuery ready - v3.3.3 - Solo nombre + (padre)');
+                        console.log('🚀 CV Category Modal v3.3.4-NAME-ONLY - Inicializando...');
+                        console.log('✅ jQuery ready - v3.3.4 - Búsqueda SOLO en nombre');
                 console.log('📍 URL:', window.location.href);
                 
                 var allCategories = [];
@@ -914,31 +914,20 @@ class CV_Category_Modal {
                     console.log('🔎 Filtrando', allCategories.length, 'categorías. Query normalizada:', normalizedQuery);
                     
                     allCategories.forEach(function(cat) {
-                        var pathSource = '';
-                        if (cat.path) {
-                            pathSource = cat.path;
-                        } else if (cat.name) {
-                            pathSource = cat.name;
-                        }
-                        var normalizedPath = normalizeString(pathSource);
+                        // SOLO buscar en el nombre de la categoría, NO en el path completo
                         var catNameForNormalize = '';
                         if (cat.name) {
                             catNameForNormalize = cat.name;
                         }
                         var normalizedName = normalizeString(catNameForNormalize);
                         
-                        var foundInPath = normalizedPath.indexOf(normalizedQuery) !== -1;
+                        // Buscar solo en el nombre
                         var foundInName = normalizedName.indexOf(normalizedQuery) !== -1;
                         
-                        if (foundInPath) {
+                        if (foundInName) {
                             matches.push(cat);
                             if (matches.length <= 5) {
-                                console.log('✅ #' + matches.length + ':', cat.name, '(path:', cat.path + ')');
-                            }
-                        } else if (foundInName) {
-                            matches.push(cat);
-                            if (matches.length <= 5) {
-                                console.log('✅ #' + matches.length + ':', cat.name, '(path:', cat.path + ')');
+                                console.log('✅ #' + matches.length + ':', cat.name, '(padre:', cat.parentName + ')');
                             }
                         }
                     });
