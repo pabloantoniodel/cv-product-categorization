@@ -3,14 +3,18 @@ declare(strict_types=1);
 
 namespace Cv\ProductCategorization;
 
+use Cv\ProductCategorization\Admin\Menu;
+use Cv\ProductCategorization\Admin\VendorSectors;
 use WP_CLI;
 
 final class Plugin
 {
     public static function init(): void
     {
+        VendorSectors::init();
+
         if (\is_admin()) {
-            Admin\Menu::init();
+            Menu::init();
         }
 
         if (defined('WP_CLI') && WP_CLI) {
