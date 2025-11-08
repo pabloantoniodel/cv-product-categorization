@@ -98,6 +98,9 @@ class CV_Stats {
         
         // Enqueue admin styles
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
+
+        // Verificar actualizaciones de esquema
+        add_action('plugins_loaded', array($this, 'maybe_upgrade_tables'));
         
         // Activación del plugin
         register_activation_hook(__FILE__, array($this, 'activate'));
@@ -217,6 +220,7 @@ class CV_Stats {
             activity_time datetime NOT NULL,
             ip_address varchar(100) DEFAULT '',
             user_agent text DEFAULT '',
+            category_snapshot longtext DEFAULT NULL,
             PRIMARY KEY (id),
             KEY product_id (product_id),
             KEY vendor_id (vendor_id),
@@ -226,6 +230,40 @@ class CV_Stats {
         dbDelta($sql_product_activities);
         
         error_log('✅ CV Stats: Plugin activado - Tablas creadas/actualizadas (logins, card_views, whatsapp_sends, product_activities)');
+    }
+    
+    /**
+     * Actualiza la estructura de tablas si faltan columnas recientes.
+     */
+    public function maybe_upgrade_tables() {
+        global $wpdb;
+
+        $table_product_activities = $wpdb->prefix . 'cv_product_activities';
+        $column_exists = $wpdb->get_var(
+            $wpdb->prepare("SHOW COLUMNS FROM {$table_product_activities} LIKE %s", 'category_snapshot')
+        );
+
+        if (!$column_exists) {
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+            $charset_collate = $wpdb->get_charset_collate();
+            $sql_product_activities = "CREATE TABLE IF NOT EXISTS $table_product_activities (
+                id bigint(20) NOT NULL AUTO_INCREMENT,
+                product_id bigint(20) NOT NULL,
+                vendor_id bigint(20) NOT NULL,
+                activity_type varchar(20) NOT NULL,
+                modified_by bigint(20) NOT NULL,
+                activity_time datetime NOT NULL,
+                ip_address varchar(100) DEFAULT '',
+                user_agent text DEFAULT '',
+                category_snapshot longtext DEFAULT NULL,
+                PRIMARY KEY (id),
+                KEY product_id (product_id),
+                KEY vendor_id (vendor_id),
+                KEY activity_type (activity_type),
+                KEY activity_time (activity_time)
+            ) $charset_collate;";
+            dbDelta($sql_product_activities);
+        }
     }
     
     /**

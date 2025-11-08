@@ -47,6 +47,12 @@ class CV_Stats_Product_Simple {
                 }
                 
                 $author = get_userdata(get_the_author_meta('ID'));
+                $categories = class_exists('CV_Stats_Product_Tracker')
+                    ? CV_Stats_Product_Tracker::get_category_snapshot_array($product_id)
+                    : array(
+                        'terms' => array(),
+                        'sector_terms' => array(),
+                    );
                 
                 $products[] = array(
                     'product_id' => $product_id,
@@ -59,7 +65,12 @@ class CV_Stats_Product_Simple {
                     'created_by_name' => $author ? $author->display_name : 'Desconocido',
                     'created_by_username' => $author ? $author->user_login : '',
                     'activity_time' => get_the_date('Y-m-d H:i:s'),
-                    'post_status' => get_post_status()
+                    'post_status' => get_post_status(),
+                    'categories' => $categories['terms'],
+                    'sector_categories' => $categories['sector_terms'],
+                    'categorize_url' => class_exists('CV_Stats_Product_Tracker')
+                        ? CV_Stats_Product_Tracker::get_categorize_url($product_id)
+                        : get_edit_post_link($product_id, '')
                 );
             }
             wp_reset_postdata();
@@ -109,6 +120,13 @@ class CV_Stats_Product_Simple {
                 $modified_by = $row->post_author;
                 $modified_by_user = $author;
             }
+
+            $categories = class_exists('CV_Stats_Product_Tracker')
+                ? CV_Stats_Product_Tracker::get_category_snapshot_array((int) $row->ID)
+                : array(
+                    'terms' => array(),
+                    'sector_terms' => array(),
+                );
             
             $products[] = array(
                 'product_id' => $row->ID,
@@ -122,7 +140,12 @@ class CV_Stats_Product_Simple {
                 'modified_by_username' => $modified_by_user ? $modified_by_user->user_login : '',
                 'activity_time' => $row->post_modified,
                 'post_status' => $row->post_status,
-                'created_at' => $row->post_date
+                'created_at' => $row->post_date,
+                'categories' => $categories['terms'],
+                'sector_categories' => $categories['sector_terms'],
+                'categorize_url' => class_exists('CV_Stats_Product_Tracker')
+                    ? CV_Stats_Product_Tracker::get_categorize_url((int) $row->ID)
+                    : get_edit_post_link($row->ID, '')
             );
         }
         

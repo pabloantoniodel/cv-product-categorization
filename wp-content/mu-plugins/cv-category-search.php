@@ -561,6 +561,14 @@ CSS;
             }
 
             jQuery(document).ready(function($) {
+                var shouldAutoOpen = false;
+                try {
+                    var params = new URLSearchParams(window.location.search || '');
+                    shouldAutoOpen = params.get('cv_open_cat') === '1';
+                } catch (err) {
+                    shouldAutoOpen = (window.location.search || '').indexOf('cv_open_cat=1') !== -1;
+                }
+
                 if (!isProductsPage()) {
                     return;
                 }
@@ -1189,6 +1197,12 @@ CSS;
                     loadCategories().then(function() {
                         updateSelectedCount();
                         renderSummary();
+                        if (shouldAutoOpen && !window.cvCategoryModalAutoOpened) {
+                            window.cvCategoryModalAutoOpened = true;
+                            setTimeout(function() {
+                                openModal();
+                            }, 250);
+                        }
                     });
                 }
 

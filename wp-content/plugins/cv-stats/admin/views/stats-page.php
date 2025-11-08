@@ -153,10 +153,77 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
     WHERE created_at >= %s AND created_at <= %s
     ORDER BY created_at DESC
 ", $period_start, $period_end), ARRAY_A);
+
+if (!function_exists('cv_stats_render_category_chips')) {
+    /**
+     * Renderiza las categorías como chips para la vista.
+     *
+     * @param array<int,array<string,mixed>> $categories
+     * @return string
+     */
+    function cv_stats_render_category_chips(array $categories): string {
+        if (empty($categories)) {
+            return '<span class="cv-category-chip is-empty">Sin categorías</span>';
+        }
+
+        $html = '<div class="cv-category-chips">';
+        foreach ($categories as $category) {
+            $label = isset($category['path']) && $category['path'] !== '' ? $category['path'] : ($category['name'] ?? '');
+            $label = (string) $label;
+            if ($label === '') {
+                continue;
+            }
+            $classes = array('cv-category-chip');
+            if (!empty($category['is_sector'])) {
+                $classes[] = 'is-sector';
+            }
+            $html .= sprintf(
+                '<span class="%s" title="%s">%s</span>',
+                esc_attr(implode(' ', $classes)),
+                esc_attr($label),
+                esc_html($label)
+            );
+        }
+        $html .= '</div>';
+
+        return $html;
+    }
+}
 ?>
 
 <div class="wrap cv-stats-page">
     <h1>📊 Estadísticas de Ciudad Virtual</h1>
+    
+    <style>
+        .cv-category-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .cv-category-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 10px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #3730a3;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.4;
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            white-space: nowrap;
+        }
+        .cv-category-chip.is-sector {
+            background: #ecfdf5;
+            color: #047857;
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+        .cv-category-chip.is-empty {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: rgba(248, 113, 113, 0.25);
+        }
+    </style>
     
     <!-- Filtro de Fechas -->
     <div class="cv-stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; margin-bottom: 30px;">
@@ -687,6 +754,7 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                             <th>Creado por</th>
                             <th>Hora</th>
                             <th>IP</th>
+                            <th>Categorías actuales</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -724,6 +792,9 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                                     <code style="font-size: 11px;"><?php echo esc_html($product['ip_address']); ?></code>
                                 </td>
                                 <td>
+                                    <?php echo cv_stats_render_category_chips($product['categories'] ?? array()); ?>
+                                </td>
+                                <td>
                                     <a href="<?php echo esc_url($product['product_url']); ?>" 
                                        target="_blank" 
                                        class="button button-small">
@@ -733,6 +804,13 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                                        class="button button-small">
                                         Editar
                                     </a>
+                                    <?php if (!empty($product['categorize_url'])): ?>
+                                        <a href="<?php echo esc_url($product['categorize_url']); ?>"
+                                           target="_blank"
+                                           class="button button-small button-primary">
+                                            Categorizar
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -758,6 +836,7 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                             <th>Modificado por</th>
                             <th>Hora</th>
                             <th>IP</th>
+                            <th>Categorías actuales</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -800,6 +879,9 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                                     <code style="font-size: 11px;"><?php echo esc_html($product['ip_address']); ?></code>
                                 </td>
                                 <td>
+                                    <?php echo cv_stats_render_category_chips($product['categories'] ?? array()); ?>
+                                </td>
+                                <td>
                                     <a href="<?php echo esc_url($product['product_url']); ?>" 
                                        target="_blank" 
                                        class="button button-small">
@@ -809,6 +891,13 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
                                        class="button button-small">
                                         Editar
                                     </a>
+                                    <?php if (!empty($product['categorize_url'])): ?>
+                                        <a href="<?php echo esc_url($product['categorize_url']); ?>"
+                                           target="_blank"
+                                           class="button button-small button-primary">
+                                            Categorizar
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

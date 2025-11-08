@@ -18,6 +18,13 @@ if (!defined('ABSPATH')) {
 class CV_Stats_Product_Tracker {
     
     /**
+     * Cache del término raíz de Sector.
+     *
+     * @var int|null
+     */
+    private static ?int $sector_root_id = null;
+    
+    /**
      * Constructor
      */
     public function __construct() {
@@ -49,6 +56,7 @@ class CV_Stats_Product_Tracker {
             global $wpdb;
             
             $table_name = $wpdb->prefix . 'cv_product_activities';
+            $category_snapshot = self::get_category_snapshot_json((int) $post->ID);
             
             // Obtener usuario actual (quien creó el producto)
             $created_by = get_current_user_id();
@@ -76,9 +84,10 @@ class CV_Stats_Product_Tracker {
                         'modified_by' => $created_by,
                         'activity_time' => current_time('mysql'),
                         'ip_address' => $this->get_ip_address(),
-                        'user_agent' => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field($_SERVER['HTTP_USER_AGENT']) : ''
+                        'user_agent' => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field($_SERVER['HTTP_USER_AGENT']) : '',
+                        'category_snapshot' => $category_snapshot,
                     ),
-                    array('%d', '%d', '%s', '%d', '%s', '%s', '%s')
+                    array('%d', '%d', '%s', '%d', '%s', '%s', '%s', '%s')
                 );
                 
                 error_log("✅ CV Stats: Producto creado trackeado - ID: {$post->ID}, Vendedor: {$post->post_author}, Creado por: {$created_by}");
@@ -109,6 +118,7 @@ class CV_Stats_Product_Tracker {
         global $wpdb;
         
         $table_name = $wpdb->prefix . 'cv_product_activities';
+        $category_snapshot = self::get_category_snapshot_json((int) $post_id);
         
         // Obtener usuario actual (quien modificó el producto)
         $modified_by = get_current_user_id();
@@ -126,9 +136,10 @@ class CV_Stats_Product_Tracker {
                 'modified_by' => $modified_by,
                 'activity_time' => current_time('mysql'),
                 'ip_address' => $this->get_ip_address(),
-                'user_agent' => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field($_SERVER['HTTP_USER_AGENT']) : ''
+                'user_agent' => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field($_SERVER['HTTP_USER_AGENT']) : '',
+                'category_snapshot' => $category_snapshot,
             ),
-            array('%d', '%d', '%s', '%d', '%s', '%s', '%s')
+            array('%d', '%d', '%s', '%d', '%s', '%s', '%s', '%s')
         );
         
         error_log("✅ CV Stats: Producto actualizado trackeado - ID: {$post_id}, Vendedor: {$post_after->post_author}, Modificado por: {$modified_by}");
@@ -180,6 +191,7 @@ class CV_Stats_Product_Tracker {
                 continue; // Producto eliminado
             }
             
+            $categories = self::get_category_snapshot_array((int) $row->product_id, $row->category_snapshot ?? null);
             $vendor = get_userdata($row->vendor_id);
             $created_by_user = get_userdata($row->modified_by);
             
@@ -194,7 +206,11 @@ class CV_Stats_Product_Tracker {
                 'created_by_name' => $created_by_user ? $created_by_user->display_name : 'Desconocido',
                 'created_by_username' => $created_by_user ? $created_by_user->user_login : '',
                 'activity_time' => $row->activity_time,
-                'ip_address' => $row->ip_address
+                'ip_address' => $row->ip_address,
+                'categories' => $categories['terms'],
+                'sector_categories' => $categories['sector_terms'],
+                'category_snapshot' => $categories,
+                'categorize_url' => self::get_categorize_url((int) $row->product_id),
             );
         }
         
@@ -230,6 +246,7 @@ class CV_Stats_Product_Tracker {
                 continue; // Producto eliminado
             }
             
+            $categories = self::get_category_snapshot_array((int) $row->product_id, $row->category_snapshot ?? null);
             $vendor = get_userdata($row->vendor_id);
             $modified_by_user = get_userdata($row->modified_by);
             
@@ -244,7 +261,11 @@ class CV_Stats_Product_Tracker {
                 'modified_by_name' => $modified_by_user ? $modified_by_user->display_name : 'Desconocido',
                 'modified_by_username' => $modified_by_user ? $modified_by_user->user_login : '',
                 'activity_time' => $row->activity_time,
-                'ip_address' => $row->ip_address
+                'ip_address' => $row->ip_address,
+                'categories' => $categories['terms'],
+                'sector_categories' => $categories['sector_terms'],
+                'category_snapshot' => $categories,
+                'categorize_url' => self::get_categorize_url((int) $row->product_id),
             );
         }
         
@@ -281,6 +302,192 @@ class CV_Stats_Product_Tracker {
             'created' => intval($created_count),
             'updated' => intval($updated_count)
         );
+    }
+
+    /**
+     * Obtener la instantánea de categorías en formato JSON.
+     */
+    public static function get_category_snapshot_json(int $product_id): string {
+        $snapshot = self::collect_product_categories($product_id);
+        return wp_json_encode($snapshot, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Obtener la instantánea de categorías como arreglo estructurado.
+     *
+     * @param string|null $snapshot_json JSON previamente guardado.
+     * @return array<string,mixed>
+     */
+    public static function get_category_snapshot_array(int $product_id, ?string $snapshot_json = null): array {
+        if ($snapshot_json) {
+            $decoded = json_decode($snapshot_json, true);
+            if (is_array($decoded) && isset($decoded['terms'])) {
+                return self::prepare_snapshot_array($decoded);
+            }
+        }
+
+        return self::collect_product_categories($product_id);
+    }
+
+    /**
+     * Genera la URL de categorización directa para un producto.
+     */
+    public static function get_categorize_url(int $product_id): string {
+        $product_id = absint($product_id);
+        if ($product_id <= 0) {
+            return get_edit_post_link($product_id, '');
+        }
+
+        if (function_exists('wcfm_get_endpoint_url')) {
+            $dashboard_base = null;
+            if (function_exists('wcfm_get_dashboard_url')) {
+                $dashboard_base = wcfm_get_dashboard_url();
+            }
+            if (!$dashboard_base && function_exists('wcfm_get_page_permalink')) {
+                $dashboard_base = wcfm_get_page_permalink('dashboard');
+            }
+            if (!$dashboard_base) {
+                $dashboard_base = site_url('/store-manager/');
+            }
+
+            $manage_url = wcfm_get_endpoint_url('wcfm-products-manage', '', $dashboard_base);
+            $manage_url = add_query_arg(array(
+                'product_id' => $product_id,
+                'cv_open_cat' => 1,
+            ), $manage_url);
+            return $manage_url;
+        }
+
+        return get_edit_post_link($product_id, '');
+    }
+
+    /**
+     * Normaliza un arreglo recuperado desde la base de datos.
+     *
+     * @param array<string,mixed> $snapshot
+     * @return array<string,mixed>
+     */
+    private static function prepare_snapshot_array(array $snapshot): array {
+        $terms = array_map(static function ($item) {
+            return array(
+                'term_id' => isset($item['term_id']) ? (int) $item['term_id'] : 0,
+                'slug' => isset($item['slug']) ? (string) $item['slug'] : '',
+                'name' => isset($item['name']) ? (string) $item['name'] : '',
+                'path' => isset($item['path']) ? (string) $item['path'] : (isset($item['name']) ? (string) $item['name'] : ''),
+                'is_sector' => !empty($item['is_sector']),
+            );
+        }, $snapshot['terms'] ?? array());
+
+        $sector_terms = array_filter($terms, static function ($item) {
+            return !empty($item['is_sector']);
+        });
+
+        return array(
+            'terms' => array_values($terms),
+            'sector_terms' => array_values($sector_terms),
+            'term_ids' => array_values(array_map(static fn($item) => (int) $item['term_id'], $terms)),
+            'sector_term_ids' => array_values(array_map(static fn($item) => (int) $item['term_id'], $sector_terms)),
+            'generated_at' => isset($snapshot['generated_at']) ? (string) $snapshot['generated_at'] : '',
+        );
+    }
+
+    /**
+     * Construye y recoge la información de categorías del producto.
+     *
+     * @return array<string,mixed>
+     */
+    private static function collect_product_categories(int $product_id): array {
+        $terms = get_the_terms($product_id, 'product_cat');
+
+        if (is_wp_error($terms) || empty($terms)) {
+            return array(
+                'terms' => array(),
+                'sector_terms' => array(),
+                'term_ids' => array(),
+                'sector_term_ids' => array(),
+                'generated_at' => current_time('mysql'),
+            );
+        }
+
+        $mapped = array();
+        foreach ($terms as $term) {
+            $path = self::build_term_path($term);
+            $is_sector = self::is_sector_term($term);
+
+            $mapped[] = array(
+                'term_id' => (int) $term->term_id,
+                'slug' => (string) $term->slug,
+                'name' => (string) $term->name,
+                'path' => $path,
+                'is_sector' => $is_sector,
+            );
+        }
+
+        $sector_terms = array_filter($mapped, static function ($item) {
+            return !empty($item['is_sector']);
+        });
+
+        return array(
+            'terms' => array_values($mapped),
+            'sector_terms' => array_values($sector_terms),
+            'term_ids' => array_values(array_map(static fn($item) => (int) $item['term_id'], $mapped)),
+            'sector_term_ids' => array_values(array_map(static fn($item) => (int) $item['term_id'], $sector_terms)),
+            'generated_at' => current_time('mysql'),
+        );
+    }
+
+    /**
+     * Construye la ruta jerárquica del término.
+     */
+    private static function build_term_path(WP_Term $term): string {
+        $ancestors = array_reverse(get_ancestors($term->term_id, 'product_cat'));
+        $names = array();
+
+        foreach ($ancestors as $ancestor_id) {
+            $ancestor = get_term($ancestor_id, 'product_cat');
+            if ($ancestor && !is_wp_error($ancestor)) {
+                $names[] = $ancestor->name;
+            }
+        }
+
+        $names[] = $term->name;
+        $names = array_filter($names, static function ($name) {
+            return $name !== '';
+        });
+
+        return implode(' → ', $names);
+    }
+
+    /**
+     * Determina si el término pertenece a la categoría Sector.
+     */
+    private static function is_sector_term(WP_Term $term): bool {
+        $sector_id = self::get_sector_root_id();
+        if (!$sector_id) {
+            return false;
+        }
+
+        if ((int) $term->term_id === $sector_id) {
+            return true;
+        }
+
+        $ancestors = get_ancestors($term->term_id, 'product_cat');
+        return in_array((int) $sector_id, array_map('intval', $ancestors), true);
+    }
+
+    /**
+     * Obtiene (con cache) el ID del término raíz "Sector".
+     */
+    private static function get_sector_root_id(): ?int {
+        if (self::$sector_root_id === null) {
+            $term = get_term_by('slug', 'sector', 'product_cat');
+            if (!$term || is_wp_error($term)) {
+                $term = get_term_by('name', 'Sector', 'product_cat');
+            }
+            self::$sector_root_id = ($term && !is_wp_error($term)) ? (int) $term->term_id : 0;
+        }
+
+        return self::$sector_root_id ?: null;
     }
     
     /**
