@@ -108,7 +108,7 @@ function cv_store_redirects_maybe_redirect(): void
         return;
     }
 
-    if (!is_404()) {
+    if (is_admin()) {
         return;
     }
 
