@@ -5,6 +5,7 @@ namespace Cv\ProductCategorization\Admin;
 
 use Cv\ProductCategorization\Processors\OtrosCleaner;
 use Cv\ProductCategorization\Processors\SectorAssigner;
+use Cv\ProductCategorization\Processors\VendorSectorSync;
 
 final class Menu
 {
@@ -16,6 +17,7 @@ final class Menu
         \add_action('admin_menu', [self::class, 'register_menu']);
         \add_action('admin_post_cv_cat_assign_sector', [self::class, 'handle_assign_sector']);
         \add_action('admin_post_cv_cat_vaciar_otros', [self::class, 'handle_vaciar_otros']);
+        \add_action('admin_post_cv_cat_sync_vendors', [self::class, 'handle_sync_vendors']);
         \add_action('admin_notices', [self::class, 'maybe_render_notice']);
     }
 
@@ -102,8 +104,38 @@ final class Menu
                 </table>
                 <?php \submit_button(\__('Vaciar categoría “Otros”', 'cv-product-categorization'), 'primary', 'submit', false); ?>
             </form>
+
+            <hr />
+
+            <h2><?php \esc_html_e('Sincronizar sector de vendedores', 'cv-product-categorization'); ?></h2>
+            <p><?php \esc_html_e('Escanea los productos de cada vendedor y les asigna el primer sector encontrado para mantener sus fichas de tienda coherentes con la oferta actual.', 'cv-product-categorization'); ?></p>
+            <form method="post" action="<?php echo \esc_url($assign_url); ?>">
+                <?php \wp_nonce_field('cv_cat_sync_vendors'); ?>
+                <input type="hidden" name="action" value="cv_cat_sync_vendors" />
+                <p class="description"><?php \esc_html_e('Se procesarán todos los vendedores activos con rol WCFM.', 'cv-product-categorization'); ?></p>
+                <?php \submit_button(\__('Sincronizar sectores de vendedores', 'cv-product-categorization'), 'primary', 'submit', false); ?>
+            </form>
         </div>
         <?php
+    }
+
+    public static function handle_sync_vendors(): void
+    {
+        self::check_permissions();
+        \check_admin_referer('cv_cat_sync_vendors');
+
+        $sync    = new VendorSectorSync();
+        $output  = self::run_with_buffer(static function () use ($sync) {
+            $sync->run();
+        });
+
+        self::store_notice(
+            __('Sincronización de sectores de vendedores completada.', 'cv-product-categorization'),
+            $output
+        );
+
+        \wp_safe_redirect(self::admin_page_url());
+        exit;
     }
 
     public static function handle_assign_sector(): void

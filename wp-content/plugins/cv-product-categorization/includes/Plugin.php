@@ -39,6 +39,13 @@ final class Plugin
                     'shortdesc' => 'Reubica productos fuera de "Otros productos y servicios" aplicando reglas específicas.',
                 ]
             );
+            WP_CLI::add_command(
+                'cv-cat sync-vendor-sectors',
+                [new WpCli\VendorSectorSyncCommand(), '__invoke'],
+                [
+                    'shortdesc' => 'Sincroniza el sector principal de cada vendedor según sus productos publicados.',
+                ]
+            );
         }
     }
 }
