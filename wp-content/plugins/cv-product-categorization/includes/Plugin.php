@@ -9,6 +9,10 @@ final class Plugin
 {
     public static function init(): void
     {
+        if (\is_admin()) {
+            Admin\Menu::init();
+        }
+
         if (defined('WP_CLI') && WP_CLI) {
             self::register_cli_commands();
         }
