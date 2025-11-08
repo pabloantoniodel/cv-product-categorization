@@ -9,6 +9,7 @@ final class VendorSectors
 {
     private const META_KEY = 'cv_vendor_sector_terms';
     private static array $pageData = [];
+    private static bool $fieldInjected = false;
 
     public static function init(): void
     {
@@ -26,6 +27,10 @@ final class VendorSectors
      */
     public static function inject_settings_field(array $fields, int $vendorId): array
     {
+        if (self::$fieldInjected) {
+            return $fields;
+        }
+
         $sector = self::get_sector_term();
         if (!$sector) {
             return $fields;
@@ -53,6 +58,8 @@ final class VendorSectors
             'label_class' => 'wcfm_title wcfm_full_title',
             'value'       => self::render_field_html($terms, $selected),
         ];
+
+        self::$fieldInjected = true;
 
         return $fields;
     }
