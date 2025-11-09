@@ -10,6 +10,7 @@ final class VendorSectors
     private const META_KEY = 'cv_vendor_sector_terms';
     private static array $pageData = [];
     private static bool $fieldInjected = false;
+    private static bool $assetsPrinted = false;
 
     public static function init(): void
     {
@@ -42,7 +43,7 @@ final class VendorSectors
         }
 
         $selected = self::get_selected_terms($vendorId);
-        self::$pageData = [
+        $payload  = [
             'sector'   => [
                 'id'   => $sector->term_id,
                 'name' => $sector->name,
@@ -50,13 +51,14 @@ final class VendorSectors
             'terms'    => self::build_terms_payload($terms, $sector->term_id),
             'selected' => $selected,
         ];
+        self::$pageData = $payload;
 
         $fields['cv_sector_categories'] = [
             'label'       => __('Sectores comerciales', 'cv-product-categorization'),
             'type'        => 'html',
             'class'       => 'wcfm_ele wcfm_full_ele',
             'label_class' => 'wcfm_title wcfm_full_title',
-            'value'       => self::render_field_html($terms, $selected),
+            'value'       => self::render_field_html($terms, $selected, $payload),
         ];
 
         self::$fieldInjected = true;
@@ -107,17 +109,13 @@ final class VendorSectors
 
     public static function render_assets(): void
     {
-        if (empty(self::$pageData) || !self::is_vendor_settings_page()) {
+        if (empty(self::$pageData) || self::$assetsPrinted || !self::is_vendor_settings_page()) {
             return;
         }
 
-        $data = self::$pageData;
+        echo self::get_assets_markup();
+        self::$assetsPrinted = true;
         self::$pageData = [];
-
-        echo '<script type="text/javascript">window.CV_VENDOR_SECTOR_DATA = ' . wp_json_encode($data) . ';</script>';
-        echo '<style>' . self::get_modal_css() . '</style>';
-        echo self::get_modal_markup();
-        echo '<script type="text/javascript">' . self::get_modal_js() . '</script>';
     }
 
     /**
@@ -180,7 +178,12 @@ final class VendorSectors
      * @param array<int, WP_Term> $terms
      * @param array<int>          $selected
      */
-    private static function render_field_html(array $terms, array $selected): string
+    /**
+     * @param array<int, WP_Term> $terms
+     * @param array<int>          $selected
+     * @param array<string,mixed> $payload
+     */
+    private static function render_field_html(array $terms, array $selected, array $payload): string
     {
         $selectedNames = [];
         $map = [];
@@ -194,10 +197,12 @@ final class VendorSectors
         }
 
         $value = implode(',', array_map('intval', $selected));
+        $payloadJson = wp_json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $payloadAttr = $payloadJson ? esc_attr($payloadJson) : '';
 
         ob_start();
         ?>
-        <div id="cv-sector-field" class="cv-sector-field">
+        <div id="cv-sector-field" class="cv-sector-field" data-cv-sector="<?php echo $payloadAttr; ?>">
             <input type="hidden" id="cv-sector-input" name="vendor_sector_categories" value="<?php echo esc_attr($value); ?>" />
             <button type="button" class="cv-categorize-button" id="cv-sector-open">
                 <span><?php esc_html_e('Seleccionar sectores comerciales', 'cv-product-categorization'); ?></span>
@@ -209,7 +214,15 @@ final class VendorSectors
             </p>
         </div>
         <?php
-        return (string) ob_get_clean();
+        $html = (string) ob_get_clean();
+
+        if (wp_doing_ajax() && !self::$assetsPrinted && !empty(self::$pageData)) {
+            $html .= self::get_assets_markup();
+            self::$assetsPrinted = true;
+            self::$pageData = [];
+        }
+
+        return $html;
     }
 
     /**
@@ -244,11 +257,25 @@ final class VendorSectors
         }
 
         $uri = $_SERVER['REQUEST_URI'] ?? '';
-        if ($uri && (strpos($uri, 'wcfm-settings') !== false || strpos($uri, 'store-manager/settings') !== false)) {
+        if (
+            $uri
+            && (
+                strpos($uri, 'wcfm-settings') !== false
+                || strpos($uri, 'store-manager/settings') !== false
+                || strpos($uri, 'store-manager/vendors-manage') !== false
+            )
+        ) {
             return true;
         }
 
         return false;
+    }
+
+    private static function get_assets_markup(): string
+    {
+        return '<style>' . self::get_modal_css() . '</style>'
+            . self::get_modal_markup()
+            . '<script type="text/javascript">' . self::get_modal_js() . '</script>';
     }
 
     private static function get_modal_css(): string
@@ -600,32 +627,73 @@ HTML;
     {
         return <<<'JS'
 (function($){
-  const data = window.CV_VENDOR_SECTOR_DATA || null;
-  if(!data || !Array.isArray(data.terms)) {
-    return;
-  }
+  let payload = null;
 
   const state = {
     nodes: new Map(),
     roots: [],
-    selected: new Set((data.selected || []).map(id => String(id))),
-    sectorId: String(data.sector.id),
+    selected: new Set(),
+    sectorId: '',
     initialized: false,
-    snapshot: new Set()
+    snapshot: new Set(),
+    eventsBound: false,
+    signature: ''
   };
+  let observer = null;
+  let mutationPending = false;
+
+  function buildSignature(data){
+    const selected = Array.isArray(data.selected) ? data.selected.join(',') : '';
+    return [data.sector && data.sector.id ? data.sector.id : '', data.terms ? data.terms.length : 0, selected].join('|');
+  }
+
+  function readPayload(){
+    const field = document.getElementById('cv-sector-field');
+    if(!field){
+      return null;
+    }
+    const raw = field.getAttribute('data-cv-sector');
+    if(!raw){
+      return null;
+    }
+    try {
+      return JSON.parse(raw);
+    } catch (err) {
+      console.error('CV Vendor Sectors: payload inválido', err);
+      return null;
+    }
+  }
+
+  function applyPayload(data){
+    payload = data;
+    state.signature = buildSignature(data);
+    state.sectorId = String(data.sector.id);
+    state.selected = new Set((data.selected || []).map(function(id){ return String(id); }));
+    state.nodes.clear();
+    state.roots = [];
+    state.initialized = false;
+    state.snapshot = new Set();
+  }
 
   function normalize(str){
     return (str || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
   function buildTree(){
-    data.terms.forEach(term => {
+    if(!payload || !Array.isArray(payload.terms)){
+      return;
+    }
+
+    state.nodes.clear();
+    state.roots = [];
+
+    payload.terms.forEach(function(term){
       const id = String(term.id);
       const parent = term.parent ? String(term.parent) : state.sectorId;
       const node = {
-        id,
+        id: id,
         name: term.name,
-        parent,
+        parent: parent,
         children: [],
         element: null,
         checkbox: null,
@@ -636,17 +704,22 @@ HTML;
       state.nodes.set(id, node);
     });
 
-    state.nodes.forEach(node => {
-      if(node.parent && state.nodes.has(node.parent)) {
+    state.nodes.forEach(function(node){
+      if(node.parent && state.nodes.has(node.parent)){
         state.nodes.get(node.parent).children.push(node);
       } else {
         state.roots.push(node);
       }
     });
 
-    state.roots.sort((a,b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
-    state.nodes.forEach(node => {
-      node.children.sort((a,b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
+    state.roots.sort(function(a, b){
+      return a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
+    });
+
+    state.nodes.forEach(function(node){
+      node.children.sort(function(a, b){
+        return a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
+      });
     });
   }
 
@@ -707,7 +780,7 @@ HTML;
   }
 
   function setDescendantsVisibility(node, visible){
-    node.children.forEach(child => {
+    node.children.forEach(function(child){
       if(child.element){
         child.element.style.display = visible ? '' : 'none';
       }
@@ -722,8 +795,9 @@ HTML;
   }
 
   function updateNodeExpansion(node){
-    if(!node.element) return;
-    if(node.children.length === 0) return;
+    if(!node.element || node.children.length === 0){
+      return;
+    }
     node.element.classList.toggle('expanded', node.expanded);
     if(node.toggle){
       node.toggle.textContent = node.expanded ? '▾' : '▸';
@@ -753,7 +827,7 @@ HTML;
   }
 
   function syncSelectionUI(){
-    state.nodes.forEach(node => {
+    state.nodes.forEach(function(node){
       const isSelected = state.selected.has(node.id);
       if(node.checkbox){
         node.checkbox.checked = isSelected;
@@ -789,7 +863,7 @@ HTML;
     if(inline){
       inline.innerHTML = '';
       if(chipsInline.length){
-        chipsInline.forEach(chip => inline.appendChild(chip));
+        chipsInline.forEach(function(chip){ inline.appendChild(chip); });
       } else {
         const empty = document.createElement('div');
         empty.className = 'cv-empty-selection';
@@ -801,7 +875,7 @@ HTML;
     if(modalList){
       modalList.innerHTML = '';
       if(chipsModal.length){
-        chipsModal.forEach(chip => modalList.appendChild(chip));
+        chipsModal.forEach(function(chip){ modalList.appendChild(chip); });
       } else {
         const empty = document.createElement('div');
         empty.className = 'cv-empty-selection';
@@ -813,10 +887,12 @@ HTML;
 
   function createChips(ids, removable){
     return ids
-      .map(id => state.nodes.get(String(id)))
+      .map(function(id){ return state.nodes.get(String(id)); })
       .filter(Boolean)
-      .sort((a,b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }))
-      .map(node => {
+      .sort(function(a, b){
+        return a.name.localeCompare(b.name, 'es', { sensitivity: 'base' });
+      })
+      .map(function(node){
         const chip = document.createElement('div');
         chip.className = 'cv-selected-chip';
         chip.textContent = node.name;
@@ -838,7 +914,7 @@ HTML;
   function filterTree(query){
     const normalized = normalize(query);
     if(!normalized){
-      state.nodes.forEach(node => {
+      state.nodes.forEach(function(node){
         if(node.element){
           node.element.style.display = '';
           node.element.classList.remove('match');
@@ -858,12 +934,12 @@ HTML;
         matchCache.set(node.id, true);
         return true;
       }
-      const anyChild = node.children.some(child => nodeMatches(child));
+      const anyChild = node.children.some(function(child){ return nodeMatches(child); });
       matchCache.set(node.id, anyChild);
       return anyChild;
     }
 
-    state.nodes.forEach(node => {
+    state.nodes.forEach(function(node){
       const matches = nodeMatches(node);
       if(node.element){
         node.element.style.display = matches ? '' : 'none';
@@ -876,8 +952,11 @@ HTML;
   }
 
   function openModal(){
+    ensureLatestPayload();
     const modal = document.getElementById('cv-sector-modal');
-    if(!modal) return;
+    if(!modal){
+      return;
+    }
     state.snapshot = new Set(state.selected);
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -891,7 +970,9 @@ HTML;
 
   function closeModal(){
     const modal = document.getElementById('cv-sector-modal');
-    if(!modal) return;
+    if(!modal){
+      return;
+    }
     modal.classList.remove('active');
     document.body.style.overflow = '';
   }
@@ -909,15 +990,22 @@ HTML;
       node.expanded = true;
       updateNodeExpansion(node);
     }
-    node.children.forEach(child => renderNode(child, depth + 1, container));
+    node.children.forEach(function(child){
+      renderNode(child, depth + 1, container);
+    });
   }
 
   function initialise(){
-    if(state.initialized) return;
+    if(!payload || state.initialized){
+      return;
+    }
     buildTree();
     const treeRoot = document.getElementById('cv-sector-tree');
     if(treeRoot){
-      state.roots.forEach(node => renderNode(node, 0, treeRoot));
+      treeRoot.innerHTML = '';
+      state.roots.forEach(function(node){
+        renderNode(node, 0, treeRoot);
+      });
     }
     syncSelectionUI();
     bindEvents();
@@ -925,51 +1013,122 @@ HTML;
   }
 
   function bindEvents(){
-    $('#cv-sector-open').on('click', function(event){
+    if(state.eventsBound){
+      return;
+    }
+    state.eventsBound = true;
+
+    $(document).on('click', '#cv-sector-open', function(event){
       event.preventDefault();
       openModal();
     });
-    $('#cv-sector-save').on('click', function(){
+
+    $(document).on('click', '#cv-sector-save', function(){
       closeModal();
     });
-    $('#cv-sector-cancel, #cv-sector-close, #cv-sector-modal .cv-modal-overlay').on('click', function(){
+
+    $(document).on('click', '#cv-sector-cancel, #cv-sector-close, #cv-sector-modal .cv-modal-overlay', function(){
       cancelModal();
     });
-    $('#cv-sector-clear-all').on('click', function(){
+
+    $(document).on('click', '#cv-sector-clear-all', function(){
       state.selected.clear();
       syncSelectionUI();
     });
-    $('#cv-sector-clear-search').on('click', function(){
+
+    $(document).on('click', '#cv-sector-clear-search', function(){
       const search = document.getElementById('cv-sector-search');
       if(search){
         search.value = '';
       }
       filterTree('');
     });
-    $('#cv-sector-search').on('input', function(){
+
+    $(document).on('input', '#cv-sector-search', function(){
       filterTree(this.value || '');
     });
 
-    const observer = new MutationObserver(function(){
-      const field = document.getElementById('cv-sector-field');
-      if(field && !field.dataset.initialized){
-        field.dataset.initialized = '1';
-        syncSelectionUI();
-      }
+    startObserver();
+    scheduleHandleMutations();
+  }
+
+  function handleFieldUpdate(){
+    const field = document.getElementById('cv-sector-field');
+    if(!field){
+      payload = null;
+      state.initialized = false;
+      state.signature = '';
+      return;
+    }
+    if(!ensureLatestPayload()){
+      return;
+    }
+    if(!state.initialized){
+      initialise();
+    } else {
+      syncSelectionUI();
+    }
+  }
+
+  function scheduleHandleMutations(){
+    if(mutationPending){
+      return;
+    }
+    mutationPending = true;
+    requestAnimationFrame(function(){
+      mutationPending = false;
+      handleFieldUpdate();
+    });
+  }
+
+  function startObserver(){
+    if(observer){
+      observer.disconnect();
+    }
+    observer = new MutationObserver(function(){
+      scheduleHandleMutations();
     });
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
+  function ensureLatestPayload(){
+    const data = readPayload();
+    if(!data || !Array.isArray(data.terms)){
+      return false;
+    }
+    const signature = buildSignature(data);
+    if(signature !== state.signature){
+      applyPayload(data);
+      state.initialized = false;
+      const treeRoot = document.getElementById('cv-sector-tree');
+      if(treeRoot){
+        treeRoot.innerHTML = '';
+      }
+    }
+    return true;
+  }
+
   function initWhenReady(){
     const field = document.getElementById('cv-sector-field');
-    if(field){
+    if(!field){
+      payload = null;
+      state.initialized = false;
+      state.signature = '';
+      setTimeout(initWhenReady, 400);
+      return;
+    }
+    if(!ensureLatestPayload()){
+      setTimeout(initWhenReady, 400);
+      return;
+    }
+    if(!state.initialized){
       initialise();
     } else {
-      setTimeout(initWhenReady, 400);
+      syncSelectionUI();
     }
   }
 
-  $(document).ready(initWhenReady);
+  initWhenReady();
 })(jQuery);
 JS;
     }

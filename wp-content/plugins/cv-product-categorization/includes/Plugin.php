@@ -46,6 +46,13 @@ final class Plugin
                     'shortdesc' => 'Sincroniza el sector principal de cada vendedor según sus productos publicados.',
                 ]
             );
+            WP_CLI::add_command(
+                'cv-cat assign-category-images',
+                [new WpCli\CategoryImageAssignerCommand(), '__invoke'],
+                [
+                    'shortdesc' => 'Asigna imágenes libres a las categorías que no tienen miniatura (fuente Openverse).',
+                ]
+            );
         }
     }
 }
