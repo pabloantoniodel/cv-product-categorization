@@ -72,6 +72,9 @@ class CV_Stats {
         
         // Rastreador de consultas de contacto
         require_once CV_STATS_PLUGIN_DIR . 'includes/class-cv-stats-contact-tracker.php';
+
+        // Registro de búsquedas AWS
+        require_once CV_STATS_PLUGIN_DIR . 'includes/class-cv-aws-search-log.php';
         
         // Rastreador de referencias desde buscadores - DESACTIVADO (no interferir con WP Statistics)
         // require_once CV_STATS_PLUGIN_DIR . 'includes/class-cv-search-referral-tracker.php';
@@ -89,6 +92,9 @@ class CV_Stats {
         
         // Inicializar rastreador de tarjetas
         new CV_Stats_Card_Tracker();
+
+        // Inicializar logger de búsquedas AWS
+        new CV_Stats_Aws_Search_Log();
         
         // Inicializar widget de dashboard
         new CV_Stats_Dashboard_Widget();
@@ -230,6 +236,10 @@ class CV_Stats {
         dbDelta($sql_product_activities);
         
         error_log('✅ CV Stats: Plugin activado - Tablas creadas/actualizadas (logins, card_views, whatsapp_sends, product_activities)');
+
+        if (class_exists('CV_Stats_Aws_Search_Log')) {
+            CV_Stats_Aws_Search_Log::create_table();
+        }
     }
     
     /**
@@ -263,6 +273,10 @@ class CV_Stats {
                 KEY activity_time (activity_time)
             ) $charset_collate;";
             dbDelta($sql_product_activities);
+        }
+
+        if (class_exists('CV_Stats_Aws_Search_Log')) {
+            CV_Stats_Aws_Search_Log::maybe_create_table();
         }
     }
     

@@ -330,35 +330,46 @@ class CV_Stats_Product_Tracker {
     }
 
     /**
-     * Genera la URL de categorización directa para un producto.
+     * Obtiene la URL de edición del producto en el panel de WCFM.
+     *
+     * @param int $product_id
+     * @param array<string,mixed> $extra_args
      */
-    public static function get_categorize_url(int $product_id): string {
+    public static function get_manage_url(int $product_id, array $extra_args = array()): string {
         $product_id = absint($product_id);
         if ($product_id <= 0) {
             return get_edit_post_link($product_id, '');
         }
 
+        $dashboard_base = null;
+        if (function_exists('wcfm_get_dashboard_url')) {
+            $dashboard_base = wcfm_get_dashboard_url();
+        }
+        if (!$dashboard_base && function_exists('wcfm_get_page_permalink')) {
+            $dashboard_base = wcfm_get_page_permalink('dashboard');
+        }
+        if (!$dashboard_base) {
+            $dashboard_base = site_url('/store-manager/');
+        }
+
         if (function_exists('wcfm_get_endpoint_url')) {
-            $dashboard_base = null;
-            if (function_exists('wcfm_get_dashboard_url')) {
-                $dashboard_base = wcfm_get_dashboard_url();
-            }
-            if (!$dashboard_base && function_exists('wcfm_get_page_permalink')) {
-                $dashboard_base = wcfm_get_page_permalink('dashboard');
-            }
-            if (!$dashboard_base) {
-                $dashboard_base = site_url('/store-manager/');
+            $manage_url = wcfm_get_endpoint_url('wcfm-products-manage', $product_id, $dashboard_base);
+
+            if (!empty($extra_args)) {
+                $manage_url = add_query_arg($extra_args, $manage_url);
             }
 
-            $manage_url = wcfm_get_endpoint_url('wcfm-products-manage', '', $dashboard_base);
-            $manage_url = add_query_arg(array(
-                'product_id' => $product_id,
-                'cv_open_cat' => 1,
-            ), $manage_url);
             return $manage_url;
         }
 
         return get_edit_post_link($product_id, '');
+    }
+
+    /**
+     * Genera la URL de categorización directa para un producto.
+     */
+    public static function get_categorize_url(int $product_id): string {
+        return self::get_manage_url($product_id, array('cv_open_cat' => 1));
     }
 
     /**
@@ -388,6 +399,7 @@ class CV_Stats_Product_Tracker {
             'term_ids' => array_values(array_map(static fn($item) => (int) $item['term_id'], $terms)),
             'sector_term_ids' => array_values(array_map(static fn($item) => (int) $item['term_id'], $sector_terms)),
             'generated_at' => isset($snapshot['generated_at']) ? (string) $snapshot['generated_at'] : '',
+            'vendor_virtual' => !empty($snapshot['vendor_virtual']),
         );
     }
 
@@ -398,6 +410,16 @@ class CV_Stats_Product_Tracker {
      */
     private static function collect_product_categories(int $product_id): array {
         $terms = get_the_terms($product_id, 'product_cat');
+        $vendor_id = (int) get_post_field('post_author', $product_id);
+
+        $vendor_virtual = false;
+        if ($vendor_id > 0) {
+            if (class_exists('\Cv\ProductCategorization\Admin\VendorVirtual')) {
+                $vendor_virtual = \Cv\ProductCategorization\Admin\VendorVirtual::is_virtual($vendor_id);
+            } else {
+                $vendor_virtual = (bool) get_user_meta($vendor_id, 'cv_vendor_virtual_agent', true);
+            }
+        }
 
         if (is_wp_error($terms) || empty($terms)) {
             return array(
@@ -406,6 +428,7 @@ class CV_Stats_Product_Tracker {
                 'term_ids' => array(),
                 'sector_term_ids' => array(),
                 'generated_at' => current_time('mysql'),
+                'vendor_virtual' => $vendor_virtual,
             );
         }
 
@@ -433,6 +456,7 @@ class CV_Stats_Product_Tracker {
             'term_ids' => array_values(array_map(static fn($item) => (int) $item['term_id'], $mapped)),
             'sector_term_ids' => array_values(array_map(static fn($item) => (int) $item['term_id'], $sector_terms)),
             'generated_at' => current_time('mysql'),
+            'vendor_virtual' => $vendor_virtual,
         );
     }
 
