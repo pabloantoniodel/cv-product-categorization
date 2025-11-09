@@ -3,3 +3,4 @@ User-agent: *
 # No indexar páginas comercios duplicadas
 Disallow: /comercios-2/
 Disallow: /comercios-2-2/
+Disallow: /login/
