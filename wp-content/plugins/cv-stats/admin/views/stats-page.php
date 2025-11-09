@@ -1178,10 +1178,13 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                     <?php echo cv_stats_render_category_chips($product['categories'] ?? array()); ?>
                                 </td>
                                 <td>
-                                    <a href="<?php echo esc_url($product['product_url']); ?>" 
+                                    <?php
+                                    $manage_link = !empty($product['manage_url']) ? $product['manage_url'] : $product['product_url'];
+                                    ?>
+                                    <a href="<?php echo esc_url($manage_link); ?>" 
                                        target="_blank" 
                                        class="button button-small">
-                                        Ver →
+                                        Ver (WCFM)
                                     </a>
                                     <?php if (!empty($product['manage_url'])): ?>
                                         <a href="<?php echo esc_url($product['manage_url']); ?>" 
@@ -1271,10 +1274,13 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                     <?php echo cv_stats_render_category_chips($product['categories'] ?? array()); ?>
                                 </td>
                                 <td>
-                                    <a href="<?php echo esc_url($product['product_url']); ?>" 
+                                    <?php
+                                    $manage_link = !empty($product['manage_url']) ? $product['manage_url'] : $product['product_url'];
+                                    ?>
+                                    <a href="<?php echo esc_url($manage_link); ?>" 
                                        target="_blank" 
                                        class="button button-small">
-                                        Ver →
+                                        Ver (WCFM)
                                     </a>
                                     <?php if (!empty($product['manage_url'])): ?>
                                         <a href="<?php echo esc_url($product['manage_url']); ?>" 
@@ -1350,10 +1356,13 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="<?php echo esc_url($aff['product_url']); ?>" 
+                                    <?php
+                                    $manage_link = !empty($aff['manage_url']) ? $aff['manage_url'] : $aff['product_url'];
+                                    ?>
+                                    <a href="<?php echo esc_url($manage_link); ?>" 
                                        target="_blank" 
                                        class="button button-small">
-                                        Ver →
+                                        Ver (WCFM)
                                     </a>
                                     <?php if (!empty($aff['manage_url'])): ?>
                                         <a href="<?php echo esc_url($aff['manage_url']); ?>"

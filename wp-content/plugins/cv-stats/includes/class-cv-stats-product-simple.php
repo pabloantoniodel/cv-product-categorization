@@ -59,7 +59,7 @@ class CV_Stats_Product_Simple {
                     'product_name' => get_the_title(),
                     'product_url' => get_permalink($product_id),
                     'manage_url' => class_exists('CV_Stats_Product_Tracker')
-                        ? CV_Stats_Product_Tracker::get_manage_url($product_id, array('cv_open_cat' => 1))
+                        ? CV_Stats_Product_Tracker::get_manage_url($product_id)
                         : get_edit_post_link($product_id, ''),
                     'vendor_id' => get_the_author_meta('ID'),
                     'vendor_name' => $author ? $author->display_name : 'Desconocido',
@@ -137,7 +137,7 @@ class CV_Stats_Product_Simple {
                 'product_name' => $row->post_title,
                 'product_url' => get_permalink($row->ID),
                 'manage_url' => class_exists('CV_Stats_Product_Tracker')
-                    ? CV_Stats_Product_Tracker::get_manage_url((int) $row->ID, array('cv_open_cat' => 1))
+                    ? CV_Stats_Product_Tracker::get_manage_url((int) $row->ID)
                     : get_edit_post_link($row->ID, ''),
                 'vendor_id' => $row->post_author,
                 'vendor_name' => $author ? $author->display_name : 'Desconocido',
@@ -204,7 +204,7 @@ class CV_Stats_Product_Simple {
                 'product_name' => $row->product_name,
                 'product_url' => get_permalink($row->product_id),
                 'manage_url' => class_exists('CV_Stats_Product_Tracker')
-                    ? CV_Stats_Product_Tracker::get_manage_url((int) $row->product_id, array('cv_open_cat' => 1))
+                    ? CV_Stats_Product_Tracker::get_manage_url((int) $row->product_id)
                     : get_edit_post_link($row->product_id, ''),
                 'vendor_id' => $row->vendor_id,
                 'vendor_name' => $vendor ? $vendor->display_name : 'Desconocido',
