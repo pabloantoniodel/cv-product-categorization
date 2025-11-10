@@ -7,6 +7,12 @@
 (function($, window) {
     'use strict';
 
+    var geoEnabled = localStorage.getItem('cv_geolocation_enabled') === 'true';
+    if (!geoEnabled) {
+        console.log('[CV Radius Fix] ℹ️ Geolocalización desactivada - script deshabilitado');
+        return;
+    }
+
     console.log('[CV Radius Fix] 🚀 Script cargado');
 
     // Esperar a que el slider exista

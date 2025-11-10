@@ -1,0 +1,487 @@
+.cv-comercios {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    padding: 20px;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #1a1a1a;
+}
+
+.cv-comercios__header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.cv-comercios__title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6544ff 0%, #7f5bff 60%, #9a73ff 100%);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.cv-comercios__subtitle {
+    margin: 12px auto 0;
+    max-width: 680px;
+    font-size: 1rem;
+    color: #4d4d4d;
+}
+
+.cv-comercios__filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+    background: #f7f7ff;
+    border: 1px solid rgba(101, 68, 255, 0.16);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.cv-comercios__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cv-comercios__label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5a40cc;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.cv-comercios__input,
+.cv-comercios__select {
+    border-radius: 10px;
+    border: 1px solid rgba(101, 68, 255, 0.25);
+    background: #fff;
+    padding: 10px 14px;
+    font-size: 0.98rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-comercios__input:focus,
+.cv-comercios__select:focus {
+    outline: none;
+    border-color: #6544ff;
+    box-shadow: 0 0 0 3px rgba(101, 68, 255, 0.2);
+}
+
+.cv-comercios__actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.cv-comercios__submit,
+.cv-comercios__reset {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cv-comercios__submit {
+    border: none;
+    color: #fff;
+    background: linear-gradient(135deg, #6544ff 0%, #8364ff 100%);
+    box-shadow: 0 10px 25px rgba(101, 68, 255, 0.25);
+}
+
+.cv-comercios__submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(101, 68, 255, 0.3);
+}
+
+.cv-comercios__submit:active {
+    transform: translateY(0);
+}
+
+.cv-comercios__reset {
+    background: #fff;
+    color: #6544ff;
+    border: 1px solid rgba(101, 68, 255, 0.45);
+}
+
+.cv-comercios__reset:hover {
+    background: rgba(101, 68, 255, 0.06);
+}
+
+.cv-comercios__summary {
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    color: #4d4d4d;
+}
+
+.cv-comercios__field--radius {
+    grid-column: span 2;
+}
+
+.cv-comercios__radius-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cv-comercios__summary strong {
+    color: #2c1b72;
+}
+
+.cv-comercios__summary-geo {
+    margin-left: 8px;
+    font-weight: 600;
+    color: #4b3abd;
+}
+
+.cv-comercios__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 20px;
+}
+
+.cv-comercios__card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid rgba(106, 81, 255, 0.12);
+    box-shadow: 0 20px 35px -22px rgba(55, 26, 120, 0.35);
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    height: 100%;
+}
+
+.cv-comercios__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 38px -20px rgba(55, 26, 120, 0.45);
+}
+
+.cv-comercios__card-media {
+    position: relative;
+    height: 150px;
+    background: linear-gradient(135deg, rgba(101, 68, 255, 0.15), rgba(132, 112, 255, 0.05));
+}
+
+.cv-comercios__card-media.has-banner {
+    background-size: cover;
+    background-position: center;
+}
+
+.cv-comercios__card-media.has-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(24, 16, 67, 0.08) 0%, rgba(24, 16, 67, 0.65) 100%);
+}
+
+.cv-comercios__card-avatar {
+    position: absolute;
+    left: 22px;
+    bottom: -32px;
+    width: 72px;
+    height: 72px;
+    border-radius: 22px;
+    border: 4px solid #fff;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: #5c43ff;
+    box-shadow: 0 16px 32px -18px rgba(59, 24, 110, 0.55);
+    z-index: 2;
+}
+
+.cv-comercios__card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cv-comercios__card-body {
+    padding: 58px 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 260px;
+    flex: 1;
+}
+
+.cv-comercios__card-title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.cv-comercios__card-title a {
+    color: #2c1b72;
+    text-decoration: none;
+}
+
+.cv-comercios__card-title a:hover {
+    text-decoration: underline;
+}
+
+.cv-comercios__card-excerpt {
+    margin: 0 0 2px;
+    font-size: 0.92rem;
+    color: #4a4a5c;
+    line-height: 1.5;
+}
+
+.cv-comercios__card-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #73708e;
+}
+
+.cv-comercios__distance {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4b3abd;
+}
+
+.wcfm_radius_filter_container {
+    position: relative;
+}
+
+.wcfmmp-radius-addr {
+    width: 100%;
+    border: 1px solid rgba(101, 68, 255, 0.25);
+    border-radius: 10px;
+    padding: 10px 40px 10px 14px;
+    font-size: 0.95rem;
+}
+
+.wcfmmmp_locate_icon {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+}
+
+.wcfm_radius_slidecontainer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.wcfmmp_radius_range {
+    flex: 1;
+}
+
+.wcfmmp_radius_range_start,
+.wcfmmp_radius_range_cur,
+.wcfmmp_radius_range_end {
+    font-size: 0.85rem;
+    color: #4d4d4d;
+    min-width: 42px;
+}
+
+.cv-comercios__stars {
+    position: relative;
+    display: inline-block;
+    line-height: 1;
+    font-size: 1rem;
+}
+
+.cv-comercios__stars-base,
+.cv-comercios__stars-fill {
+    display: block;
+    letter-spacing: 2px;
+}
+
+.cv-comercios__stars-base {
+    color: #dad7ef;
+}
+
+.cv-comercios__stars-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #f7b723;
+    overflow: hidden;
+    width: 0;
+}
+
+.cv-comercios__rating-value {
+    font-weight: 700;
+    color: #372694;
+}
+
+.cv-comercios__rating-count {
+    font-size: 0.82rem;
+    color: #88869f;
+}
+
+.cv-comercios__rating-empty {
+    font-size: 0.9rem;
+    color: #88869f;
+}
+
+.cv-comercios__card-meta {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.92rem;
+    color: #4d4b62;
+}
+
+.cv-comercios__card-meta li {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.cv-comercios__card-meta-icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: #5c43ff;
+    margin-top: 1px;
+}
+
+.cv-comercios__card-meta a {
+    color: #3d2ec6;
+    text-decoration: none;
+}
+
+.cv-comercios__card-meta a:hover {
+    text-decoration: underline;
+}
+
+.cv-comercios__card-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.cv-comercios__card-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6544ff 0%, #8665ff 100%);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 14px 32px -18px rgba(101, 68, 255, 0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cv-comercios__card-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 36px -18px rgba(101, 68, 255, 0.6);
+}
+
+.cv-comercios__card-action-secondary {
+    font-weight: 600;
+    color: #5c43ff;
+    text-decoration: none;
+}
+
+.cv-comercios__card-action-secondary:hover {
+    text-decoration: underline;
+}
+
+.cv-comercios__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    background: #f9f9ff;
+    border: 1px dashed rgba(101, 68, 255, 0.25);
+    border-radius: 14px;
+    color: #3d338a;
+    font-weight: 600;
+}
+
+.cv-comercios__pagination {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.cv-comercios__pagination-list {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cv-comercios__pagination-item a,
+.cv-comercios__pagination-item span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c1b72;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.cv-comercios__pagination-item a:hover {
+    border-color: rgba(101, 68, 255, 0.45);
+    color: #6544ff;
+}
+
+.cv-comercios__pagination-item .current {
+    background: linear-gradient(135deg, #6544ff 0%, #8762ff 100%);
+    color: #fff;
+    box-shadow: 0 10px 30px -18px rgba(101, 68, 255, 0.75);
+}
+
+@media (max-width: 900px) {
+    .cv-comercios__filters {
+        grid-template-columns: 1fr;
+    }
+
+    .cv-comercios__actions {
+        justify-content: flex-start;
+    }
+
+    .cv-comercios__grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .cv-comercios {
+        padding: 16px;
+    }
+
+    .cv-comercios__title {
+        font-size: 1.8rem;
+    }
+
+    .cv-comercios__subtitle {
+        font-size: 0.95rem;
+    }
+}
+

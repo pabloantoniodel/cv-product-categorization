@@ -3,7 +3,7 @@
  * Plugin Name: Ciudad Virtual - Frontend Enhancements
  * Plugin URI: https://ciudadvirtual.app
  * Description: Mejoras visuales para el frontend: Sistema de burbujas animadas para geolocalización de tiendas, login moderno de WooCommerce y más
- * Version: 3.5.4
+ * Version: 3.5.5
  * Author: Ciudad Virtual
  * Author URI: https://ciudadvirtual.app
  * License: GPL v2 or later
@@ -130,7 +130,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definir constantes del plugin
-define('CV_FRONT_VERSION', '3.5.4');
+define('CV_FRONT_VERSION', '3.5.6-20251110');
 define('CV_FRONT_PLUGIN_FILE', __FILE__);
 define('CV_FRONT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CV_FRONT_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -187,6 +187,7 @@ class CV_Front {
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-optimizer.php';
         // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-script-override.php'; // Ya no es necesario, se usa versión no minificada directamente en el plugin personalizado
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-notifications-toggle.php';
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-comercios-page.php';
         // DESACTIVADO: Movido a wcfm-radius-persistence v2.0.0
         // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geolocation-toggle.php';
         // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geolocation-default-disabled.php';
@@ -373,6 +374,7 @@ class CV_Front {
         
         // Inicializar corrector de enlaces WhatsApp
         new CV_Store_WhatsApp_Fixer();
+        new CV_Comercios_Page();
         
         // Activación del plugin
         register_activation_hook(__FILE__, array($this, 'activate'));
