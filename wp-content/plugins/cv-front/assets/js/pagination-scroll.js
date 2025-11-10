@@ -14,6 +14,13 @@
         var hasSearch = urlParams.has('s') || urlParams.has('product_cat');
         var isStorePage = $('body').hasClass('woocommerce-shop') || window.location.href.indexOf('/store/') !== -1;
         var shouldScroll = sessionStorage.getItem('cv_should_scroll') === 'true';
+        var isGeoEnabled = localStorage.getItem('cv_geolocation_enabled') === 'true';
+        
+        // Si es página de tienda/shop Y la geolocalización está DESACTIVADA, NO hacer scroll
+        if (isStorePage && !isGeoEnabled && !hasPage && !hasSearch && !shouldScroll) {
+            console.log('CV Front: Página shop con geo DESACTIVADA - NO haciendo scroll inicial');
+            return;
+        }
         
         // Hacer scroll si hay paginación O si hay búsqueda O si es página de vendedor O si sessionStorage lo indica
         if (hasPage || hasSearch || isStorePage || shouldScroll) {
