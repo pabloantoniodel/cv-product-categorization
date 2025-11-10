@@ -55,6 +55,9 @@
         }
     }
 
+    // Variable para controlar el tiempo de carga inicial
+    var pageLoadTime = Date.now();
+    
     // Función para refrescar el listado de tiendas
     function refreshStoreList() {
         console.log('[CV Radius Fix] 🔄 Refrescando listado de tiendas...');
@@ -64,17 +67,23 @@
             return;
         }
         
-        // CV FIX: No refrescar si ya hay comercios cargados (evita duplicados en carga inicial)
-        var existingStores = $('.wcfmmp-single-store').length;
-        var isInitialLoad = !window.cvRadiusFixInitialized;
-        
-        if (existingStores > 0 && isInitialLoad) {
-            console.log('[CV Radius Fix] ⏭️ Carga inicial con', existingStores, 'comercios - SALTANDO refresh para evitar duplicados');
-            window.cvRadiusFixInitialized = true;
+        // CV FIX: NO ejecutar si stores-persistence está manejando la paginación
+        if (window.cvStoresPaginating) {
+            console.log('[CV Radius Fix] ⏭️ Paginación en curso - stores-persistence lo maneja');
             return;
         }
         
-        window.cvRadiusFixInitialized = true;
+        // CV FIX: Solo prevenir el refresh en los primeros 2 segundos después de cargar la página
+        // Esto evita duplicados en la carga inicial pero permite actualizaciones posteriores
+        var timeSinceLoad = Date.now() - pageLoadTime;
+        var existingStores = $('.wcfmmp-single-store').length;
+        
+        if (existingStores > 0 && timeSinceLoad < 2000) {
+            console.log('[CV Radius Fix] ⏭️ Carga inicial reciente (', timeSinceLoad, 'ms) con', existingStores, 'comercios - SALTANDO refresh para evitar duplicados');
+            return;
+        }
+        
+        console.log('[CV Radius Fix] ✅ Ejecutando refresh (tiempo desde carga:', timeSinceLoad, 'ms)');
 
         const $form = $('.wcfmmp-store-search-form');
         const formData = $form.serialize();
