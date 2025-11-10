@@ -63,6 +63,18 @@
             console.warn('[CV Radius Fix] ⚠️ Listado de tiendas no encontrado');
             return;
         }
+        
+        // CV FIX: No refrescar si ya hay comercios cargados (evita duplicados en carga inicial)
+        var existingStores = $('.wcfmmp-single-store').length;
+        var isInitialLoad = !window.cvRadiusFixInitialized;
+        
+        if (existingStores > 0 && isInitialLoad) {
+            console.log('[CV Radius Fix] ⏭️ Carga inicial con', existingStores, 'comercios - SALTANDO refresh para evitar duplicados');
+            window.cvRadiusFixInitialized = true;
+            return;
+        }
+        
+        window.cvRadiusFixInitialized = true;
 
         const $form = $('.wcfmmp-store-search-form');
         const formData = $form.serialize();
