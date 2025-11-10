@@ -1,0 +1,380 @@
+.cv-product-consult-box {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 10px;
+    background: rgba(238, 242, 255, 0.4);
+}
+
+.cv-product-consult-text {
+    margin: 0 0 12px;
+    font-size: 15px;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.cv-consultation-button {
+    display: inline-flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 14px 18px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    border: none !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+}
+
+.cv-consultation-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(118, 75, 162, 0.45) !important;
+}
+
+body.cv-consult-modal-open {
+    overflow: hidden;
+}
+
+#cv-consult-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(17, 24, 39, 0.65);
+    z-index: 99999;
+    padding: 20px;
+}
+
+#cv-consult-modal.active {
+    display: flex;
+}
+
+.cv-consult-modal__content {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 16px 45px rgba(17, 24, 39, 0.2);
+    padding: 32px;
+    position: relative;
+    animation: cvConsultSlideIn 0.25s ease-out;
+}
+
+@keyframes cvConsultSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cv-consult-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.cv-consult-modal__header h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #111827;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.cv-consult-close {
+    background: none;
+    border: none;
+    font-size: 26px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.cv-consult-close:hover {
+    color: #1f2937;
+}
+
+.cv-consult-modal__product {
+    margin: 0 0 18px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4c1d95;
+    background: rgba(79, 70, 229, 0.08);
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.cv-consult-feedback {
+    display: none;
+    margin-bottom: 18px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.cv-consult-feedback.success {
+    display: block;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.cv-consult-feedback.error {
+    display: block;
+    background: #fde8e8;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+}
+
+.cv-consult-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+    background: #f8fafc;
+    padding: 6px;
+    border-radius: 999px;
+}
+
+.cv-consult-tab {
+    flex: 1;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 600;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cv-consult-tab:hover {
+    background: rgba(99, 102, 241, 0.08);
+    color: #4338ca;
+}
+
+.cv-consult-tab.active {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: #ffffff;
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.22);
+}
+
+.cv-consult-panel {
+    background: #f9fafc;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    margin-bottom: 18px;
+}
+
+.cv-consult-panel form {
+    margin: 0;
+}
+
+.cv-consult-login-panel {
+    background: linear-gradient(160deg, rgba(59, 130, 246, 0.08), rgba(99, 102, 241, 0.08));
+}
+
+.cv-consult-login-panel h4 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.cv-consult-login-form .form-group {
+    margin-bottom: 16px;
+}
+
+.cv-consult-login-form input {
+    width: 100%;
+    border: 1px solid rgba(99, 102, 241, 0.32);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-consult-login-form input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    outline: none;
+}
+
+.cv-consult-login-remember {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 18px;
+    cursor: pointer;
+}
+
+.cv-consult-login-remember input {
+    width: auto;
+    accent-color: #4f46e5;
+}
+
+.cv-consult-login-submit {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.32);
+}
+
+.cv-consult-login-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(79, 70, 229, 0.35);
+}
+
+.cv-consult-login-submit[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.cv-consult-form .form-group {
+    margin-bottom: 18px;
+}
+
+.cv-consult-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.cv-consult-form input,
+.cv-consult-form textarea {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 15px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-consult-form input:focus,
+.cv-consult-form textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+    outline: none;
+}
+
+.cv-consult-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.cv-consult-submit {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 18px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-consult-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
+}
+
+.cv-consult-submit[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.cv-consult-contact-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 13px 18px;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(129, 140, 248, 0.35);
+    color: #4338ca;
+    background: rgba(224, 231, 255, 0.7);
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 10px 22px rgba(99, 102, 241, 0.08);
+}
+
+.cv-consult-contact-link:hover {
+    background: rgba(199, 210, 254, 0.9);
+    border-color: rgba(79, 70, 229, 0.45);
+}
+
+.cv-consult-guest-fields {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cv-consult-guest-fields .form-group {
+    flex: 1 1 100%;
+}
+
+@media (min-width: 640px) {
+    .cv-consult-guest-fields .form-group {
+        flex: 1 1 calc(50% - 8px);
+    }
+
+    .cv-consult-guest-fields .form-group:nth-child(3) {
+        flex-basis: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .cv-product-consult-box {
+        margin-top: 16px;
+        padding: 14px;
+    }
+
+    .cv-consult-modal__content {
+        padding: 22px;
+    }
+
+    .cv-consult-panel {
+        padding: 20px;
+    }
+
+    .cv-consult-tabs {
+        padding: 4px;
+    }
+}
+

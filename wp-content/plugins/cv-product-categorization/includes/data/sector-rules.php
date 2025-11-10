@@ -260,6 +260,17 @@ return [
         'min_keyword_hits'=> 2,
     ],
     [
+        'slug'            => 'agente-comercial',
+        'keywords'        => [
+            'agente comercial', 'representante comercial', 'representacion comercial', 'representación comercial',
+            'delegado comercial', 'broker comercial', 'outsourcing comercial', 'captación de clientes',
+            'portafolio de productos', 'distribution partner', 'distribuidor autorizado', 'comercializa',
+        ],
+        'category_slugs'  => ['representacion-comercial', 'servicios-profesionales'],
+        'threshold'       => 4,
+        'min_keyword_hits'=> 1,
+    ],
+    [
         'slug'            => 'optica',
         'keywords'        => ['optica', 'optomet', 'gafa', 'lente', 'lentilla'],
         'category_slugs'  => ['optica'],

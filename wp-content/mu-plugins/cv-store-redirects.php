@@ -57,6 +57,27 @@ function cv_store_redirects_supported_tabs(): array
 }
 
 /**
+ * Endpoints nativos de WCFM Marketplace que deben quedar intactos (/store/slug/endpoint).
+ *
+ * @return array<int,string>
+ */
+function cv_store_redirects_native_endpoints(): array
+{
+    return [
+        'about',
+        'products',
+        'reviews',
+        'policies',
+        'followers',
+        'articles',
+        'store-policy',
+        'shipping',
+        'cancellation',
+        'return',
+    ];
+}
+
+/**
  * Obtiene el slug base de las tiendas (por defecto `store`).
  */
 function cv_store_redirects_get_base_slug(): string
@@ -166,6 +187,13 @@ function cv_store_redirects_maybe_redirect(): void
     if (!empty($rest)) {
         $tab_candidate = strtolower($rest[0]);
         $tabs = cv_store_redirects_supported_tabs();
+        $native_tabs = cv_store_redirects_native_endpoints();
+
+        // Si es un endpoint soportado por WCFM, permitimos que la propia regla de reescritura lo gestione.
+        if (in_array($tab_candidate, $native_tabs, true)) {
+            return;
+        }
+
         if (isset($tabs[$tab_candidate])) {
             $target = home_url($base_prefix . $slug . '/?tab=' . rawurlencode($tabs[$tab_candidate]));
             wp_redirect($target, 301);

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Cv\ProductCategorization\Processors;
 
+use Cv\ProductCategorization\Admin\VendorVirtual;
+
 use RuntimeException;
 use WP_CLI;
 use WP_Error;
@@ -137,6 +139,16 @@ final class SectorAssigner
         $searchText = $this->searchableText($this->gatherTextForProduct($productId, $terms));
         $authorId   = (int) get_post_field('post_author', $productId);
 
+        if (VendorVirtual::is_virtual($authorId)) {
+            return $this->ensureVirtualAgentAssignments(
+                $productId,
+                $productTitle,
+                $currentSlugs,
+                $currentSectorSlugs,
+                $hasNonSector
+            );
+        }
+
         if ($hasInmobiliaria) {
             $this->handleInmobiliaria($productId, $productTitle, $currentSlugs, $currentSectorSlugs, $searchText, $hasNonSector);
             return true;
@@ -224,6 +236,47 @@ final class SectorAssigner
         }
 
         return implode(' ', array_filter($pieces));
+    }
+
+    private function ensureVirtualAgentAssignments(
+        int $productId,
+        string $productTitle,
+        array &$currentSlugs,
+        array &$currentSectorSlugs,
+        bool &$hasNonSector
+    ): bool {
+        $assigned    = false;
+        $baseSlug    = 'representacion-comercial';
+        $sectorSlug  = 'agente-comercial';
+        $baseId      = $this->resolveCategoryId($baseSlug);
+        $hasBaseSlug = in_array($baseSlug, $currentSlugs, true);
+
+        if ($baseId && !$hasBaseSlug) {
+            $this->addTermById($productId, $baseId);
+            $currentSlugs[] = $baseSlug;
+            $hasNonSector   = true;
+            $assigned       = true;
+        }
+
+        if (!$hasNonSector && $hasBaseSlug) {
+            $hasNonSector = true;
+        }
+
+        if (isset($this->sectorTermMap[$sectorSlug]) && !in_array($sectorSlug, $currentSectorSlugs, true)) {
+            $this->addTermById($productId, $this->sectorTermMap[$sectorSlug]);
+            $currentSectorSlugs[] = $sectorSlug;
+            $assigned             = true;
+        }
+
+        if ($assigned) {
+            $this->log(sprintf('✅ Producto #%d – "%s" marcado como agente comercial', $productId, $productTitle));
+        }
+
+        if (!$baseId && !$hasBaseSlug) {
+            $this->warn(sprintf('⚠️ Producto #%d – "%s" agente comercial sin categoría base "Representación Comercial"', $productId, $productTitle));
+        }
+
+        return true;
     }
 
     private function handleInmobiliaria(

@@ -25,7 +25,7 @@ function init_dsk() {
             $this->icon         = plugins_url( '/imagenes/logo.png', __FILE__ );
 
             $this->has_fields   = false;
-            $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'woocommerce_dsk', home_url( '/' ) ) );
+            $this->notify_url   = WC()->api_request_url( 'woocommerce_dsk' );
             $this->method_description  = __( 'Sistema de pago con criptomonedas con orden de pago en 1 click.', 'dsk-chearaan-woo');
 
             // Load the form fields.
@@ -45,7 +45,6 @@ function init_dsk() {
             $this->woo_version          = $this->get_woo_version();
 
             // Actions
-            add_action('init', array(&$this, 'successful_request'));
             add_action('woocommerce_api_woocommerce_dsk', array( &$this, 'successful_request' ));
             add_action('woocommerce_receipt_dsk', array(&$this, 'receipt_page'));
             if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0', '>=' ) ) {
@@ -142,14 +141,23 @@ function init_dsk() {
         public function generate_dsk_form( $order_id ) {
             
             global $woocommerce;
-            $order = new WC_Order($order_id);
-            $amount = $order->get_total();
-            $id_order = $order->get_id();
-            $email_client = $order->get_billing_email();;
+            $order        = wc_get_order( $order_id );
 
-            $rest_url = $this->api_url;
+            if ( ! $order ) {
+                wc_get_logger()->error( sprintf( '[Waynance] Pedido %d no encontrado al generar el formulario.', $order_id ), array( 'source' => 'waynance' ) );
+                return '';
+            }
 
-            $sHash = hash('sha256', $this->hashKey.$amount.$id_order);
+            $amount       = (float) $order->get_total();
+            $id_order     = $order->get_id();
+            $email_client = $order->get_billing_email();
+
+            $rest_url     = $this->api_url;
+            $sHash        = hash( 'sha256', $this->hashKey . $amount . $id_order );
+
+            update_post_meta( $order_id, '_waynance_secure_hash', $sHash );
+            update_post_meta( $order_id, '_waynance_expected_total', $amount );
+            update_post_meta( $order_id, '_waynance_email', $email_client );
            
             wc_enqueue_js('
                 jQuery(function(){
@@ -175,19 +183,18 @@ function init_dsk() {
                         });
             ');
 
-        return '<form action="https://wordpress.waynance.app/api/pay" method="post">
-                    <input type="hidden" name="secureHash" value="'.$sHash.'" />
-                    <input type="hidden" name="url" value="'.$this->merchantid.'" />
-                    <input type="hidden" name="hashKey" value="'.$this->hashKey.'" />
-                    <input type="hidden" name="orden" value="'.$id_order.'" />
-                    <input type="hidden" name="invno" value="'.$amount.'" />
-                    <input type="hidden" name="postURL" value="'.$this->notify_url.'" />
-                    <input type="hidden" name="email" value="'.$email_client.'" />
-                    <input type="hidden" name="currency" value="'.get_woocommerce_currency().'" />
-                    
-                    <input type="submit" class="button-alt" id="submit_dsk_payment_form" value="'.__('Pagar a través de WAYNANCE
-', 'dsk-chearaan-woo').'" /> <a class="button cancel" href="'.$order->get_cancel_order_url().'">'.__('Cancel order &amp; restore cart', 'dsk-chearaan-woo').'</a>
-                </form>';           
+        return '<form action="' . esc_url( $rest_url ) . '" method="post">
+                    <input type="hidden" name="secureHash" value="' . esc_attr( $sHash ) . '" />
+                    <input type="hidden" name="url" value="' . esc_attr( $this->merchantid ) . '" />
+                    <input type="hidden" name="hashKey" value="' . esc_attr( $this->hashKey ) . '" />
+                    <input type="hidden" name="orden" value="' . esc_attr( $id_order ) . '" />
+                    <input type="hidden" name="invno" value="' . esc_attr( $amount ) . '" />
+                    <input type="hidden" name="postURL" value="' . esc_attr( $this->notify_url ) . '" />
+                    <input type="hidden" name="email" value="' . esc_attr( $email_client ) . '" />
+                    <input type="hidden" name="currency" value="' . esc_attr( get_woocommerce_currency() ) . '" />
+
+                    <input type="submit" class="button-alt" id="submit_dsk_payment_form" value="' . esc_attr__( 'Pagar a través de WAYNANCE', 'dsk-chearaan-woo' ) . '" /> <a class="button cancel" href="' . esc_url( $order->get_cancel_order_url() ) . '">' . esc_html__( 'Cancel order &amp; restore cart', 'dsk-chearaan-woo' ) . '</a>
+                </form>';
         }
 
         // Procesar el pago y devolver el resultado
@@ -216,54 +223,102 @@ function init_dsk() {
         }
 
         // La devolución de llamada del servidor fue válida, procesar la devolución de llamada (orden de actualización como aprobado/fallido, etc.).
-        function successful_request($dsk_response) {
-            global $woocommerce;
+        function successful_request() {
+            if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
+                status_header( 405 );
+                exit;
+            }
 
-                header( 'HTTP/1.1 200 OK' );
+            $params = filter_input_array(
+                INPUT_GET,
+                array(
+                    'pedido'        => FILTER_SANITIZE_NUMBER_INT,
+                    'estatus'       => FILTER_UNSAFE_RAW,
+                    'hash'          => FILTER_UNSAFE_RAW,
+                    'pagado'        => FILTER_UNSAFE_RAW,
+                    'metodoDePago'  => FILTER_UNSAFE_RAW,
+                    'adicional'     => FILTER_UNSAFE_RAW,
+                )
+            );
 
-                $order = new WC_Order( $_GET['pedido'] );
+            $order_id = isset( $params['pedido'] ) ? absint( $params['pedido'] ) : 0;
+            if ( ! $order_id ) {
+                status_header( 400 );
+                exit;
+            }
 
-                if( $_GET['estatus'] == 0 || $_GET['estatus'] == 2 )
-                {
-                    // Reduce stock levels
-                    $order->reduce_order_stock();
-                    //$order->payment_complete();
-                    if( $_GET['estatus'] == 2 ){
-						$order->update_status($this->order_status);
-					}
-					else{ $order->update_status( 'on-hold' ); }
-                    
-					
-					if( $_GET['metodoDePago'] == 'WPAY' )
-					{ 
-						$cortar = explode(',',$_GET['adicional']);
-						$colocar = '<br>Método: WAYNANCE PAY<br>RED: '.$cortar[0].'<br>MONEDA: '.$cortar[1];
-						$condicionPago = 'Pago exitoso';
-					}
-					if( $_GET['metodoDePago'] == 'TARJETA' )
-					{ $colocar = '<br>Método: TARJETA'; $condicionPago = 'Pago exitoso'; }
-					if( $_GET['metodoDePago'] == 'TRANSFERENCIA' )
-					{ $colocar = '<br>Método: TRANSFERENCIA'; $condicionPago = 'En Espera'; }
-					
-                    $order->add_order_note($condicionPago.'<br>HASH: '.$_GET['hash'].'<br>PAGADO: '.$_GET['pagado'].$colocar);
-                     // Remove cart
-                    WC()->cart->empty_cart();
-                    wp_redirect( $this->get_return_url($order) ); 
-                    exit;
+            $order = wc_get_order( $order_id );
+
+            if ( ! $order ) {
+                wc_get_logger()->warning( sprintf( '[Waynance] Pedido %d no encontrado en callback.', $order_id ), array( 'source' => 'waynance' ) );
+                status_header( 404 );
+                exit;
+            }
+
+            $received_hash = isset( $params['hash'] ) ? sanitize_text_field( wp_unslash( $params['hash'] ) ) : '';
+            $expected_hash = (string) get_post_meta( $order_id, '_waynance_secure_hash', true );
+
+            if ( empty( $received_hash ) || empty( $expected_hash ) || ! hash_equals( $expected_hash, $received_hash ) ) {
+                $order->add_order_note( __( 'Waynance: hash inválido en la notificación.', 'dsk-chearaan-woo' ) );
+                wc_get_logger()->warning( sprintf( '[Waynance] Hash inválido para pedido %d.', $order_id ), array( 'source' => 'waynance' ) );
+                status_header( 400 );
+                exit;
+            }
+
+            $expected_total = (float) get_post_meta( $order_id, '_waynance_expected_total', true );
+            $paid_amount    = isset( $params['pagado'] ) ? (float) $params['pagado'] : 0.0;
+
+            if ( $expected_total > 0 && $paid_amount > 0 && abs( $expected_total - $paid_amount ) > 0.01 ) {
+                $order->add_order_note( sprintf( __( 'Waynance: importe recibido (%1$s) no coincide con el esperado (%2$s).', 'dsk-chearaan-woo' ), $paid_amount, $expected_total ) );
+                wc_get_logger()->warning( sprintf( '[Waynance] Pedido %d con importe inconsistente.', $order_id ), array( 'source' => 'waynance' ) );
+                status_header( 400 );
+                exit;
+            }
+
+            $status = isset( $params['estatus'] ) ? sanitize_text_field( wp_unslash( $params['estatus'] ) ) : '';
+
+            if ( '0' === $status || '2' === $status ) {
+                $order->reduce_order_stock();
+
+                if ( '2' === $status ) {
+                    $order->update_status( $this->order_status );
+                } else {
+                    $order->update_status( 'on-hold' );
                 }
-                else
-                {
-                    if( $_GET['estatus'] == 1 )
-                    {
-                        $order->update_status('failed', sprintf(__('Pago fallido'.'<br>HASH: '.$_GET['hash'], 'dsk-chearaan-woo') ) );
+
+                $note = __( 'Pago recibido a través de Waynance.', 'dsk-chearaan-woo' );
+                $method = isset( $params['metodoDePago'] ) ? sanitize_text_field( wp_unslash( $params['metodoDePago'] ) ) : '';
+                if ( $method ) {
+                    $note .= '<br>' . esc_html__( 'Método:', 'dsk-chearaan-woo' ) . ' ' . esc_html( $method );
+                }
+                if ( ! empty( $params['adicional'] ) ) {
+                    $extra = explode( ',', $params['adicional'] );
+                    if ( isset( $extra[0] ) ) {
+                        $note .= '<br>' . esc_html__( 'RED:', 'dsk-chearaan-woo' ) . ' ' . esc_html( $extra[0] );
                     }
-                    else
-                    {
-       
-                        $order->update_status('awaiting-shipment', sprintf(__('El cliente anulo la opereción.', 'dsk-chearaan-woo') ) );
+                    if ( isset( $extra[1] ) ) {
+                        $note .= '<br>' . esc_html__( 'MONEDA:', 'dsk-chearaan-woo' ) . ' ' . esc_html( $extra[1] );
                     }
-                    wp_redirect($order->get_cancel_order_url()); exit;
-                }  
+                }
+                if ( $paid_amount ) {
+                    $note .= '<br>' . esc_html__( 'PAGADO:', 'dsk-chearaan-woo' ) . ' ' . wp_kses_post( wc_price( $paid_amount ) );
+                }
+                $note .= '<br>' . esc_html__( 'HASH:', 'dsk-chearaan-woo' ) . ' ' . esc_html( $received_hash );
+
+                $order->add_order_note( $note );
+
+                wp_safe_redirect( $this->get_return_url( $order ) );
+                exit;
+            }
+
+            if ( '1' === $status ) {
+                $order->update_status( 'failed', __( 'Waynance: pago fallido.', 'dsk-chearaan-woo' ) . '<br>HASH: ' . esc_html( $received_hash ) );
+            } else {
+                $order->update_status( 'cancelled', __( 'Waynance: el cliente canceló la operación.', 'dsk-chearaan-woo' ) );
+            }
+
+            wp_safe_redirect( $order->get_cancel_order_url() );
+            exit;
         }
 
         function get_woo_version() {

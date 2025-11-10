@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Cv\ProductCategorization\Processors;
 
+use Cv\ProductCategorization\Admin\VendorVirtual;
+
 use WP_CLI;
 use WP_Error;
 use WP_Term;
@@ -16,6 +18,9 @@ final class VendorSectorSync
 
     /** @var array<int,bool> */
     private array $allowedSectorIds = [];
+
+    /** @var array<string,int> */
+    private array $sectorSlugMap = [];
 
     public function run(array $options = []): void
     {
@@ -83,13 +88,22 @@ final class VendorSectorSync
 
         foreach ($terms as $term) {
             if ($term instanceof WP_Term) {
-                $this->allowedSectorIds[(int) $term->term_id] = true;
+                $termId = (int) $term->term_id;
+                $this->allowedSectorIds[$termId]          = true;
+                $this->sectorSlugMap[$term->slug] = $termId;
             }
         }
     }
 
     private function resolveVendorSector(int $vendorId): int
     {
+        if (VendorVirtual::is_virtual($vendorId)) {
+            $virtualId = $this->sectorIdFromSlug('agente-comercial');
+            if ($virtualId) {
+                return $virtualId;
+            }
+        }
+
         $products = get_posts([
             'post_type'      => 'product',
             'post_status'    => ['publish', 'pending', 'draft', 'future', 'private'],
@@ -109,6 +123,23 @@ final class VendorSectorSync
             if ($sectorId) {
                 return $sectorId;
             }
+        }
+
+        return 0;
+    }
+
+    private function sectorIdFromSlug(string $slug): int
+    {
+        if (isset($this->sectorSlugMap[$slug])) {
+            return $this->sectorSlugMap[$slug];
+        }
+
+        $term = get_term_by('slug', $slug, 'product_cat');
+        if ($term instanceof WP_Term) {
+            $termId = (int) $term->term_id;
+            $this->sectorSlugMap[$slug]    = $termId;
+            $this->allowedSectorIds[$termId] = true;
+            return $termId;
         }
 
         return 0;

@@ -3,7 +3,7 @@
  * Plugin Name: Ciudad Virtual - Frontend Enhancements
  * Plugin URI: https://ciudadvirtual.app
  * Description: Mejoras visuales para el frontend: Sistema de burbujas animadas para geolocalización de tiendas, login moderno de WooCommerce y más
- * Version: 3.2.1
+ * Version: 3.4.0
  * Author: Ciudad Virtual
  * Author URI: https://ciudadvirtual.app
  * License: GPL v2 or later
@@ -130,7 +130,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definir constantes del plugin
-define('CV_FRONT_VERSION', '3.2.1');
+define('CV_FRONT_VERSION', '3.5.0');
 define('CV_FRONT_PLUGIN_FILE', __FILE__);
 define('CV_FRONT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CV_FRONT_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -185,7 +185,11 @@ class CV_Front {
         
         // Optimizaciones de rendimiento para WCFM
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-optimizer.php';
+        // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-script-override.php'; // Ya no es necesario, se usa versión no minificada directamente en el plugin personalizado
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-notifications-toggle.php';
+        // DESACTIVADO: Movido a wcfm-radius-persistence v2.0.0
+        // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geolocation-toggle.php';
+        // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geolocation-default-disabled.php';
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-reviews-fix.php';
         // DESACTIVADO TEMPORALMENTE: require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-admin-access-fix.php';
         
@@ -206,6 +210,9 @@ class CV_Front {
         
         // Campo de teléfono en formularios de consulta WCFM
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-enquiry-phone.php';
+        
+        // Botón y modal de consulta genérica
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-product-consultation.php';
         
         // Distancia en header de tienda (oculta en productos)
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-store-distance.php';
@@ -264,6 +271,9 @@ class CV_Front {
         // Corrector automático de enlaces WhatsApp en listados y tiendas
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-store-whatsapp-fixer.php';
         
+        // Estilos del selector de distancia en Comercios
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-store-radius-style.php';
+        
         // Estilos para Login as User
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-login-as-user-style.php';
         
@@ -284,6 +294,19 @@ class CV_Front {
         
         // Estilos para botones en listas de productos
         add_action('wp_enqueue_scripts', array($this, 'enqueue_loop_buttons_styles'));
+
+        // DESACTIVADO: Movido a wcfm-radius-persistence v2.0.0
+        // add_action('wp_enqueue_scripts', array($this, 'enqueue_geolocation_init'), 1);
+        // add_action('wp_enqueue_scripts', array($this, 'enqueue_geolocation_manager'), 125);
+
+        // Sincronización de geolocalización entre listados
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_geo_sync_script'), 105);
+
+        // Fix para slider de radio con AJAX
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_radius_ajax_fix'), 110);
+
+        // Límite de mapa a Península Ibérica
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_iberian_map_bounds_script'), 120);
     }
     
     /**
@@ -307,6 +330,7 @@ class CV_Front {
         
         // Inicializar optimizaciones de WCFM
         new CV_WCFM_Optimizer();
+        // new CV_WCFM_Script_Override(); // Ya no es necesario
         
         // Inicializar fix de radio en categorías
         new CV_Category_Radius_Fix();
@@ -317,8 +341,17 @@ class CV_Front {
         // Inicializar campo teléfono WCFM
         new CV_Enquiry_Phone();
         
+        // Inicializar botón de consulta genérica
+        new CV_Product_Consultation();
+        
         // Inicializar distancia en header de tienda
         new CV_Store_Distance();
+
+        // Estilo del selector de radio en comercios
+        new CV_Store_Radius_Style();
+        
+        // Evitar mapas por defecto y exponer botón de comercios cercanos
+        // new CV_Store_List_Lazy(); // REMOVED
         
         // Inicializar verificación de reseñas
         new CV_Review_Verification();
@@ -372,6 +405,90 @@ class CV_Front {
             array(),
             CV_FRONT_VERSION
         );
+    }
+
+    /**
+     * Inicialización de geolocalización (desactivada por defecto)
+     */
+    public function enqueue_geolocation_init() {
+        // Cargar en páginas de shop, categorías, tiendas
+        if (is_shop() || is_product_category() || is_product_tag() || 
+            (function_exists('wcfmmp_is_stores_list_page') && wcfmmp_is_stores_list_page())) {
+            
+            wp_enqueue_script(
+                'cv-front-geolocation-init',
+                CV_FRONT_PLUGIN_URL . 'assets/js/geolocation-init.js',
+                array('jquery'),
+                CV_FRONT_VERSION,
+                false // Cargar en el header para ejecutar antes
+            );
+        }
+    }
+
+    /**
+     * Sincronizar preferencias de geolocalización entre distintas vistas
+     */
+    public function enqueue_geo_sync_script() {
+        wp_enqueue_script(
+            'cv-front-geo-sync',
+            CV_FRONT_PLUGIN_URL . 'assets/js/geo-sync.js',
+            array('jquery'),
+            CV_FRONT_VERSION,
+            true
+        );
+    }
+
+    /**
+     * Fix para que el slider de radio funcione correctamente con AJAX
+     */
+    public function enqueue_radius_ajax_fix() {
+        // Cargar en páginas de shop, categorías, tiendas
+        if (is_shop() || is_product_category() || is_product_tag() || 
+            (function_exists('wcfmmp_is_stores_list_page') && wcfmmp_is_stores_list_page())) {
+            
+            wp_enqueue_script(
+                'cv-front-radius-ajax-fix',
+                CV_FRONT_PLUGIN_URL . 'assets/js/radius-ajax-fix.js',
+                array('jquery'),
+                CV_FRONT_VERSION,
+                true
+            );
+        }
+    }
+
+    /**
+     * Limitar interacción del mapa de tiendas a la Península Ibérica
+     */
+    public function enqueue_iberian_map_bounds_script() {
+        if (!wp_script_is('wcfmmp_product_list_js', 'enqueued')) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'cv-front-map-iberian-bounds',
+            CV_FRONT_PLUGIN_URL . 'assets/js/map-iberian-bounds.js',
+            array('wcfmmp_product_list_js'),
+            CV_FRONT_VERSION,
+            true
+        );
+    }
+
+    /**
+     * Gestor de visibilidad de elementos de geolocalización
+     */
+    public function enqueue_geolocation_manager() {
+        // Cargar en páginas de shop, categorías, tiendas
+        if (is_shop() || is_product_category() || is_product_tag() || 
+            (function_exists('wcfmmp_is_stores_list_page') && wcfmmp_is_stores_list_page())) {
+            
+            wp_enqueue_script(
+                'cv-front-geolocation-manager',
+                CV_FRONT_PLUGIN_URL . 'assets/js/geolocation-manager.js',
+                array('jquery'),
+                CV_FRONT_VERSION,
+                true
+            );
+        }
     }
 }
 

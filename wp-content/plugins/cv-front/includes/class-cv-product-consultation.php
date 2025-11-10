@@ -48,6 +48,9 @@ class CV_Product_Consultation
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
         add_action('woocommerce_single_product_summary', [$this, 'render_consult_box'], 31);
         add_filter('wcfm_is_pref_enquiry_button', [$this, 'maybe_disable_wcfm_button'], 20, 1);
+        add_filter('login_redirect', [$this, 'maybe_force_consult_redirect'], 999, 3);
+        add_filter('woocommerce_login_redirect', [$this, 'maybe_force_consult_redirect_woo'], 999, 2);
+        add_action('wp_ajax_nopriv_cv_product_consultation_login', [$this, 'handle_login']);
         add_action('wp_ajax_cv_product_consultation_submit', [$this, 'handle_submission']);
         add_action('wp_ajax_nopriv_cv_product_consultation_submit', [$this, 'handle_submission']);
     }
@@ -90,6 +93,7 @@ class CV_Product_Consultation
             'userName'   => $this->get_current_user_name(),
             'userEmail'  => $this->get_current_user_email(),
             'userPhone'  => $this->get_current_user_phone(),
+            'loginNonce' => wp_create_nonce('cv_product_consult_login'),
             'strings'    => [
                 'modalTitle'      => __('Consulta sobre este producto', 'cv-front'),
                 'contactCTA'      => __('¿Prefieres nuestro formulario general?', 'cv-front'),
@@ -100,8 +104,16 @@ class CV_Product_Consultation
                 'emptyGuest'      => __('Por favor completa tu nombre, email y teléfono.', 'cv-front'),
                 'sending'         => __('Enviando…', 'cv-front'),
                 'sendLabel'       => __('Enviar consulta', 'cv-front'),
-                'loginCTA'        => __('¿Ya tienes cuenta? Inicia sesión y volverás a esta ventana para escribir tu consulta.', 'cv-front'),
-                'loginBtn'        => __('Iniciar sesión', 'cv-front'),
+                'tabGuest'        => __('Sin cuenta', 'cv-front'),
+                'tabLogin'        => __('Ya soy usuario', 'cv-front'),
+                'loginTitle'      => __('Inicia sesión para continuar', 'cv-front'),
+                'loginUserLabel'  => __('Usuario o email', 'cv-front'),
+                'loginPassLabel'  => __('Contraseña', 'cv-front'),
+                'loginRemember'   => __('Recordarme', 'cv-front'),
+                'loginSubmit'     => __('Iniciar sesión', 'cv-front'),
+                'loginProcessing' => __('Accediendo…', 'cv-front'),
+                'loginError'      => __('No pudimos iniciar sesión con esos datos.', 'cv-front'),
+                'loginSuccess'    => __('Sesión iniciada, ya puedes escribir tu consulta.', 'cv-front'),
             ],
         ]);
     }
@@ -163,6 +175,97 @@ class CV_Product_Consultation
         }
 
         return false;
+    }
+
+    /**
+     * Fuerza la redirección de login cuando proviene de la consulta.
+     */
+    public function maybe_force_consult_redirect(string $redirect_to, string $requested_redirect_to, $user): string
+    {
+        $target = $this->resolve_consult_return_url();
+        if ('' !== $target) {
+            return $target;
+        }
+
+        return $redirect_to;
+    }
+
+    /**
+     * Equivalente para el filtro de WooCommerce.
+     */
+    public function maybe_force_consult_redirect_woo(string $redirect_to, $user): string
+    {
+        $target = $this->resolve_consult_return_url();
+        if ('' !== $target) {
+            return $target;
+        }
+
+        return $redirect_to;
+    }
+
+    /**
+     * Obtiene la URL de retorno solicitada para la consulta.
+     */
+    private function resolve_consult_return_url(): string
+    {
+        if (!isset($_REQUEST['cv_consult_return'])) { // phpcs:ignore WordPress.Security.NonceVerification
+            return '';
+        }
+
+        $raw = wp_unslash((string) $_REQUEST['cv_consult_return']); // phpcs:ignore WordPress.Security.NonceVerification
+        if ('' === $raw) {
+            return '';
+        }
+
+        $validated = wp_validate_redirect($raw, '');
+        if (!$validated) {
+            return '';
+        }
+
+        return $validated;
+    }
+
+    /**
+     * Autentica al usuario desde el modal sin abandonar la página.
+     */
+    public function handle_login(): void
+    {
+        if (!check_ajax_referer('cv_product_consult_login', 'nonce', false)) {
+            wp_send_json_error(['message' => __('Sesión expirada, recarga la página.', 'cv-front')], 400);
+        }
+
+        $login    = isset($_POST['login']) ? sanitize_text_field((string) $_POST['login']) : '';
+        $password = isset($_POST['password']) ? (string) $_POST['password'] : '';
+        $remember = !empty($_POST['remember']);
+
+        if ('' === $login || '' === $password) {
+            wp_send_json_error(['message' => __('Indica usuario y contraseña.', 'cv-front')], 400);
+        }
+
+        $creds = [
+            'user_login'    => $login,
+            'user_password' => wp_unslash($password),
+            'remember'      => $remember,
+        ];
+
+        $user = wp_signon($creds, false);
+
+        if ($user instanceof WP_Error) {
+            wp_send_json_error(['message' => $user->get_error_message()], 401);
+        }
+
+        wp_set_current_user($user->ID);
+
+        $return_url = isset($_POST['return_url']) ? wp_validate_redirect((string) $_POST['return_url'], '') : '';
+
+        wp_send_json_success([
+            'nonce'       => wp_create_nonce('cv_inmobiliaria_nonce'),
+            'login_nonce' => wp_create_nonce('cv_product_consult_login'),
+            'user_name'   => $this->get_current_user_name(),
+            'user_email'  => $this->get_current_user_email(),
+            'user_phone'  => $this->get_current_user_phone(),
+            'return_url'  => $return_url,
+        ]);
     }
 
     /**

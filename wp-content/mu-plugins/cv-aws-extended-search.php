@@ -102,7 +102,9 @@ add_action('plugins_loaded', static function (): void {
                 $vendor_terms[] = $vendor_user->user_login;
             }
 
-            if (function_exists('wcfmmp_get_store')) {
+        $profile_settings = null;
+
+        if (function_exists('wcfmmp_get_store')) {
                 $store = wcfmmp_get_store($vendor_id);
                 if ($store && method_exists($store, 'get_shop_name')) {
                     $vendor_terms[] = $store->get_shop_name();
@@ -113,6 +115,25 @@ add_action('plugins_loaded', static function (): void {
                         $vendor_terms[] = str_replace(['-', '_'], ' ', $slug);
                     }
                 }
+            if ($store && method_exists($store, 'get_address_string')) {
+                $address_string = $store->get_address_string();
+                if (is_string($address_string) && $address_string !== '') {
+                    $vendor_terms[] = $address_string;
+                }
+            }
+            if ($store && method_exists($store, 'get_address')) {
+                $address_array = $store->get_address();
+                if (is_array($address_array)) {
+                    foreach (['street_1', 'street_2', 'city', 'state', 'country', 'zip'] as $key) {
+                        if (!empty($address_array[$key]) && is_string($address_array[$key])) {
+                            $vendor_terms[] = $address_array[$key];
+                        }
+                    }
+                }
+            }
+            if ($store && method_exists($store, 'get_shop_info')) {
+                $profile_settings = $store->get_shop_info();
+            }
             } else {
                 $store_slug = get_user_meta($vendor_id, 'wcfmmp_store_slug', true);
                 if ($store_slug) {
@@ -123,6 +144,21 @@ add_action('plugins_loaded', static function (): void {
                     $vendor_terms[] = (string) $store_name;
                 }
             }
+
+        if ($profile_settings === null) {
+            $profile_settings = get_user_meta($vendor_id, 'wcfmmp_profile_settings', true);
+            if (!is_array($profile_settings)) {
+                $profile_settings = [];
+            }
+        }
+
+        if (!empty($profile_settings['address']) && is_array($profile_settings['address'])) {
+            foreach (['street_1', 'street_2', 'city', 'state', 'country', 'zip'] as $key) {
+                if (!empty($profile_settings['address'][$key]) && is_string($profile_settings['address'][$key])) {
+                    $vendor_terms[] = $profile_settings['address'][$key];
+                }
+            }
+        }
         }
 
         $vendor_terms = array_unique(array_filter(array_map('trim', $vendor_terms)));

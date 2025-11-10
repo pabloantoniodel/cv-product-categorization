@@ -5,6 +5,7 @@ namespace Cv\ProductCategorization;
 
 use Cv\ProductCategorization\Admin\Menu;
 use Cv\ProductCategorization\Admin\VendorSectors;
+use Cv\ProductCategorization\Admin\VendorVirtual;
 use WP_CLI;
 
 final class Plugin
@@ -12,6 +13,7 @@ final class Plugin
     public static function init(): void
     {
         VendorSectors::init();
+        VendorVirtual::init();
 
         if (\is_admin()) {
             Menu::init();
@@ -51,6 +53,13 @@ final class Plugin
                 [new WpCli\CategoryImageAssignerCommand(), '__invoke'],
                 [
                     'shortdesc' => 'Asigna imágenes libres a las categorías que no tienen miniatura (fuente Openverse).',
+                ]
+            );
+            WP_CLI::add_command(
+                'cv-cat mark-virtual-agents',
+                [new WpCli\VendorVirtualBatchCommand(), '__invoke'],
+                [
+                    'shortdesc' => 'Marca a los vendedores recientes como agentes comerciales y les asigna el sector correspondiente.',
                 ]
             );
         }

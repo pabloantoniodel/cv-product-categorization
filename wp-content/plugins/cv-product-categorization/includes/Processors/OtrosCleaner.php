@@ -28,7 +28,7 @@ final class OtrosCleaner
             $ALIM, $BEB, $PLAT, $FRES, $PAN, $DULCES,
             $MASC, $MASC_ALI, $MASC_ACC,
             $HOG, $TEXTIL, $MUEB, $ILUM, $DECO, $EXTER, $LIMPIEZA_HOGAR, $JARDIN, $MENAJE,
-            $SERV, $FOTO, $IMPRE, $REP, $CONS, $FORM, $PROMO, $LOTO, $LIMP, $PAP, $ESOT, $CERT, $CERR, $EVENTOS, $SEGURIDAD, $FINANZAS, $SOLAR, $TRANS, $INDUS,
+            $SERV, $FOTO, $IMPRE, $REP, $CONS, $FORM, $PROMO, $LOTO, $LIMP, $PAP, $ESOT, $CERT, $CERR, $EVENTOS, $SEGURIDAD, $FINANZAS, $SOLAR, $TRANS, $INDUS, $REP_COM,
             $BEBE, $PROD_BEBE, $JUGUETES,
             $REG, $FUMADOR,
             $TEC, $TEC_MOVIL, $TEC_SERV, $TEC_ELEC,
@@ -302,6 +302,13 @@ final class OtrosCleaner
                 $proposed[] = $INDUS;
             }
 
+            if (preg_match('/\b(agente comercial|representante comercial|representaci[oó]n comercial|delegad[oa] comercial|broker comercial|outsourcing comercial|fuerza de ventas|captaci[oó]n de clientes|gesti[oó]n comercial)\b/u', $text)) {
+                $proposed[] = $SERV;
+                if ($REP_COM) {
+                    $proposed[] = $REP_COM;
+                }
+            }
+
             // --- Salud ---
             if (preg_match('/\b(lipo slim|suplemento|vitamin|nutricion|bienestar|protector solar|leche protectora|masaje|spa|liquido lentes de contacto|colirio)\b/u', $text)) {
                 $proposed[] = $SALUD;
@@ -464,6 +471,7 @@ final class OtrosCleaner
         $SOLAR = $this->ensureTerm('Energía Solar', $SERV);
         $TRANS = $this->ensureTerm('Transporte y Mensajería', $SERV);
         $INDUS = $this->ensureTerm('Material Industrial', $SERV);
+        $REP_COM = $this->ensureTerm('Representación Comercial', $SERV);
 
         $BEBE = $this->getTermIdByName('Bebé e Infantil') ?? 754;
         $PROD_BEBE = $this->ensureTerm('Productos Bebé', $BEBE);
@@ -510,7 +518,7 @@ final class OtrosCleaner
             $ALIM, $BEB, $PLAT, $FRES, $PAN, $DULCES,
             $MASC, $MASC_ALI, $MASC_ACC,
             $HOG, $TEXTIL, $MUEB, $ILUM, $DECO, $EXTER, $LIMPIEZA_HOGAR, $JARDIN, $MENAJE,
-            $SERV, $FOTO, $IMPRE, $REP, $CONS, $FORM, $PROMO, $LOTO, $LIMP, $PAP, $ESOT, $CERT, $CERR, $EVENTOS, $SEGURIDAD, $FINANZAS, $SOLAR, $TRANS, $INDUS,
+            $SERV, $FOTO, $IMPRE, $REP, $CONS, $FORM, $PROMO, $LOTO, $LIMP, $PAP, $ESOT, $CERT, $CERR, $EVENTOS, $SEGURIDAD, $FINANZAS, $SOLAR, $TRANS, $INDUS, $REP_COM,
             $BEBE, $PROD_BEBE, $JUGUETES,
             $REG, $FUMADOR,
             $TEC, $TEC_MOVIL, $TEC_SERV, $TEC_ELEC,

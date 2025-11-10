@@ -1,0 +1,8 @@
+"use strict";(globalThis.wpConsoleWebpack=globalThis.wpConsoleWebpack||[]).push([[192],{192:(e,s,n)=>{n.r(s),n.d(s,{default:()=>a});var o=n(87),c=n(427),i=n(723),l=n(508),t=n(626),r=n(350),p=n(790);const a=(0,l.A)({select:["fetchingLog","clearingLog","log","extraInfo"],dispatch:["setNotice","startFetchingLog","finishFetchingLog","setLog","setExtraInfo"]})(e=>{const{fetchingLog:s,clearingLog:n,log:l,extraInfo:a}=e;return(0,o.useEffect)(()=>{(0,t.A)(e)},[]),(0,p.jsxs)("div",{id:"wp-console-panel-debug-log",children:[s||n?(0,p.jsxs)("div",{className:"wp-console-spinner",children:[(0,p.jsx)(c.Spinner,{}),s?(0,i.sprintf)(
+// translators: %s: Fetching debug.log indicator
+// translators: %s: Fetching debug.log indicator
+(0,i.__)("Fetching %s","wp-console"),"debug.log"):(0,i.sprintf)(
+// translators: %s: Clearing debug.log indicator
+// translators: %s: Clearing debug.log indicator
+(0,i.__)("Clearing %s","wp-console"),"debug.log"),"..."]}):(0,p.jsx)(o.Fragment,{children:l?(0,p.jsx)(o.Fragment,{children:"API_ERROR"===l?(0,p.jsx)("pre",{}):(0,p.jsx)("pre",{children:l})}):(0,p.jsx)("p",{className:"empty-content",children:(0,p.jsxs)("span",{children:[(0,p.jsx)(r.Yc,{width:"29",height:"29"})," ",(0,i.__)("Your debug.log is empty","wp-console")]})})}),a.php_version&&(0,p.jsxs)("div",{className:"extra-info",children:[(0,i.__)("CURRENT TIME","wp-console"),":"," ",a.current_time," ",a.timezone,(0,p.jsx)("span",{className:"wp-console-separator"}),(0,i.__)("PHP VERSION","wp-console"),":"," ",a.php_version]})]})})}}]);
+//# sourceMappingURL=7cab92d31dad1dff1eea.js.map

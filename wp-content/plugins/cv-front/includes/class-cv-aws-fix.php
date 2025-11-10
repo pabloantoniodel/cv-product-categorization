@@ -15,6 +15,7 @@ class CV_AWS_Fix {
     public function __construct() {
         // Desactivar AWS en búsquedas vacías ANTES de que se procese
         add_action('pre_get_posts', array($this, 'fix_search_per_page'), 1);
+        add_action('template_redirect', array($this, 'ensure_type_aws_param'), 0);
         
         // Ajustar número de resultados por página en AWS con máxima prioridad
         add_filter('aws_posts_per_page', array($this, 'set_aws_posts_per_page'), 9999);
@@ -24,6 +25,36 @@ class CV_AWS_Fix {
         add_filter('aws_searchpage_enabled', array($this, 'disable_aws_empty_search'), 1, 2);
     }
     
+    /**
+     * Garantizar que las búsquedas de productos usen el motor de AWS.
+     */
+    public function ensure_type_aws_param(): void {
+        if (is_admin() || wp_doing_ajax()) {
+            return;
+        }
+
+        if (!is_search()) {
+            return;
+        }
+
+        $post_type = isset($_GET['post_type']) ? (array) $_GET['post_type'] : array();
+        if (empty($post_type)) {
+            return;
+        }
+
+        if (!in_array('product', $post_type, true)) {
+            return;
+        }
+
+        if (isset($_GET['type_aws'])) {
+            return;
+        }
+
+        $target_url = add_query_arg('type_aws', 'true');
+        wp_safe_redirect($target_url, 301);
+        exit;
+    }
+
     /**
      * Fix directo en pre_get_posts para búsquedas
      */
