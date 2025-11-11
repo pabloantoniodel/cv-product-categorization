@@ -31,6 +31,21 @@
     font-size: 12px;
 }
 
+/* Imágenes cuadradas centradas en listados */
+.woocommerce ul.products li.product .woocommerce-LoopProduct-link {
+    display: block;
+}
+
+.woocommerce ul.products li.product .woocommerce-LoopProduct-link img,
+.woocommerce ul.products li.product .attachment-woocommerce_thumbnail,
+.woocommerce ul.products li.product .attachment-woocommerce_thumbnail img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+}
+
 /* Botones originales en listas - mismo estilo moderno */
 .woocommerce ul.products li.product .loop-addtocart-btn-wrapper .button {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
