@@ -188,6 +188,8 @@ class CV_Front {
         // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-script-override.php'; // Ya no es necesario, se usa versión no minificada directamente en el plugin personalizado
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-wcfm-notifications-toggle.php';
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-comercios-page.php';
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geo-radius-service.php';
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-custom-footer.php';
         // DESACTIVADO: Movido a wcfm-radius-persistence v2.0.0
         // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geolocation-toggle.php';
         // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geolocation-default-disabled.php';
