@@ -27,6 +27,30 @@ class CV_Geolocation_Toggle {
      */
     public function enqueue_dashicons() {
         wp_enqueue_style('dashicons');
+        if (!wp_style_is('cv-comercios-listing', 'enqueued')) {
+            wp_enqueue_style(
+                'cv-comercios-listing',
+                CV_FRONT_PLUGIN_URL . 'assets/css/comercios.css',
+                array(),
+                CV_FRONT_VERSION
+            );
+        }
+        if (!wp_style_is('cv-radius-dialog-styles', 'enqueued')) {
+            $dialog_css = CV_FRONT_PLUGIN_DIR . 'assets/css/cv-radius-dialog.css';
+            wp_enqueue_style(
+                'cv-radius-dialog-styles',
+                CV_FRONT_PLUGIN_URL . 'assets/css/cv-radius-dialog.css',
+                array(),
+                file_exists($dialog_css) ? filemtime($dialog_css) : CV_FRONT_VERSION
+            );
+        }
+        wp_enqueue_script(
+            'cv-radius-dialog',
+            CV_FRONT_PLUGIN_URL . 'assets/js/geo-radius-dialog.js',
+            array('jquery'),
+            CV_FRONT_VERSION,
+            true
+        );
     }
     
     /**
@@ -114,103 +138,374 @@ class CV_Geolocation_Toggle {
             // Estado inicial: desactivado (con tachado)
             $btn.addClass('disabled');
             
-            $('#cv-geolocation-toggle-float').on('click', function() {
-                var isEnabled = $btn.hasClass('enabled');
-                
-                // Confirmar acción
-                var confirmMsg = isEnabled 
-                    ? '¿Desactivar geolocalización?\n\nLos productos y comercios no se filtrarán por distancia.'
-                    : '¿Activar geolocalización?\n\nSe te pedirá tu ubicación para mostrar comercios cercanos.';
-                
-                if (!confirm(confirmMsg)) {
+            function setCookie(name, value, days) {
+                var expires = '';
+                if (typeof days === 'number') {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = '; expires=' + date.toUTCString();
+                }
+                document.cookie = name + '=' + (value || '') + expires + '; path=/';
+            }
+            
+            function getStoredSettings() {
+                try {
+                    var raw = localStorage.getItem('cv_geo_radius_dialog_settings');
+                    if (!raw) {
+                        return null;
+                    }
+                    return JSON.parse(raw);
+                } catch (error) {
+                    console.warn('cvRadiusDialog: no se pudo leer configuración almacenada', error);
+                    return null;
+                }
+            }
+
+            function waitForDialog(callback) {
+                if (window.cvRadiusDialogManager) {
+                    callback(window.cvRadiusDialogManager);
                     return;
                 }
-                
-                // Marcar como procesando
-                $btn.addClass('processing');
-                
-                if (!isEnabled) {
-                    // ACTIVAR: Pedir ubicación del navegador
-                    if ('geolocation' in navigator) {
-                        navigator.geolocation.getCurrentPosition(
-                            function(position) {
-                                // Éxito: guardar ubicación
-                                var lat = position.coords.latitude;
-                                var lng = position.coords.longitude;
-                                
-                                console.log('✅ Ubicación obtenida:', lat, lng);
-                                
-                                // Guardar en localStorage
-                                localStorage.setItem('cv_geolocation_enabled', 'true');
-                                localStorage.setItem('cv_user_lat', lat);
-                                localStorage.setItem('cv_user_lng', lng);
-                                
-                                // Cambiar estado a activado
-                                $btn.removeClass('processing disabled').addClass('enabled');
-                                $btn.attr('title', 'Geolocalización activada');
-                                
-                                // Mostrar mensaje
-                                showMessage('📍 Geolocalización activada', '#4CAF50');
-                                
-                                // Aplicar cambios sin recargar
+                window.addEventListener('cvRadiusDialogReady', function handler(event) {
+                    window.removeEventListener('cvRadiusDialogReady', handler);
+                    var manager = event && event.detail ? event.detail : window.cvRadiusDialogManager;
+                    callback(manager);
+                }, { once: true });
+            }
+
+            function showMessage(text, color) {
+                $('<div style="position: fixed; top: 210px; left: 20px; background: ' + color + '; color: white; padding: 15px 25px; border-radius: 8px; z-index: 999998; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-width: 320px; line-height: 1.4;"></div>')
+                    .appendTo('body')
+                    .html(text)
+                    .delay(3500)
+                    .fadeOut(300, function () { $(this).remove(); });
+            }
+
+            function setButtonState(enabled) {
+                if (enabled) {
+                    $btn.removeClass('disabled processing').addClass('enabled');
+                    $btn.attr('title', 'Geolocalización activada');
+                } else {
+                    $btn.removeClass('enabled processing').addClass('disabled');
+                    $btn.attr('title', 'Geolocalización desactivada');
+                }
+            }
+
+            function persistActivation(data) {
+                var unit = data.unit || 'km';
+                var radiusKm = parseFloat(data.range);
+                if (isNaN(radiusKm) || radiusKm <= 0) {
+                    radiusKm = 50;
+                }
+                var radiusRaw = (data.rangeRaw !== undefined) ? parseFloat(data.rangeRaw) : null;
+                if (unit === 'm') {
+                    if (isNaN(radiusRaw) || radiusRaw <= 0) {
+                        radiusRaw = Math.round(radiusKm * 1000);
+                    }
+                } else {
+                    radiusRaw = radiusKm;
+                }
+
+                localStorage.setItem('cv_geolocation_enabled', 'true');
+                if (data.lat !== null && data.lat !== undefined) {
+                    localStorage.setItem('cv_user_lat', data.lat);
+                }
+                if (data.lng !== null && data.lng !== undefined) {
+                    localStorage.setItem('cv_user_lng', data.lng);
+                }
+                localStorage.setItem('cv_geo_radius', radiusKm);
+                localStorage.setItem('cv_geo_unit', unit);
+                localStorage.setItem('cv_geo_radius_raw', radiusRaw);
+
+                setCookie('cv_geolocation_enabled', 'true', 30);
+                setCookie('cv_geo_radius', radiusKm, 30);
+                setCookie('cv_geo_radius_wcfm', radiusKm, 30);
+                setCookie('cv_geo_radius_raw', radiusRaw, 30);
+
+                if (data.lat !== null && data.lng !== null) {
+                    var payload = {
+                        addr: data.address || '',
+                        lat: data.lat,
+                        lng: data.lng,
+                        range: radiusKm,
+                        range_raw: radiusRaw,
+                        unit: unit,
+                        timestamp: Date.now()
+                    };
+                    setCookie('wcfm_stores_radius_filter', JSON.stringify(payload), 30);
+                }
+
+                if (window.cvRadiusDialogManager && typeof window.cvRadiusDialogManager.configure === 'function') {
+                    window.cvRadiusDialogManager.configure({
+                        range: radiusKm,
+                        rangeRaw: radiusRaw,
+                        unit: unit,
+                        unitLabel: unit === 'm' ? 'm' : 'Km',
+                        lat: data.lat,
+                        lng: data.lng,
+                        address: data.address || '',
+                        context: 'stores',
+                        rangeFieldMode: (unit === 'm') ? 'raw' : 'km'
+                    });
+                }
+            }
+
+            function clearGeoState() {
+                localStorage.setItem('cv_geolocation_enabled', 'false');
+                localStorage.removeItem('cv_user_lat');
+                localStorage.removeItem('cv_user_lng');
+                localStorage.removeItem('cv_geo_radius');
+                localStorage.removeItem('cv_geo_unit');
+                localStorage.removeItem('cv_geo_radius_raw');
+                localStorage.removeItem('cv_geo_radius_dialog_settings');
+
+                setCookie('cv_geolocation_enabled', '', -1);
+                setCookie('cv_geo_radius', '', -1);
+                setCookie('cv_geo_radius_wcfm', '', -1);
+                setCookie('cv_geo_radius_raw', '', -1);
+                setCookie('wcfm_stores_radius_filter', '', -1);
+            }
+
+            function openActivationDialog(lat, lng) {
+                waitForDialog(function (manager) {
+                    var stored = getStoredSettings() || {};
+                    var storedRange = typeof stored.range === 'number' ? stored.range : (localStorage.getItem('cv_geo_radius') ? parseFloat(localStorage.getItem('cv_geo_radius')) : 50);
+                    var storedRangeRaw = typeof stored.rangeRaw === 'number' ? stored.rangeRaw : null;
+                    var unitValue = stored.unit || localStorage.getItem('cv_geo_unit') || 'km';
+                    var unitLabel = unitValue === 'm' ? 'm' : 'Km';
+                    if (unitValue === 'm') {
+                        if (storedRangeRaw === null || isNaN(storedRangeRaw)) {
+                            storedRangeRaw = localStorage.getItem('cv_geo_radius_raw') ? parseFloat(localStorage.getItem('cv_geo_radius_raw')) : null;
+                        }
+                        if (storedRangeRaw === null || isNaN(storedRangeRaw)) {
+                            storedRangeRaw = Math.round(parseFloat(storedRange || 0) * 1000);
+                        }
+                    } else {
+                        if (storedRangeRaw === null || isNaN(storedRangeRaw)) {
+                            storedRangeRaw = localStorage.getItem('cv_geo_radius_raw') ? parseFloat(localStorage.getItem('cv_geo_radius_raw')) : null;
+                        }
+                        if (storedRangeRaw === null || isNaN(storedRangeRaw)) {
+                            storedRangeRaw = storedRange;
+                        }
+                    }
+
+                    manager.open({
+                        origin: 'activate',
+                        lat: lat,
+                        lng: lng,
+                        range: storedRange,
+                        rangeRaw: storedRangeRaw,
+                        defaultRange: stored.defaultRange || storedRange,
+                        max: stored.max || 500,
+                        unit: unitValue,
+                        unitLabel: stored.unitLabel || unitLabel,
+                        address: '',
+                        context: 'stores',
+                        rangeFieldMode: 'auto',
+                        storageKey: 'cv_geo_radius_dialog_settings',
+                        submitOnApply: false,
+                        enableReverseGeocode: true,
+                        allowForwardGeocode: true,
+                        selectors: {},
+                        deactivation: {
+                            enabled: false,
+                            label: 'Desactivar geolocalización',
+                            notice: null,
+                            callback: null
+                        },
+                        hintMessage: null,
+                        applyCallbacks: [
+                            function (result) {
+                                persistActivation(result);
+                                setButtonState(true);
+                                showMessage(
+                                    '<strong>📍 Geolocalización activada</strong><br>Orden: “Más cercanos”. Ajusta el radio cuando lo necesites desde el botón de distancia.',
+                                    '#4CAF50'
+                                );
                                 if (window.GeoManager) {
                                     window.GeoManager.applyGeoState();
                                 }
-                            },
-                            function(error) {
-                                // Error: no se pudo obtener ubicación
-                                $btn.removeClass('processing');
-                                
-                                var errorMsg = 'No se pudo obtener tu ubicación';
-                                if (error.code === 1) {
-                                    errorMsg = 'Permiso de ubicación denegado';
-                                } else if (error.code === 2) {
-                                    errorMsg = 'Ubicación no disponible';
-                                } else if (error.code === 3) {
-                                    errorMsg = 'Tiempo de espera agotado';
-                                }
-                                
-                                alert('❌ ' + errorMsg);
-                                console.error('Error geolocalización:', error);
                             }
-                        );
+                        ]
+                    });
+                });
+            }
+
+            function openDeactivationDialog() {
+                waitForDialog(function (manager) {
+                    $btn.removeClass('processing');
+
+                    var stored = getStoredSettings() || {};
+                    var lat = stored.lat;
+                    var lng = stored.lng;
+
+                    if ((lat === undefined || lat === null) && localStorage.getItem('cv_user_lat')) {
+                        var parsedLat = parseFloat(localStorage.getItem('cv_user_lat'));
+                        lat = isNaN(parsedLat) ? null : parsedLat;
+                    }
+                    if ((lng === undefined || lng === null) && localStorage.getItem('cv_user_lng')) {
+                        var parsedLng = parseFloat(localStorage.getItem('cv_user_lng'));
+                        lng = isNaN(parsedLng) ? null : parsedLng;
+                    }
+
+                    var unitValue = stored.unit || localStorage.getItem('cv_geo_unit') || 'km';
+                    unitValue = unitValue === 'm' ? 'm' : 'km';
+
+                    var storedRange = typeof stored.range === 'number'
+                        ? stored.range
+                        : (localStorage.getItem('cv_geo_radius') ? parseFloat(localStorage.getItem('cv_geo_radius')) : 50);
+                    if (isNaN(storedRange) || storedRange <= 0) {
+                        storedRange = 50;
+                    }
+
+                    var storedRangeRaw = typeof stored.rangeRaw === 'number' ? stored.rangeRaw : null;
+                    if (storedRangeRaw === null || isNaN(storedRangeRaw)) {
+                        var rawValue = localStorage.getItem('cv_geo_radius_raw');
+                        if (rawValue !== null) {
+                            var parsedRawValue = parseFloat(rawValue);
+                            if (!isNaN(parsedRawValue)) {
+                                storedRangeRaw = parsedRawValue;
+                            }
+                        }
+                    }
+
+                    if (unitValue === 'm') {
+                        if (storedRangeRaw !== null && !isNaN(storedRangeRaw)) {
+                            storedRange = storedRangeRaw / 1000;
+                        } else {
+                            storedRangeRaw = Math.round(storedRange * 1000);
+                        }
                     } else {
+                        storedRangeRaw = storedRangeRaw !== null && !isNaN(storedRangeRaw)
+                            ? storedRangeRaw
+                            : storedRange;
+                    }
+
+                    var address = stored.address || '';
+                    if (!address) {
+                        var summaryText = $('#cvRadiusSummaryAddress').length ? $('#cvRadiusSummaryAddress').text() : '';
+                        if (summaryText) {
+                            var cleaned = summaryText.replace(/^Ubicación:\s*/i, '').trim();
+                            if (cleaned && cleaned.toLowerCase() !== 'ubicación sin definir') {
+                                address = cleaned;
+                            }
+                        }
+                    }
+                    if (!address) {
+                        try {
+                            var cookieEntry = document.cookie.split(';').map(function (item) {
+                                return item.trim();
+                            }).find(function (item) {
+                                return item.indexOf('wcfm_stores_radius_filter=') === 0;
+                            });
+                            if (cookieEntry) {
+                                var cookieValue = decodeURIComponent(cookieEntry.split('=').slice(1).join('='));
+                                var parsedCookie = JSON.parse(cookieValue);
+                                if (parsedCookie && parsedCookie.addr) {
+                                    address = parsedCookie.addr;
+                                }
+                            }
+                        } catch (cookieError) {
+                            // Silenciar errores de parsing de cookie
+                        }
+                    }
+
+                    var deactivateNotice = 'Mantén tus ajustes actuales o pulsa “Desactivar geolocalización” para volver al listado general sin filtros de distancia.';
+
+                    manager.open({
+                        origin: 'deactivate',
+                        lat: lat,
+                        lng: lng,
+                        range: storedRange,
+                        rangeRaw: storedRangeRaw,
+                        unit: unitValue,
+                        unitLabel: unitValue === 'm' ? 'm' : 'Km',
+                        address: address,
+                        hintMessage: deactivateNotice,
+                        rangeFieldMode: 'auto',
+                        context: 'stores',
+                        deactivation: {
+                            enabled: true,
+                            label: 'Desactivar geolocalización',
+                            notice: deactivateNotice,
+                            callback: function () {
+                                clearGeoState();
+                                setButtonState(false);
+                                showMessage(
+                                    '<strong>🔕 Geolocalización desactivada</strong><br>El filtro por distancia se eliminó y verás el listado completo.',
+                                    '#ff704d'
+                                );
+                                if (window.GeoManager) {
+                                    window.GeoManager.applyGeoState();
+                                    if (typeof window.GeoManager.clearGeoParams === 'function') {
+                                        window.GeoManager.clearGeoParams();
+                                    }
+                                }
+                            }
+                        },
+                        applyCallbacks: [
+                            function (result) {
+                                persistActivation(result);
+                                setButtonState(true);
+                                showMessage(
+                                    '<strong>✅ Ajustes actualizados</strong><br>Seguimos mostrando comercios cercanos con tus nuevos parámetros.',
+                                    '#4CAF50'
+                                );
+                                if (window.GeoManager) {
+                                    window.GeoManager.applyGeoState();
+                                }
+                            }
+                        ]
+                    });
+                });
+            }
+
+            $('#cv-geolocation-toggle-float').on('click', function () {
+                if ($btn.hasClass('processing')) {
+                    return;
+                }
+
+                var isEnabled = $btn.hasClass('enabled');
+
+                if (!isEnabled) {
+                    $btn.addClass('processing');
+
+                    if (!('geolocation' in navigator)) {
                         $btn.removeClass('processing');
                         alert('❌ Tu navegador no soporta geolocalización');
+                        return;
                     }
+
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            $btn.removeClass('processing');
+                            openActivationDialog(position.coords.latitude, position.coords.longitude);
+                        },
+                        function (error) {
+                            $btn.removeClass('processing');
+                            var errorMsg = 'No se pudo obtener tu ubicación';
+                            if (error.code === 1) {
+                                errorMsg = 'Permiso de ubicación denegado';
+                            } else if (error.code === 2) {
+                                errorMsg = 'Ubicación no disponible';
+                            } else if (error.code === 3) {
+                                errorMsg = 'Tiempo de espera agotado';
+                            }
+                            alert('❌ ' + errorMsg);
+                            console.error('Error geolocalización:', error);
+                        },
+                        { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }
+                    );
                 } else {
-                    // DESACTIVAR: Limpiar localStorage
-                    localStorage.removeItem('cv_geolocation_enabled');
-                    localStorage.removeItem('cv_user_lat');
-                    localStorage.removeItem('cv_user_lng');
-                    
-                    // Cambiar estado a desactivado
-                    $btn.removeClass('processing enabled').addClass('disabled');
-                    $btn.attr('title', 'Geolocalización desactivada');
-                    
-                    // Mostrar mensaje
-                    showMessage('🔕 Geolocalización desactivada', '#FF9800');
-                    
-                    // Aplicar cambios sin recargar
-                    if (window.GeoManager) {
-                        window.GeoManager.applyGeoState();
-                    }
+                    $btn.addClass('processing');
+                    openDeactivationDialog();
                 }
             });
-            
-            // Función auxiliar para mostrar mensajes
-            function showMessage(text, color) {
-                $('<div style="position: fixed; top: 210px; left: 20px; background: ' + color + '; color: white; padding: 15px 25px; border-radius: 8px; z-index: 999998; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">' + text + '</div>')
-                    .appendTo('body')
-                    .delay(2000)
-                    .fadeOut(300, function() { $(this).remove(); });
-            }
-            
-            // Verificar estado inicial desde localStorage
+
             var geoEnabled = localStorage.getItem('cv_geolocation_enabled') === 'true';
-            if (geoEnabled) {
-                $btn.removeClass('disabled').addClass('enabled');
-                $btn.attr('title', 'Geolocalización activada');
+            setButtonState(geoEnabled);
+            if (!geoEnabled) {
+                setCookie('cv_geolocation_enabled', '', -1);
             }
         });
         </script>
