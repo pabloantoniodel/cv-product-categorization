@@ -25,6 +25,9 @@
     var mapButton;
     var deactivateButton;
     var hintTextEl;
+    var locateButton;
+    var useDeviceButton;
+    var suggestionsList;
     var mapDialog;
     var mapCloseButton;
     var mapContainer;
@@ -55,7 +58,7 @@
     var globalCallbacks = [];
     var dialogReadyDispatched = false;
 
-    var MAP_DIALOG_VERSION = '20251111-geo-08';
+    var MAP_DIALOG_VERSION = '20251111-geo-09';
     var MAP_DIALOG_LOADED_AT = new Date().toISOString();
     var DEFAULT_HINT_TEXT = 'Estos ajustes se guardan para próximas visitas. Al aplicar se actualizará el listado con el nuevo radio.';
 
@@ -247,6 +250,277 @@
                 dialog.classList.remove('cv-radius-dialog--with-deactivate');
             }
         }
+    }
+
+    function clearSuggestions() {
+        if (!suggestionsList) {
+            return;
+        }
+        suggestionsList.innerHTML = '';
+        suggestionsList.hidden = true;
+        suggestionsList.dataset.state = 'empty';
+    }
+
+    function showSuggestionMessage(message, type) {
+        if (!suggestionsList) {
+            return;
+        }
+        suggestionsList.innerHTML = '';
+        var item = document.createElement('li');
+        item.className = 'cv-radius-dialog__suggestion cv-radius-dialog__suggestion--message' + (type ? ' cv-radius-dialog__suggestion--' + type : '');
+        item.textContent = message;
+        suggestionsList.appendChild(item);
+        suggestionsList.hidden = false;
+        suggestionsList.dataset.state = type || 'info';
+    }
+
+    function renderSuggestions(results) {
+        if (!suggestionsList) {
+            return;
+        }
+        suggestionsList.innerHTML = '';
+        if (!Array.isArray(results) || !results.length) {
+            showSuggestionMessage('No encontramos coincidencias en España para esa búsqueda.', 'warning');
+            return;
+        }
+        results.forEach(function (item) {
+            if (!item || !item.lat || !item.lon) {
+                return;
+            }
+            var li = document.createElement('li');
+            li.className = 'cv-radius-dialog__suggestion';
+            var button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'cv-radius-dialog__suggestion-btn';
+            button.dataset.lat = item.lat;
+            button.dataset.lng = item.lon;
+            button.dataset.display = item.display_name || '';
+            button.innerHTML = '<strong>' + (item.display_name || 'Ubicación sin nombre') + '</strong>'
+                + (item.type ? '<span>' + item.type + '</span>' : '');
+            li.appendChild(button);
+            suggestionsList.appendChild(li);
+        });
+        suggestionsList.hidden = false;
+        suggestionsList.dataset.state = 'list';
+    }
+
+    function setLocateLoading(isLoading) {
+        if (!locateButton) {
+            return;
+        }
+        if (isLoading) {
+            if (!locateButton.dataset.originalText) {
+                locateButton.dataset.originalText = locateButton.textContent;
+            }
+            locateButton.disabled = true;
+            locateButton.dataset.loading = '1';
+            locateButton.textContent = 'Buscando…';
+        } else {
+            locateButton.disabled = false;
+            locateButton.dataset.loading = '0';
+            if (locateButton.dataset.originalText) {
+                locateButton.textContent = locateButton.dataset.originalText;
+            }
+        }
+    }
+
+    function setUseDeviceLoading(isLoading) {
+        if (!useDeviceButton) {
+            return;
+        }
+        if (isLoading) {
+            if (!useDeviceButton.dataset.originalText) {
+                useDeviceButton.dataset.originalText = useDeviceButton.textContent;
+            }
+            useDeviceButton.disabled = true;
+            useDeviceButton.dataset.loading = '1';
+            useDeviceButton.textContent = 'Obteniendo…';
+        } else {
+            useDeviceButton.disabled = false;
+            useDeviceButton.dataset.loading = '0';
+            if (useDeviceButton.dataset.originalText) {
+                useDeviceButton.textContent = useDeviceButton.dataset.originalText;
+            }
+        }
+    }
+
+    function applyLocationSelection(lat, lng, displayName, options) {
+        options = options || {};
+        if (typeof lat !== 'number' || isNaN(lat) || typeof lng !== 'number' || isNaN(lng)) {
+            return;
+        }
+
+        var prevLat = currentConfig.lat;
+        var prevLng = currentConfig.lng;
+        var prevRange = currentConfig.range;
+
+        currentConfig.lat = lat;
+        currentConfig.lng = lng;
+
+        var locationChanged = (
+            prevLat === undefined || prevLng === undefined ||
+            Math.abs(parseFloat(prevLat) - lat) > 0.00001 ||
+            Math.abs(parseFloat(prevLng) - lng) > 0.00001
+        );
+
+        if (hiddenLatEl) {
+            hiddenLatEl.value = lat;
+        }
+        if (hiddenLngEl) {
+            hiddenLngEl.value = lng;
+        }
+
+        if (displayName) {
+            if (addressInput) {
+                addressInput.value = displayName;
+            }
+            if (hiddenAddressEl) {
+                hiddenAddressEl.value = displayName;
+            }
+            if (summaryAddressEl) {
+                summaryAddressEl.textContent = 'Ubicación: ' + displayName;
+            }
+        } else {
+            if (hiddenAddressEl) {
+                hiddenAddressEl.value = '';
+            }
+            if (summaryAddressEl) {
+                summaryAddressEl.textContent = 'Ubicación sin definir';
+            }
+        }
+
+        refreshMapButtonState();
+        saveToStorage({
+            range: currentConfig.range,
+            rangeRaw: currentConfig.rangeRaw,
+            lat: lat,
+            lng: lng,
+            address: displayName || '',
+            unit: currentConfig.unit,
+            unitLabel: currentConfig.unitLabel,
+            origin: currentConfig.origin
+        }, currentConfig.storageKey);
+
+        if (locationChanged || options.forceBootstrap) {
+            initialBootstrapPending = true;
+        }
+
+        var fetchOptions = {};
+        if (initialBootstrapPending) {
+            fetchOptions.bootstrap = true;
+            fetchOptions.minCount = 10;
+        }
+
+        scheduleSummaryFetch(true, fetchOptions);
+
+        if (options.focusRange && rangeInput) {
+            rangeInput.focus();
+        }
+    }
+
+    function reverseGeocodeAndFill(lat, lng) {
+        var url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&accept-language=es&lat='
+            + encodeURIComponent(lat) + '&lon=' + encodeURIComponent(lng) + '&countrycodes=es';
+        fetch(url, { headers: { 'Accept': 'application/json' } })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function (json) {
+                if (!json) {
+                    return;
+                }
+                var display = json.display_name || '';
+                applyLocationSelection(lat, lng, display);
+            })
+            .catch(function (error) {
+                console.warn('cvRadiusDialog: reverse geocode manual falló', error);
+            });
+    }
+
+    function onLocateClick() {
+        if (!addressInput) {
+            return;
+        }
+        var query = addressInput.value.trim();
+        if (!query) {
+            showSuggestionMessage('Escribe una dirección o ciudad dentro de España para buscar.', 'info');
+            return;
+        }
+        if (locateButton && locateButton.dataset.loading === '1') {
+            return;
+        }
+        setLocateLoading(true);
+        var url = 'https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=6'
+            + '&countrycodes=es&q=' + encodeURIComponent(query);
+        fetch(url, { headers: { 'Accept': 'application/json' } })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(function (results) {
+                renderSuggestions(results);
+            })
+            .catch(function (error) {
+                console.warn('cvRadiusDialog: búsqueda de dirección falló', error);
+                showSuggestionMessage('Ocurrió un error al buscar. Intenta de nuevo.', 'error');
+            })
+            .finally(function () {
+                setLocateLoading(false);
+            });
+    }
+
+    function onSuggestionClick(event) {
+        if (!event || !event.target || !event.target.closest) {
+            return;
+        }
+        var button = event.target.closest('.cv-radius-dialog__suggestion-btn');
+        if (!button) {
+            return;
+        }
+        var lat = parseFloat(button.dataset.lat);
+        var lng = parseFloat(button.dataset.lng);
+        var display = button.dataset.display || '';
+        if (isNaN(lat) || isNaN(lng)) {
+            return;
+        }
+        applyLocationSelection(lat, lng, display, { focusRange: true });
+        clearSuggestions();
+    }
+
+    function onUseDeviceClick() {
+        if (!('geolocation' in navigator)) {
+            showSuggestionMessage('Tu navegador no permite obtener la ubicación automática.', 'error');
+            return;
+        }
+        if (useDeviceButton && useDeviceButton.dataset.loading === '1') {
+            return;
+        }
+        clearSuggestions();
+        setUseDeviceLoading(true);
+        navigator.geolocation.getCurrentPosition(function (position) {
+            setUseDeviceLoading(false);
+            if (!position || !position.coords) {
+                return;
+            }
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            applyLocationSelection(lat, lng, 'Ubicación detectada');
+            reverseGeocodeAndFill(lat, lng);
+        }, function (error) {
+            setUseDeviceLoading(false);
+            var message = 'No se pudo obtener tu ubicación.';
+            if (error && error.code === 1) {
+                message = 'Permiso de ubicación denegado.';
+            } else if (error && error.code === 3) {
+                message = 'Tiempo de espera agotado obteniendo ubicación.';
+            }
+            showSuggestionMessage(message, 'error');
+        }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 });
     }
 
     function setMapButtonLoading(isLoading) {
@@ -826,9 +1100,13 @@
                 var angle = angleStep * j;
                 var east = Math.sin(angle) * radiusMeters;
                 var north = Math.cos(angle) * radiusMeters;
-                var coords = radiusMeters === 0
-                    ? [baseLat, baseLng]
-                    : offsetCoordinates(baseLat, baseLng, east, north);
+                var coords = [parseFloat(store.lat), parseFloat(store.lng)];
+                if (isNaN(coords[0]) || isNaN(coords[1])) {
+                    coords = [baseLat, baseLng];
+                }
+                if (radiusMeters > 0) {
+                    coords = offsetCoordinates(coords[0], coords[1], east, north);
+                }
 
                 var lat = parseFloat(coords[0]);
                 var lng = parseFloat(coords[1]);
@@ -841,7 +1119,8 @@
                     weight: 1,
                     color: '#ffffff',
                     fillColor: '#6544ff',
-                    fillOpacity: 0.9
+                    fillOpacity: 0.9,
+                    bubblingMouseEvents: false
                 }).addTo(mapInstance);
 
                 var popupContent = '<strong>' + (store.url ? '<a href="' + store.url + '" target="_blank" rel="noopener noreferrer">' + store.name + '</a>' : store.name) + '</strong>';
@@ -1075,7 +1354,8 @@
                     weight: 2,
                     color: '#ffffff',
                     fillColor: '#6544ff',
-                    fillOpacity: 0.92
+                    fillOpacity: 0.92,
+                    bubblingMouseEvents: false
                 }).addTo(mapInstance);
 
                 clusterMarker.bindTooltip(String(group.count), {
@@ -1192,6 +1472,11 @@
             + '    <div class="cv-radius-dialog__body">'
             + '      <label for="cvRadiusAddress">Dirección base</label>'
             + '      <input type="text" id="cvRadiusAddress" placeholder="Inserta tu dirección…"/>'
+            + '      <div class="cv-radius-dialog__address-actions">'
+            + '        <button type="button" id="cvRadiusLocate" class="cv-radius-dialog__secondary">Ubicar</button>'
+            + '        <button type="button" id="cvRadiusUseDevice" class="cv-radius-dialog__secondary">Mi ubicación</button>'
+            + '      </div>'
+            + '      <ul id="cvRadiusAddressResults" class="cv-radius-dialog__suggestions" hidden></ul>'
             + '      <div class="cv-radius-dialog__unit">'
             + '        <span>Unidad</span>'
             + '        <div class="cv-radius-dialog__unit-options">'
@@ -1245,6 +1530,9 @@
         mapButton = document.getElementById('cvRadiusMap');
         deactivateButton = document.getElementById('cvRadiusDeactivate');
         hintTextEl = dialog.querySelector('.cv-radius-dialog__hint');
+        locateButton = document.getElementById('cvRadiusLocate');
+        useDeviceButton = document.getElementById('cvRadiusUseDevice');
+        suggestionsList = document.getElementById('cvRadiusAddressResults');
 
         if (hintTextEl) {
             var storedDefault = hintTextEl.dataset.defaultText;
@@ -1256,6 +1544,11 @@
                 }
                 hintTextEl.dataset.defaultText = currentText;
             }
+        }
+
+        if (suggestionsList && !suggestionsList.dataset.state) {
+            suggestionsList.dataset.state = 'empty';
+            suggestionsList.hidden = true;
         }
 
         if (deactivateButton && !deactivateButton.dataset.loading) {
@@ -1307,6 +1600,21 @@
             deactivateButton.dataset.bound = '1';
         }
 
+        if (locateButton && !locateButton.dataset.bound) {
+            locateButton.addEventListener('click', onLocateClick);
+            locateButton.dataset.bound = '1';
+        }
+
+        if (useDeviceButton && !useDeviceButton.dataset.bound) {
+            useDeviceButton.addEventListener('click', onUseDeviceClick);
+            useDeviceButton.dataset.bound = '1';
+        }
+
+        if (suggestionsList && !suggestionsList.dataset.bound) {
+            suggestionsList.addEventListener('click', onSuggestionClick);
+            suggestionsList.dataset.bound = '1';
+        }
+
         if (unitInputs && unitInputs.length) {
             unitInputs.forEach(function (input) {
                 input.addEventListener('change', function () {
@@ -1315,6 +1623,15 @@
                     }
                 });
             });
+        }
+
+        if (addressInput && !addressInput.dataset.bound) {
+            addressInput.addEventListener('input', function () {
+                if (!this.value.trim()) {
+                    clearSuggestions();
+                }
+            });
+            addressInput.dataset.bound = '1';
         }
 
         dialog.dataset.bound = '1';
@@ -1345,6 +1662,7 @@
             summaryAddressEl.textContent = 'Ubicación sin definir';
         }
         updateSummaryCount(null);
+        clearSuggestions();
         refreshMapButtonState();
         try {
             saveToStorage({
@@ -1788,6 +2106,7 @@
             formEl.submit();
         }
 
+        clearSuggestions();
         dialog.close();
     }
 
