@@ -12,7 +12,7 @@
         emptyGuest: 'Por favor completa tu nombre, email y teléfono.',
         sendLabel: 'Enviar consulta',
         sending: 'Enviando…',
-        tabGuest: 'Sin cuenta',
+        tabGuest: 'Realiza tu consulta',
         tabLogin: 'Ya soy usuario',
         loginTitle: 'Inicia sesión para continuar',
         loginUserLabel: 'Usuario o email',
@@ -55,6 +55,7 @@
             return;
         }
 
+        // Siempre mostrar el formulario de consulta primero, con opción de login para usuarios registrados
         var hasTabs = !isLoggedIn;
         var tabsHtml = hasTabs ? (
             '<div class="cv-consult-tabs">' +
@@ -162,7 +163,8 @@
         prefillUserData();
         updateModalHeader();
         updateContactLink();
-        setActiveTab(isLoggedIn ? 'guest' : activeTab);
+        // Siempre mostrar el formulario de consulta primero (pestaña guest)
+        setActiveTab('guest');
 
         $('#' + modalId).addClass('active');
         $('body').addClass('cv-consult-modal-open');
@@ -464,6 +466,7 @@
         }
     }
 
+    // Interceptar clic en nuestro botón personalizado
     $(document).on('click', '.cv-consultation-button', function (evt) {
         evt.preventDefault();
 
@@ -472,6 +475,77 @@
         currentProduct.vendorId = parseInt($(this).data('vendor-id'), 10) || 0;
 
         openModal();
+    });
+
+    // Interceptar clic en el botón de inmobiliaria para usar nuestro modal
+    $(document).on('click', '.cv-inmobiliaria-inquiry-btn', function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        evt.stopImmediatePropagation();
+
+        // Obtener datos del producto desde el botón
+        var $button = $(this);
+        currentProduct.id = parseInt($button.data('product-id'), 10) || 0;
+        currentProduct.title = $button.data('product-title') || '';
+        currentProduct.vendorId = parseInt($button.data('vendor-id'), 10) || 0;
+
+        // Abrir nuestro modal
+        openModal();
+        
+        return false;
+    });
+
+    // Interceptar clic en el botón de WCFM para abrir nuestro modal en lugar del popup de login
+    $(document).on('click', '.wcfm_catalog_enquiry', function (evt) {
+        // Solo interceptar en páginas de producto
+        if (!window.location.href.match(/\/product\//)) {
+            return;
+        }
+
+        evt.preventDefault();
+        evt.stopPropagation();
+        evt.stopImmediatePropagation();
+
+        // Obtener datos del producto desde el botón o desde la página
+        var $button = $(this);
+        currentProduct.id = parseInt($button.data('product-id'), 10) || 0;
+        currentProduct.vendorId = parseInt($button.data('store'), 10) || 0;
+
+        // Si no tenemos el ID del producto, intentar obtenerlo de la URL o del DOM
+        if (!currentProduct.id) {
+            // Intentar obtener del body o de algún elemento con data-product-id
+            var $productElement = $('body[data-product-id], .product[data-product-id], [data-product-id]').first();
+            if ($productElement.length) {
+                currentProduct.id = parseInt($productElement.data('product-id'), 10) || 0;
+            }
+            
+            // Si aún no lo tenemos, intentar desde el botón de añadir al carrito
+            if (!currentProduct.id) {
+                var $addToCart = $('button[data-product_id], .single_add_to_cart_button[data-product_id]').first();
+                if ($addToCart.length) {
+                    currentProduct.id = parseInt($addToCart.data('product_id') || $addToCart.data('product-id'), 10) || 0;
+                }
+            }
+        }
+
+        // Obtener título del producto
+        if (!currentProduct.title) {
+            currentProduct.title = $('h1.product_title, .product_title, h1.entry-title, .woocommerce-product-details__short-description').first().text().trim() || '';
+        }
+
+        // Abrir nuestro modal
+        openModal();
+        
+        return false;
+    });
+
+    // Cambiar el texto del botón de WCFM cuando se carga la página
+    $(function() {
+        if (window.location.href.match(/\/product\//)) {
+            $('.wcfm_catalog_enquiry .add_enquiry_label').text('Realiza tu consulta');
+            // También quitar la clase de login popup para que siempre abra nuestro modal
+            $('.wcfm_catalog_enquiry').removeClass('wcfm_login_popup');
+        }
     });
 
     $(function () {

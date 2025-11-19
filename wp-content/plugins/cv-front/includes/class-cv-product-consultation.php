@@ -50,6 +50,8 @@ class CV_Product_Consultation
         add_filter('wcfm_is_pref_enquiry_button', [$this, 'maybe_disable_wcfm_button'], 20, 1);
         add_filter('login_redirect', [$this, 'maybe_force_consult_redirect'], 999, 3);
         add_filter('woocommerce_login_redirect', [$this, 'maybe_force_consult_redirect_woo'], 999, 2);
+        // Cambiar el texto del botón de WCFM
+        add_filter('wcfm_enquiry_button_label', [$this, 'change_wcfm_enquiry_button_label'], 10, 1);
         add_action('wp_ajax_nopriv_cv_product_consultation_login', [$this, 'handle_login']);
         add_action('wp_ajax_cv_product_consultation_submit', [$this, 'handle_submission']);
         add_action('wp_ajax_nopriv_cv_product_consultation_submit', [$this, 'handle_submission']);
@@ -104,7 +106,7 @@ class CV_Product_Consultation
                 'emptyGuest'      => __('Por favor completa tu nombre, email y teléfono.', 'cv-front'),
                 'sending'         => __('Enviando…', 'cv-front'),
                 'sendLabel'       => __('Enviar consulta', 'cv-front'),
-                'tabGuest'        => __('Sin cuenta', 'cv-front'),
+                'tabGuest'        => __('Realiza tu consulta', 'cv-front'),
                 'tabLogin'        => __('Ya soy usuario', 'cv-front'),
                 'loginTitle'      => __('Inicia sesión para continuar', 'cv-front'),
                 'loginUserLabel'  => __('Usuario o email', 'cv-front'),
@@ -175,6 +177,16 @@ class CV_Product_Consultation
         }
 
         return false;
+    }
+
+    /**
+     * Cambiar el texto del botón de consulta de WCFM
+     */
+    public function change_wcfm_enquiry_button_label($label) {
+        if (is_product()) {
+            return __('Realiza tu consulta', 'cv-front');
+        }
+        return $label;
     }
 
     /**
@@ -354,17 +366,45 @@ class CV_Product_Consultation
         $guest_email = $is_guest ? sanitize_email((string) ($_POST['email'] ?? '')) : '';
         $guest_phone = sanitize_text_field((string) ($_POST['phone'] ?? ''));
 
-        if ($is_guest) {
-            if ('' === $guest_name || '' === $guest_phone || !is_email($guest_email)) {
-                wp_send_json_error(['message' => __('Necesitamos tu nombre, email y teléfono para responderte.', 'cv-front')], 400);
-            }
-        }
-
         $customer_id    = 0;
         $customer_name  = $guest_name;
         $customer_email = $guest_email;
 
-        if (!$is_guest) {
+        if ($is_guest) {
+            if ('' === $guest_name || '' === $guest_phone || !is_email($guest_email)) {
+                wp_send_json_error(['message' => __('Necesitamos tu nombre, email y teléfono para responderte.', 'cv-front')], 400);
+            }
+            
+            // Registrar automáticamente al usuario
+            $new_user_id = $this->auto_register_user($guest_name, $guest_email, $guest_phone);
+            
+            if (is_wp_error($new_user_id)) {
+                // Si el usuario ya existe, intentar obtener su ID
+                $existing_user = get_user_by('email', $guest_email);
+                if ($existing_user) {
+                    $new_user_id = (int) $existing_user->ID;
+                    // Actualizar teléfono si no existe
+                    if ('' !== $guest_phone) {
+                        $existing_phone = get_user_meta($new_user_id, 'billing_phone', true);
+                        if (empty($existing_phone)) {
+                            update_user_meta($new_user_id, 'billing_phone', $guest_phone);
+                        }
+                    }
+                } else {
+                    wp_send_json_error(['message' => $new_user_id->get_error_message()], 400);
+                }
+            }
+            
+            // Iniciar sesión automáticamente
+            if ($new_user_id > 0) {
+                wp_set_current_user($new_user_id);
+                wp_set_auth_cookie($new_user_id);
+                $customer_id = $new_user_id;
+            }
+        }
+
+        // Obtener datos del usuario (ya sea recién registrado o existente)
+        if ($customer_id > 0 || !$is_guest) {
             $user = wp_get_current_user();
             if ($user instanceof WP_User) {
                 $customer_id    = (int) $user->ID;
@@ -467,7 +507,78 @@ class CV_Product_Consultation
             );
         }
 
+        // Disparar hook wcfm_after_enquiry_submit para que Ultramsg y otros plugins puedan actuar
+        // Este hook se ejecuta tanto para usuarios registrados como no registrados
+        // El hook enviará automáticamente el WhatsApp al vendedor
+        do_action('wcfm_after_enquiry_submit', $enquiry_id, $customer_id, $product_id, $vendor_id, $message, array(
+            'customer_name' => $customer_name,
+            'customer_email' => $customer_email,
+            'phone' => $guest_phone
+        ));
+
         wp_send_json_success(['message' => __('¡Consulta enviada correctamente!', 'cv-front')]);
+    }
+
+    /**
+     * Registrar automáticamente un usuario cuando envía una consulta
+     * 
+     * @param string $name Nombre completo
+     * @param string $email Email
+     * @param string $phone Teléfono
+     * @return int|WP_Error ID del usuario o error
+     */
+    private function auto_register_user(string $name, string $email, string $phone) {
+        // Verificar si el email ya existe
+        if (email_exists($email)) {
+            $existing_user = get_user_by('email', $email);
+            if ($existing_user) {
+                return new WP_Error('user_exists', __('Este email ya está registrado.', 'cv-front'));
+            }
+        }
+
+        // Generar username desde el email
+        $username = sanitize_user(current(explode('@', $email)), true);
+        if (username_exists($username)) {
+            $username = $username . '_' . time();
+        }
+
+        // Generar contraseña aleatoria
+        $password = wp_generate_password(12, false);
+
+        // Separar nombre y apellido
+        $name_parts = explode(' ', trim($name), 2);
+        $first_name = $name_parts[0];
+        $last_name = isset($name_parts[1]) ? $name_parts[1] : '';
+
+        // Crear usuario
+        $user_data = array(
+            'user_login' => $username,
+            'user_email' => $email,
+            'user_pass'  => $password,
+            'first_name' => $first_name,
+            'last_name'  => $last_name,
+            'display_name' => $name,
+            'role'       => 'customer'
+        );
+
+        $user_id = wp_insert_user($user_data);
+
+        if (is_wp_error($user_id)) {
+            return $user_id;
+        }
+
+        // Guardar teléfono
+        if ('' !== $phone) {
+            update_user_meta($user_id, 'billing_phone', $phone);
+            update_user_meta($user_id, 'phone', $phone);
+        }
+
+        // Enviar email de bienvenida con la contraseña (opcional)
+        // wp_new_user_notification($user_id, null, 'user');
+
+        error_log('✅ CV Product Consultation: Usuario registrado automáticamente - ID: ' . $user_id . ', Email: ' . $email);
+
+        return $user_id;
     }
 
     private function get_current_user_name(): string
