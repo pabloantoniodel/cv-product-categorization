@@ -3,7 +3,7 @@
  * Plugin Name: Ciudad Virtual - Frontend Enhancements
  * Plugin URI: https://ciudadvirtual.app
  * Description: Mejoras visuales para el frontend: Sistema de burbujas animadas para geolocalización de tiendas, login moderno de WooCommerce y más
- * Version: 3.5.5
+ * Version: 3.5.7
  * Author: Ciudad Virtual
  * Author URI: https://ciudadvirtual.app
  * License: GPL v2 or later
@@ -130,7 +130,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Definir constantes del plugin
-define('CV_FRONT_VERSION', '3.5.6-20251110');
+define('CV_FRONT_VERSION', '3.5.7-20251114');
 define('CV_FRONT_PLUGIN_FILE', __FILE__);
 define('CV_FRONT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CV_FRONT_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -190,6 +190,56 @@ class CV_Front {
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-comercios-page.php';
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geo-radius-service.php';
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-custom-footer.php';
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-layout-cleanup.php';
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-privacy-page.php';
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-product-exclusions.php';
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-vendors-admin-tweaks.php';
+
+        add_action(
+            'wp',
+            static function () {
+                $page_ids = array();
+
+                $contact_page_id = (int) get_option('cv_contact_page_id', 0);
+                if ($contact_page_id <= 0) {
+                    $contact_page = get_page_by_path('contacto');
+                    if ($contact_page instanceof WP_Post) {
+                        $contact_page_id = (int) $contact_page->ID;
+                        update_option('cv_contact_page_id', $contact_page_id);
+                    }
+                }
+                if ($contact_page_id > 0) {
+                    $page_ids[] = $contact_page_id;
+                }
+
+                $my_account_id = (int) get_option('woocommerce_myaccount_page_id', 0);
+                if ($my_account_id <= 0) {
+                    $my_account_page = get_page_by_path('my-account');
+                    if ($my_account_page instanceof WP_Post) {
+                        $my_account_id = (int) $my_account_page->ID;
+                    }
+                }
+                if ($my_account_id > 0) {
+                    $page_ids[] = $my_account_id;
+                }
+
+                $categories_page_id = (int) get_option('cv_product_categories_page_id', 0);
+                if ($categories_page_id <= 0) {
+                    $categories_page = get_page_by_path('categorias-de-producto');
+                    if ($categories_page instanceof WP_Post) {
+                        $categories_page_id = (int) $categories_page->ID;
+                        update_option('cv_product_categories_page_id', $categories_page_id);
+                    }
+                }
+                if ($categories_page_id > 0) {
+                    $page_ids[] = $categories_page_id;
+                }
+
+                if (!empty($page_ids)) {
+                    CV_Layout_Cleanup::hide_titles_for_pages(array_unique($page_ids));
+                }
+            }
+        );
         // DESACTIVADO: Movido a wcfm-radius-persistence v2.0.0
         // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geolocation-toggle.php';
         // require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-geolocation-default-disabled.php';
@@ -290,6 +340,9 @@ class CV_Front {
         
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-product-tabs-modern.php';
         
+        // Bloquear usuarios suspendidos (no pueden loguearse ni recuperar contraseña)
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-block-suspended-users.php';
+        
         // Configuración de galería de videos
         if (is_admin()) {
             require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-video-gallery-settings.php';
@@ -310,6 +363,9 @@ class CV_Front {
 
         // Límite de mapa a Península Ibérica
         add_action('wp_enqueue_scripts', array($this, 'enqueue_iberian_map_bounds_script'), 120);
+
+        // Dialog flotante para dirección de envío en checkout
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_checkout_shipping_dialog'), 140);
     }
     
     /**
@@ -376,7 +432,11 @@ class CV_Front {
         
         // Inicializar corrector de enlaces WhatsApp
         new CV_Store_WhatsApp_Fixer();
+        
+        // Inicializar bloqueo de usuarios suspendidos
+        new CV_Block_Suspended_Users();
         new CV_Comercios_Page();
+        new CV_Vendors_Admin_Tweaks();
         
         // Activación del plugin
         register_activation_hook(__FILE__, array($this, 'activate'));
@@ -493,6 +553,30 @@ class CV_Front {
                 true
             );
         }
+    }
+
+    /**
+     * Dialog para dirección de envío en checkout
+     */
+    public function enqueue_checkout_shipping_dialog() {
+        if (!function_exists('is_checkout') || !is_checkout()) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'cv-front-checkout-shipping-dialog',
+            CV_FRONT_PLUGIN_URL . 'assets/css/checkout-shipping-dialog.css',
+            array(),
+            CV_FRONT_VERSION
+        );
+
+        wp_enqueue_script(
+            'cv-front-checkout-shipping-dialog',
+            CV_FRONT_PLUGIN_URL . 'assets/js/checkout-shipping-dialog.js',
+            array('jquery'),
+            CV_FRONT_VERSION,
+            true
+        );
     }
 }
 
