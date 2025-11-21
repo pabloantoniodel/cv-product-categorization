@@ -267,6 +267,9 @@ class CV_Front {
         // Botón y modal de consulta genérica
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-product-consultation.php';
         
+        // Asignación automática de sponsors en UAP (vendedor como sponsor de clientes)
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-uap-sponsor-assignment.php';
+        
         // Distancia en header de tienda (oculta en productos)
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-store-distance.php';
         
