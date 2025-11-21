@@ -34,6 +34,8 @@ $period_label = $is_single_day ? date('d/m/Y', strtotime($date_from)) : date('d/
 // Obtener estadísticas con el rango de fechas
 $logins_today = CV_Stats_Login_Tracker::get_logins_by_date_range($period_start, $period_end);
 $count_today = count($logins_today);
+$active_sessions = CV_Stats_Login_Tracker::get_sessions_since($period_start);
+$count_active_sessions = count($active_sessions);
 
 // Agrupar logins por IP
 $logins_by_ip = array();
@@ -109,292 +111,6 @@ $count_whatsapp_sends = count($whatsapp_sends_today);
 // Solo usuarios con roles válidos que tengan tarjetas reales del plugin
 global $wpdb;
 
-if (!function_exists('cv_stats_resolve_store_search_info')) {
-    /**
-     * Resuelve información de la tienda (slug, nombre y URL) a partir del slug o vendor.
-     *
-     * @param string $store_slug
-     * @param int    $vendor_id
-     * @return array{store_slug:string, store_name:string, store_url:string, vendor_id:int}
-     */
-    function cv_stats_resolve_store_search_info(string $store_slug, int $vendor_id = 0): array {
-        global $wpdb;
-
-        $store_slug = trim($store_slug);
-        $normalized_slug = sanitize_title($store_slug);
-
-        if ($normalized_slug === '' || $normalized_slug === 'global') {
-            return array(
-                'store_slug' => 'global',
-                'store_name' => __('Búsqueda global', 'cv-stats'),
-                'store_url'  => home_url('/'),
-                'vendor_id'  => 0,
-            );
-        }
-
-        if ($vendor_id <= 0 && function_exists('wcfmmp_get_store_id_by_slug')) {
-            $maybe_vendor = (int) wcfmmp_get_store_id_by_slug($normalized_slug);
-            if ($maybe_vendor) {
-                $vendor_id = $maybe_vendor;
-            }
-        }
-
-        if ($vendor_id <= 0) {
-            $vendor_id = (int) $wpdb->get_var(
-                $wpdb->prepare(
-                    "
-                    SELECT user_id 
-                    FROM {$wpdb->usermeta} 
-                    WHERE meta_key = 'wcfmmp_store_slug' 
-                      AND meta_value = %s 
-                    LIMIT 1
-                    ",
-                    $normalized_slug
-                )
-            );
-        }
-
-        $store_name = ucwords(str_replace('-', ' ', $normalized_slug));
-        $store_url  = home_url('/store/' . $normalized_slug . '/');
-
-        if ($vendor_id > 0 && function_exists('wcfmmp_get_store')) {
-            $store_object = wcfmmp_get_store($vendor_id);
-            if ($store_object) {
-                $shop_name = $store_object->get_shop_name();
-                if (!empty($shop_name)) {
-                    $store_name = $shop_name;
-                }
-                $shop_url = $store_object->get_shop_url();
-                if (!empty($shop_url)) {
-                    $store_url = $shop_url;
-                }
-            }
-        }
-
-        return array(
-            'store_slug' => $normalized_slug,
-            'store_name' => $store_name,
-            'store_url'  => $store_url,
-            'vendor_id'  => $vendor_id > 0 ? $vendor_id : 0,
-        );
-    }
-}
-
-$store_search_stats_map = array();
-$store_search_stats_top = array();
-$store_search_total_hits = 0;
-
-$store_search_rows = $wpdb->get_results(
-    $wpdb->prepare(
-        "
-        SELECT uri, SUM(count) AS total_hits, MIN(date) AS first_seen, MAX(date) AS last_seen
-        FROM {$wpdb->prefix}statistics_pages
-        WHERE date >= %s
-          AND date <= %s
-          AND uri LIKE %s
-        GROUP BY uri
-        ",
-        $date_from,
-        $date_to,
-        '%?s=%'
-    ),
-    ARRAY_A
-);
-
-if (!empty($store_search_rows)) {
-    foreach ($store_search_rows as $row) {
-        $uri        = $row['uri'] ?? '';
-        $total_hits = isset($row['total_hits']) ? (int) $row['total_hits'] : 0;
-        if ($total_hits <= 0 || empty($uri)) {
-            continue;
-        }
-
-        $parsed = @parse_url($uri);
-        if (!is_array($parsed)) {
-            continue;
-        }
-
-        $path  = $parsed['path'] ?? '';
-        $query = $parsed['query'] ?? '';
-
-        if (empty($path) || strpos($path, '/store/') !== 0) {
-            continue;
-        }
-
-        parse_str($query, $params);
-        if (empty($params['s'])) {
-            continue;
-        }
-
-        $term = sanitize_text_field((string) $params['s']);
-        if ($term === '') {
-            continue;
-        }
-
-        $segments = array_values(array_filter(explode('/', trim($path, '/'))));
-        if (count($segments) < 2 || $segments[0] !== 'store') {
-            continue;
-        }
-
-        $store_slug = sanitize_title($segments[1]);
-        if ($store_slug === '') {
-            continue;
-        }
-
-        $store_info = cv_stats_resolve_store_search_info($store_slug);
-        $resolved_slug = $store_info['store_slug'];
-        $vendor_id = $store_info['vendor_id'];
-        $store_name = $store_info['store_name'];
-        $store_url = $store_info['store_url'];
-
-        $key = $resolved_slug . '|' . strtolower($term);
-
-        if (!isset($store_search_stats_map[$key])) {
-            $store_search_stats_map[$key] = array(
-                'store_slug' => $resolved_slug,
-                'store_name' => $store_name,
-                'store_url'  => $store_url,
-                'vendor_id'  => $vendor_id,
-                'term'       => $term,
-                'hits'       => 0,
-                'first_seen' => $row['first_seen'] ?? $date_from,
-                'last_seen'  => $row['last_seen'] ?? $date_to,
-                'last_user_id' => 0,
-                'last_user_login' => '',
-                'last_user_display' => '',
-                'last_ip' => '',
-            );
-        }
-
-        $store_search_stats_map[$key]['hits'] += $total_hits;
-
-        $existing_first = strtotime($store_search_stats_map[$key]['first_seen']);
-        $existing_last  = strtotime($store_search_stats_map[$key]['last_seen']);
-        $row_first      = strtotime($row['first_seen'] ?? $date_from);
-        $row_last       = strtotime($row['last_seen'] ?? $date_to);
-
-        if ($row_first && ($existing_first === false || $row_first < $existing_first)) {
-            $store_search_stats_map[$key]['first_seen'] = $row['first_seen'];
-        }
-        if ($row_last && ($existing_last === false || $row_last > $existing_last)) {
-            $store_search_stats_map[$key]['last_seen'] = $row['last_seen'];
-        }
-    }
-}
-
-$aws_log_table = $wpdb->prefix . 'cv_aws_search_log';
-$aws_table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $aws_log_table));
-
-if ($aws_table_exists === $aws_log_table) {
-    $aws_search_logs = $wpdb->get_results(
-        $wpdb->prepare(
-            "
-            SELECT store_slug,
-                   search_term,
-                   vendor_id,
-                   COUNT(*) AS total_hits,
-                   MIN(created_at) AS first_seen,
-                   MAX(created_at) AS last_seen,
-                   SUBSTRING_INDEX(GROUP_CONCAT(COALESCE(user_id, 0) ORDER BY created_at DESC), ',', 1) AS last_user_id,
-                   SUBSTRING_INDEX(GROUP_CONCAT(COALESCE(user_login, '') ORDER BY created_at DESC), ',', 1) AS last_user_login,
-                   SUBSTRING_INDEX(GROUP_CONCAT(COALESCE(ip_address, '') ORDER BY created_at DESC), ',', 1) AS last_ip
-            FROM {$aws_log_table}
-            WHERE created_at >= %s
-              AND created_at <= %s
-            GROUP BY store_slug, search_term, vendor_id
-            ",
-            $period_start,
-            $period_end
-        ),
-        ARRAY_A
-    );
-
-    if (!empty($aws_search_logs)) {
-        foreach ($aws_search_logs as $row) {
-            $term = sanitize_text_field((string) ($row['search_term'] ?? ''));
-            if ($term === '') {
-                continue;
-            }
-
-            $store_slug = isset($row['store_slug']) ? sanitize_title((string) $row['store_slug']) : '';
-            if ($store_slug === '') {
-                $store_slug = 'global';
-            }
-
-            $vendor_id = isset($row['vendor_id']) ? (int) $row['vendor_id'] : 0;
-            $store_info = cv_stats_resolve_store_search_info($store_slug, $vendor_id);
-
-            $resolved_slug = $store_info['store_slug'];
-            $store_name = $store_info['store_name'];
-            $store_url = $store_info['store_url'];
-            $resolved_vendor = $store_info['vendor_id'];
-
-            $key = $resolved_slug . '|' . strtolower($term);
-
-            if (!isset($store_search_stats_map[$key])) {
-                $store_search_stats_map[$key] = array(
-                    'store_slug' => $resolved_slug,
-                    'store_name' => $store_name,
-                    'store_url'  => $store_url,
-                    'vendor_id'  => $resolved_vendor,
-                    'term'       => $term,
-                    'hits'       => 0,
-                    'first_seen' => $row['first_seen'] ?? $period_start,
-                    'last_seen'  => $row['last_seen'] ?? $period_end,
-                    'last_user_id' => 0,
-                    'last_user_login' => '',
-                    'last_user_display' => '',
-                    'last_ip' => '',
-                );
-            }
-
-            $store_search_stats_map[$key]['hits'] += (int) ($row['total_hits'] ?? 0);
-
-            $resolved_user_id = isset($row['last_user_id']) ? (int) $row['last_user_id'] : 0;
-            $resolved_user_login = isset($row['last_user_login']) ? sanitize_user((string) $row['last_user_login'], true) : '';
-            $resolved_ip = isset($row['last_ip']) ? sanitize_text_field((string) $row['last_ip']) : '';
-
-            $store_search_stats_map[$key]['last_ip'] = $resolved_ip;
-            $store_search_stats_map[$key]['last_user_id'] = $resolved_user_id;
-            $store_search_stats_map[$key]['last_user_login'] = $resolved_user_login;
-
-            if ($resolved_user_id > 0) {
-                $user_object = get_userdata($resolved_user_id);
-                if ($user_object instanceof WP_User) {
-                    $store_search_stats_map[$key]['last_user_display'] = $user_object->display_name;
-                    if ($store_search_stats_map[$key]['last_user_login'] === '') {
-                        $store_search_stats_map[$key]['last_user_login'] = $user_object->user_login;
-                    }
-                }
-            }
-
-            $existing_first = strtotime($store_search_stats_map[$key]['first_seen']);
-            $existing_last  = strtotime($store_search_stats_map[$key]['last_seen']);
-            $row_first      = strtotime($row['first_seen'] ?? $period_start);
-            $row_last       = strtotime($row['last_seen'] ?? $period_end);
-
-            if ($row_first && ($existing_first === false || $row_first < $existing_first)) {
-                $store_search_stats_map[$key]['first_seen'] = $row['first_seen'];
-            }
-            if ($row_last && ($existing_last === false || $row_last > $existing_last)) {
-                $store_search_stats_map[$key]['last_seen'] = $row['last_seen'];
-            }
-        }
-    }
-}
-
-if (!empty($store_search_stats_map)) {
-    $store_search_stats_top = array_values($store_search_stats_map);
-    usort($store_search_stats_top, function ($a, $b) {
-        return $b['hits'] <=> $a['hits'];
-    });
-    $store_search_stats_top = array_slice($store_search_stats_top, 0, 25);
-    $store_search_total_hits = 0;
-    foreach ($store_search_stats_top as $stat_entry) {
-        $store_search_total_hits += (int) $stat_entry['hits'];
-    }
-}
-
 $cards_created_today = $wpdb->get_results($wpdb->prepare("
     SELECT p.ID, p.post_author, p.post_title, u.user_registered, u.user_login, u.display_name, u.user_email
     FROM {$wpdb->users} u
@@ -440,90 +156,13 @@ $contact_queries = $wpdb->get_results($wpdb->prepare("
     ORDER BY created_at DESC
 ", $period_start, $period_end), ARRAY_A);
 
-if (!function_exists('cv_stats_render_category_chips')) {
-    /**
-     * Renderiza las categorías como chips para la vista.
-     *
-     * @param array<int,array<string,mixed>> $categories
-     * @return string
-     */
-    function cv_stats_render_category_chips(array $categories): string {
-        if (empty($categories)) {
-            return '<span class="cv-category-chip is-empty">Sin categorías</span>';
-        }
-
-        $html = '<div class="cv-category-chips">';
-        foreach ($categories as $category) {
-            $label = isset($category['path']) && $category['path'] !== '' ? $category['path'] : ($category['name'] ?? '');
-            $label = (string) $label;
-            if ($label === '') {
-                continue;
-            }
-            $classes = array('cv-category-chip');
-            if (!empty($category['is_sector'])) {
-                $classes[] = 'is-sector';
-            }
-            $html .= sprintf(
-                '<span class="%s" title="%s">%s</span>',
-                esc_attr(implode(' ', $classes)),
-                esc_attr($label),
-                esc_html($label)
-            );
-        }
-        $html .= '</div>';
-
-        return $html;
-    }
-}
+$product_search_summary = CV_Product_Search_Tracker::get_summary($period_start, $period_end);
+$product_search_top_terms = CV_Product_Search_Tracker::get_top_terms($period_start, $period_end, 8);
+$product_search_recent = CV_Product_Search_Tracker::get_recent_searches($period_start, $period_end, 8);
 ?>
 
 <div class="wrap cv-stats-page">
     <h1>📊 Estadísticas de Ciudad Virtual</h1>
-    
-    <style>
-        .cv-category-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .cv-category-chip {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 10px;
-            border-radius: 999px;
-            background: #eef2ff;
-            color: #3730a3;
-            font-size: 11px;
-            font-weight: 600;
-            line-height: 1.4;
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            white-space: nowrap;
-        }
-        .cv-category-chip.is-sector {
-            background: #ecfdf5;
-            color: #047857;
-            border-color: rgba(16, 185, 129, 0.25);
-        }
-        .cv-category-chip.is-empty {
-            background: #fee2e2;
-            color: #b91c1c;
-            border-color: rgba(248, 113, 113, 0.25);
-        }
-        .cv-vendor-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
-            color: #ffffff;
-            margin-top: 6px;
-        }
-    </style>
     
     <!-- Filtro de Fechas -->
     <div class="cv-stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; margin-bottom: 30px;">
@@ -581,14 +220,16 @@ if (!function_exists('cv_stats_render_category_chips')) {
                     </thead>
                     <tbody>
                         <?php foreach ($cards_created_today as $card): 
-                            // Obtener el sponsor desde user_registration_referido
-                            $sponsor_id_or_login = get_user_meta($card['post_author'], 'user_registration_referido', true);
+                            // Obtener el sponsor desde múltiples fuentes
+                            $sponsor_user = false;
                             $sponsor_name = '—';
                             $sponsor_link = '';
                             
+                            // 1. Intentar obtener desde user_registration_referido
+                            $sponsor_id_or_login = get_user_meta($card['post_author'], 'user_registration_referido', true);
+                            
                             if (!empty($sponsor_id_or_login)) {
                                 // Intentar obtener usuario sponsor
-                                $sponsor_user = false;
                                 if (is_numeric($sponsor_id_or_login)) {
                                     $sponsor_user = get_user_by('id', intval($sponsor_id_or_login));
                                 } elseif (strpos($sponsor_id_or_login, '@') !== false) {
@@ -596,15 +237,38 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                 } else {
                                     $sponsor_user = get_user_by('login', $sponsor_id_or_login);
                                 }
-                                
-                                if ($sponsor_user) {
-                                    $sponsor_store_name = get_user_meta($sponsor_user->ID, 'store_name', true);
-                                    if (empty($sponsor_store_name)) {
-                                        $sponsor_store_name = $sponsor_user->display_name;
+                            }
+                            
+                            // 2. Si no hay sponsor en user_registration_referido, buscar en UAP MLM
+                            if (!$sponsor_user) {
+                                global $indeed_db;
+                                if (class_exists('Indeed_Db') && $indeed_db) {
+                                    $affiliate_id = $indeed_db->get_affiliate_id_by_wpuid($card['post_author']);
+                                    if ($affiliate_id) {
+                                        $parent_affiliate_id = $indeed_db->mlm_get_parent($affiliate_id);
+                                        if ($parent_affiliate_id && $parent_affiliate_id > 0) {
+                                            // Obtener user_id del sponsor desde affiliate_id
+                                            global $wpdb;
+                                            $sponsor_user_id = $wpdb->get_var($wpdb->prepare(
+                                                "SELECT uid FROM {$wpdb->prefix}uap_affiliates WHERE id = %d",
+                                                $parent_affiliate_id
+                                            ));
+                                            if ($sponsor_user_id) {
+                                                $sponsor_user = get_user_by('ID', $sponsor_user_id);
+                                            }
+                                        }
                                     }
-                                    $sponsor_name = $sponsor_store_name;
-                                    $sponsor_link = admin_url('user-edit.php?user_id=' . $sponsor_user->ID);
                                 }
+                            }
+                            
+                            // 3. Obtener nombre y link del sponsor
+                            if ($sponsor_user) {
+                                $sponsor_store_name = get_user_meta($sponsor_user->ID, 'store_name', true);
+                                if (empty($sponsor_store_name)) {
+                                    $sponsor_store_name = $sponsor_user->display_name ?: $sponsor_user->user_login;
+                                }
+                                $sponsor_name = $sponsor_store_name;
+                                $sponsor_link = admin_url('user-edit.php?user_id=' . $sponsor_user->ID);
                             }
                             
                             // URL de la tarjeta
@@ -647,82 +311,85 @@ if (!function_exists('cv_stats_render_category_chips')) {
         <?php endif; ?>
     </div>
     
-    <!-- Búsquedas dentro de tiendas -->
+    <!-- Búsquedas en el buscador de productos -->
     <div class="cv-stats-card">
-        <h2>🔍 Búsquedas recientes (tiendas + AWS) (<?php echo esc_html($period_label); ?>)</h2>
-        <p class="description" style="margin-top: -6px;">
-            Basado en los registros combinados de <strong>WP Statistics</strong> y el logger de <strong>Advanced Woo Search</strong>.
-        </p>
-        <?php if (!empty($store_search_stats_top)): ?>
-            <div class="cv-stats-summary-grid" style="margin-bottom: 18px;">
-                <div class="cv-stats-summary-item">
-                    <div class="cv-stats-big-number"><?php echo esc_html(count($store_search_stats_top)); ?></div>
-                    <div class="cv-stats-big-label">Términos únicos</div>
-                </div>
-                <div class="cv-stats-summary-item">
-                    <div class="cv-stats-big-number"><?php echo esc_html($store_search_total_hits); ?></div>
-                    <div class="cv-stats-big-label">Búsquedas totales</div>
+        <h2>🔎 Búsquedas internas de productos</h2>
+        <p style="margin: -10px 0 20px 0; color: #666; font-size: 14px;"><?php echo esc_html($period_label); ?></p>
+
+        <div class="cv-stats-summary-grid">
+            <div class="cv-stats-summary-item">
+                <div class="cv-stats-big-number"><?php echo number_format_i18n($product_search_summary['total']); ?></div>
+                <div class="cv-stats-big-label">Total de búsquedas</div>
+            </div>
+            <div class="cv-stats-summary-item">
+                <div class="cv-stats-big-number"><?php echo number_format_i18n($product_search_summary['unique_terms']); ?></div>
+                <div class="cv-stats-big-label">Términos únicos</div>
+            </div>
+            <div class="cv-stats-summary-item">
+                <div class="cv-stats-big-number"><?php echo number_format_i18n($product_search_summary['avg_results']); ?></div>
+                <div class="cv-stats-big-label">Resultados promedio</div>
+            </div>
+        </div>
+
+        <?php if (!empty($product_search_top_terms)): ?>
+            <div class="cv-stats-card" style="margin-top: 20px;">
+                <h3>📝 Términos más buscados</h3>
+                <div class="cv-stats-table-container">
+                    <table class="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>Término</th>
+                                <th>Veces buscado</th>
+                                <th>Resultados promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($product_search_top_terms as $term): ?>
+                            <tr>
+                                <td><strong><?php echo esc_html($term->search_term); ?></strong></td>
+                                <td><?php echo number_format_i18n($term->total); ?></td>
+                                <td><?php echo number_format_i18n(round($term->avg_results, 1)); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        <?php endif; ?>
 
-            <div class="cv-stats-table-container">
-                <table class="widefat striped">
-                    <thead>
-                        <tr>
-                            <th style="width: 28%;">Tienda</th>
-                            <th style="width: 28%;">Término buscado</th>
-                            <th style="width: 18%;">Usuario</th>
-                            <th style="width: 12%;">IP</th>
-                            <th style="width: 7%;">Hits</th>
-                            <th style="width: 7%;">Última vez</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($store_search_stats_top as $stat): 
-                            $last_seen_display = !empty($stat['last_seen']) ? date_i18n('d/m/Y', strtotime($stat['last_seen'])) : '—';
-                            $slug_display = ($stat['store_slug'] === 'global') ? '🌐 global' : '@' . $stat['store_slug'];
-                            $user_display = '—';
-                            if (!empty($stat['last_user_display'])) {
-                                $user_display = esc_html($stat['last_user_display']);
-                                if (!empty($stat['last_user_login'])) {
-                                    $user_display .= ' (@' . esc_html($stat['last_user_login']) . ')';
-                                }
-                            } elseif (!empty($stat['last_user_login'])) {
-                                $user_display = '@' . esc_html($stat['last_user_login']);
-                            }
-                            $ip_display = !empty($stat['last_ip']) ? esc_html($stat['last_ip']) : '—';
-                        ?>
+        <?php if (!empty($product_search_recent)): ?>
+            <div class="cv-stats-card" style="margin-top: 20px;">
+                <h3>🕒 Últimas búsquedas registradas</h3>
+                <div class="cv-stats-table-container">
+                    <table class="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>Fecha/Hora</th>
+                                <th>Término</th>
+                                <th>Resultados</th>
+                                <th>Fuente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($product_search_recent as $recent): ?>
                             <tr>
                                 <td>
-                                    <a href="<?php echo esc_url($stat['store_url']); ?>" target="_blank" style="font-weight: 600; color: #4c51bf;">
-                                        <?php echo esc_html($stat['store_name']); ?>
-                                    </a>
-                                    <br>
-                                    <small style="color: #666;"><?php echo esc_html($slug_display); ?></small>
+                                    <span class="cv-stats-time"><?php echo esc_html(date('d/m/Y H:i:s', strtotime($recent->created_at))); ?></span>
                                 </td>
+                                <td><strong><?php echo esc_html($recent->search_term); ?></strong></td>
+                                <td><?php echo number_format_i18n($recent->results_count); ?></td>
                                 <td>
-                                    <code style="font-size: 13px;"><?php echo esc_html($stat['term']); ?></code>
-                                </td>
-                                <td>
-                                    <?php echo $user_display; ?>
-                                </td>
-                                <td>
-                                    <code style="font-size: 12px;"><?php echo $ip_display; ?></code>
-                                </td>
-                                <td>
-                                    <strong><?php echo esc_html($stat['hits']); ?></strong>
-                                </td>
-                                <td>
-                                    <span class="cv-stats-time"><?php echo esc_html($last_seen_display); ?></span>
+                                    <?php echo $recent->source === 'aws' ? '⚡ AWS' : '🛒 Catálogo'; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         <?php else: ?>
             <div class="cv-stats-empty-state">
-                <p>🔎 No se registraron búsquedas dentro de las tiendas en este periodo.</p>
+                <p>🔍 No hay búsquedas registradas en este período.</p>
             </div>
         <?php endif; ?>
     </div>
@@ -751,6 +418,10 @@ if (!function_exists('cv_stats_render_category_chips')) {
                     ?>
                 </div>
                 <div class="cv-stats-big-label">Promedio Logins/IP</div>
+            </div>
+            <div class="cv-stats-summary-item" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+                <div class="cv-stats-big-number"><?php echo $count_active_sessions; ?></div>
+                <div class="cv-stats-big-label">Usuarios activos hoy</div>
             </div>
         </div>
         
@@ -875,6 +546,89 @@ if (!function_exists('cv_stats_render_category_chips')) {
         <?php else: ?>
             <div class="cv-stats-empty-state">
                 <p>📭 No hay usuarios conectados hoy.</p>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($count_active_sessions > 0): ?>
+            <div class="cv-stats-card" style="margin-top: 30px;">
+                <h3>🟢 Usuarios activos durante el día</h3>
+                <p style="margin: -10px 0 15px 0; color: #6b7280;">
+                    Lista basada en la última actividad registrada dentro del período seleccionado (panel y frontend).
+                </p>
+                <div class="cv-stats-table-container">
+                    <table class="widefat striped">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Rol</th>
+                                <th>Última actividad</th>
+                                <th>IP</th>
+                                <th>Página actual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($active_sessions as $session): ?>
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <a href="<?php echo admin_url('user-edit.php?user_id=' . $session['user_id']); ?>">
+                                                <?php echo esc_html($session['display_name']); ?>
+                                            </a>
+                                        </strong>
+                                        <br>
+                                        <small>@<?php echo esc_html($session['username']); ?></small>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $role_names = array(
+                                            'administrator' => '👑 Administrador',
+                                            'wcfm_vendor'   => '🏪 Vendedor',
+                                            'customer'      => '🛍️ Cliente',
+                                            'shop_manager'  => '⚙️ Gestor',
+                                        );
+                                        $roles_to_show = array();
+                                        foreach ($session['roles'] as $role) {
+                                            $roles_to_show[] = isset($role_names[$role]) ? $role_names[$role] : $role;
+                                        }
+                                        echo implode(', ', $roles_to_show);
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <span class="cv-stats-time">
+                                            <?php echo esc_html(date('d/m/Y H:i:s', strtotime($session['last_seen']))); ?>
+                                        </span>
+                                        <br>
+                                        <small><?php echo human_time_diff(strtotime($session['last_seen']), current_time('timestamp')); ?> atrás</small>
+                                    </td>
+                                    <td>
+                                        <code style="font-size: 11px;"><?php echo esc_html($session['ip_address']); ?></code>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($session['current_url'])): ?>
+                                            <?php
+                                                $current_url_text = $session['current_url'];
+                                                if (function_exists('mb_strimwidth')) {
+                                                    $current_url_text = mb_strimwidth($current_url_text, 0, 60, '…', 'UTF-8');
+                                                } elseif (strlen($current_url_text) > 60) {
+                                                    $current_url_text = substr($current_url_text, 0, 57) . '...';
+                                                }
+                                            ?>
+                                            <a href="<?php echo esc_url($session['current_url']); ?>" target="_blank">
+                                                <?php echo esc_html($current_url_text); ?>
+                                            </a>
+                                        <?php else: ?>
+                                            <span style="color: #94a3b8;">—</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="cv-stats-empty-state" style="margin-top: 30px;">
+                <p>🟡 No se registraron usuarios activos en este período.</p>
             </div>
         <?php endif; ?>
     </div>
@@ -1134,7 +888,6 @@ if (!function_exists('cv_stats_render_category_chips')) {
                             <th>Creado por</th>
                             <th>Hora</th>
                             <th>IP</th>
-                            <th>Categorías actuales</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -1151,9 +904,6 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                     </a>
                                     <br>
                                     <small style="color: #666;">@<?php echo esc_html($product['vendor_username']); ?></small>
-                                    <?php if (!empty($product['vendor_virtual'])): ?>
-                                        <span class="cv-vendor-badge" title="Atención comercial sin tienda física">🛰️ Agente Comercial</span>
-                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php if ($product['created_by_id'] == $product['vendor_id']): ?>
@@ -1175,31 +925,15 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                     <code style="font-size: 11px;"><?php echo esc_html($product['ip_address']); ?></code>
                                 </td>
                                 <td>
-                                    <?php echo cv_stats_render_category_chips($product['categories'] ?? array()); ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    $manage_link = !empty($product['manage_url']) ? $product['manage_url'] : $product['product_url'];
-                                    ?>
-                                    <a href="<?php echo esc_url($manage_link); ?>" 
+                                    <a href="<?php echo esc_url($product['product_url']); ?>" 
                                        target="_blank" 
                                        class="button button-small">
-                                        Ver (WCFM)
+                                        Ver →
                                     </a>
-                                    <?php if (!empty($product['manage_url'])): ?>
-                                        <a href="<?php echo esc_url($product['manage_url']); ?>" 
-                                           target="_blank"
-                                           class="button button-small">
-                                            Editar (WCFM)
-                                        </a>
-                                    <?php endif; ?>
-                                    <?php if (!empty($product['categorize_url'])): ?>
-                                        <a href="<?php echo esc_url($product['categorize_url']); ?>"
-                                           target="_blank"
-                                           class="button button-small button-primary">
-                                            Categorizar
-                                        </a>
-                                    <?php endif; ?>
+                                    <a href="<?php echo admin_url('post.php?post=' . $product['product_id'] . '&action=edit'); ?>" 
+                                       class="button button-small">
+                                        Editar
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -1225,7 +959,6 @@ if (!function_exists('cv_stats_render_category_chips')) {
                             <th>Modificado por</th>
                             <th>Hora</th>
                             <th>IP</th>
-                            <th>Categorías actuales</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -1247,9 +980,6 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                     </a>
                                     <br>
                                     <small style="color: #666;">@<?php echo esc_html($product['vendor_username']); ?></small>
-                                    <?php if (!empty($product['vendor_virtual'])): ?>
-                                        <span class="cv-vendor-badge" title="Atención comercial sin tienda física">🛰️ Agente Comercial</span>
-                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php if ($product['modified_by_id'] == $product['vendor_id']): ?>
@@ -1271,31 +1001,15 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                     <code style="font-size: 11px;"><?php echo esc_html($product['ip_address']); ?></code>
                                 </td>
                                 <td>
-                                    <?php echo cv_stats_render_category_chips($product['categories'] ?? array()); ?>
-                                </td>
-                                <td>
-                                    <?php
-                                    $manage_link = !empty($product['manage_url']) ? $product['manage_url'] : $product['product_url'];
-                                    ?>
-                                    <a href="<?php echo esc_url($manage_link); ?>" 
+                                    <a href="<?php echo esc_url($product['product_url']); ?>" 
                                        target="_blank" 
                                        class="button button-small">
-                                        Ver (WCFM)
+                                        Ver →
                                     </a>
-                                    <?php if (!empty($product['manage_url'])): ?>
-                                        <a href="<?php echo esc_url($product['manage_url']); ?>" 
-                                           target="_blank"
-                                           class="button button-small">
-                                            Editar (WCFM)
-                                        </a>
-                                    <?php endif; ?>
-                                    <?php if (!empty($product['categorize_url'])): ?>
-                                        <a href="<?php echo esc_url($product['categorize_url']); ?>"
-                                           target="_blank"
-                                           class="button button-small button-primary">
-                                            Categorizar
-                                        </a>
-                                    <?php endif; ?>
+                                    <a href="<?php echo admin_url('post.php?post=' . $product['product_id'] . '&action=edit'); ?>" 
+                                       class="button button-small">
+                                        Editar
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -1356,21 +1070,15 @@ if (!function_exists('cv_stats_render_category_chips')) {
                                     </span>
                                 </td>
                                 <td>
-                                    <?php
-                                    $manage_link = !empty($aff['manage_url']) ? $aff['manage_url'] : $aff['product_url'];
-                                    ?>
-                                    <a href="<?php echo esc_url($manage_link); ?>" 
+                                    <a href="<?php echo esc_url($aff['product_url']); ?>" 
                                        target="_blank" 
                                        class="button button-small">
-                                        Ver (WCFM)
+                                        Ver →
                                     </a>
-                                    <?php if (!empty($aff['manage_url'])): ?>
-                                        <a href="<?php echo esc_url($aff['manage_url']); ?>"
-                                           target="_blank"
-                                           class="button button-small">
-                                            Editar (WCFM)
-                                        </a>
-                                    <?php endif; ?>
+                                    <a href="<?php echo admin_url('post.php?post=' . $aff['product_id'] . '&action=edit'); ?>" 
+                                       class="button button-small">
+                                        Editar
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -1501,8 +1209,8 @@ if (!function_exists('cv_stats_render_category_chips')) {
         <?php endif; ?>
     </div>
     
-    <!-- Referencias desde Buscadores - DESACTIVADO -->
-    <?php // include(CV_STATS_PLUGIN_DIR . 'views/search-referrals-card.php'); ?>
+    <!-- Referencias desde Buscadores -->
+    <?php include CV_STATS_PLUGIN_DIR . 'views/search-referrals-card.php'; ?>
     
 </div>
 
