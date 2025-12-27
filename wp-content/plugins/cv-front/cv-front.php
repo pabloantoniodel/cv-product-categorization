@@ -327,6 +327,38 @@ class CV_Front {
         // Corrector automático de enlaces WhatsApp en listados y tiendas
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-store-whatsapp-fixer.php';
         
+        // Función helper para limpiar espacios en teléfonos
+        if (!function_exists('cv_clean_phone_spaces')) {
+            /**
+             * Elimina todos los espacios (inicio, final e intermedios) de un número de teléfono
+             * 
+             * @param string $phone Número de teléfono
+             * @return string Teléfono sin espacios
+             */
+            function cv_clean_phone_spaces($phone) {
+                if (empty($phone) || !is_string($phone)) {
+                    return '';
+                }
+                // Eliminar TODOS los espacios (inicio, final e intermedios)
+                return str_replace(' ', '', trim($phone));
+            }
+        }
+        
+        // Hook para limpiar automáticamente billing_phone cuando se actualice
+        add_filter('update_user_metadata', function($check, $user_id, $meta_key, $meta_value) {
+            if ($meta_key === 'billing_phone' && !empty($meta_value) && is_string($meta_value)) {
+                $cleaned = cv_clean_phone_spaces($meta_value);
+                if ($cleaned !== $meta_value) {
+                    // Actualizar con el valor limpio
+                    remove_filter('update_user_metadata', __FUNCTION__, 10);
+                    update_user_meta($user_id, $meta_key, $cleaned);
+                    add_filter('update_user_metadata', __FUNCTION__, 10, 4);
+                    return false; // Prevenir la actualización original
+                }
+            }
+            return $check;
+        }, 10, 4);
+        
         // Estilos del selector de distancia en Comercios
         require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-store-radius-style.php';
         
@@ -369,6 +401,12 @@ class CV_Front {
 
         // Dialog flotante para dirección de envío en checkout
         add_action('wp_enqueue_scripts', array($this, 'enqueue_checkout_shipping_dialog'), 140);
+        
+        // Redirigir al checkout después del login si venía del checkout
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-checkout-login-redirect.php';
+        
+        // Reordenar menús de administración (CV primero)
+        require_once CV_FRONT_PLUGIN_DIR . 'includes/class-cv-admin-menu-order.php';
     }
     
     /**
@@ -576,6 +614,15 @@ class CV_Front {
         wp_enqueue_script(
             'cv-front-checkout-shipping-dialog',
             CV_FRONT_PLUGIN_URL . 'assets/js/checkout-shipping-dialog.js',
+            array('jquery'),
+            CV_FRONT_VERSION,
+            true
+        );
+        
+        // Force unblock checkout if stuck
+        wp_enqueue_script(
+            'cv-front-checkout-unblock',
+            CV_FRONT_PLUGIN_URL . 'assets/js/checkout-unblock.js',
             array('jquery'),
             CV_FRONT_VERSION,
             true
