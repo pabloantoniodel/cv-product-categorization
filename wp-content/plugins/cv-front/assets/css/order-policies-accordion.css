@@ -1,0 +1,342 @@
+/**
+ * CV Order Policies Accordion Styles
+ * Estilos modernos para el acordeón de políticas en la página de pedido
+ */
+
+.cv-policies-accordion-wrapper {
+	margin: 30px 0 40px 0;
+	background: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	width: 100% !important;
+	max-width: 100% !important;
+	display: block !important;
+	clear: both;
+	box-sizing: border-box;
+	border: 1px solid #e8e8e8;
+}
+
+/* Ocultar título original de políticas */
+h2[style*="font-size: 18px"]:has-text("Policies"),
+h2:contains("Policies"),
+h2:contains("Políticas") {
+	display: none !important;
+}
+
+.cv-policies-store-title {
+	font-size: 17px;
+	font-weight: 600;
+	color: #2c3e50;
+	margin: 0;
+	padding: 16px 20px;
+	background: #f8f9fa;
+	border-bottom: 2px solid #667eea;
+	display: block;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.cv-policies-accordion {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.cv-accordion-item {
+	border-bottom: 1px solid #e8e8e8;
+	transition: all 0.3s ease;
+	width: 100%;
+}
+
+.cv-accordion-item:last-child {
+	border-bottom: none;
+}
+
+.cv-accordion-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 15px 20px;
+	cursor: pointer;
+	background: #f8f9fa;
+	transition: all 0.3s ease;
+	user-select: none;
+	width: 100%;
+	border-left: 3px solid transparent;
+}
+
+.cv-accordion-header:hover {
+	border-left-color: #667eea;
+}
+
+.cv-accordion-header:hover {
+	background: #e9ecef;
+}
+
+.cv-accordion-item.active .cv-accordion-header {
+	background: #667eea;
+	color: #fff;
+	border-left-color: #764ba2;
+}
+
+.cv-accordion-header-content {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex: 1;
+}
+
+.cv-accordion-header i.fas {
+	font-size: 16px;
+	color: #667eea;
+	transition: transform 0.3s ease;
+	min-width: 20px;
+}
+
+.cv-accordion-item.active .cv-accordion-header i.fas {
+	color: #fff;
+}
+
+.cv-accordion-title {
+	font-size: 15px;
+	font-weight: 500;
+	color: #2c3e50;
+}
+
+.cv-accordion-item.active .cv-accordion-title {
+	color: #fff;
+}
+
+.cv-accordion-arrow {
+	font-size: 14px;
+	color: #6c757d;
+	transition: transform 0.3s ease;
+	min-width: 20px;
+	text-align: right;
+}
+
+.cv-accordion-item.active .cv-accordion-arrow {
+	transform: rotate(180deg);
+	color: #fff;
+}
+
+.cv-accordion-content {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.4s ease, padding 0.3s ease;
+	background: #fff;
+	width: 100%;
+}
+
+.cv-accordion-item.active .cv-accordion-content {
+	max-height: 2000px;
+	padding: 0;
+}
+
+.cv-accordion-content-inner {
+	padding: 16px 20px;
+	color: #495057;
+	line-height: 1.6;
+	font-size: 14px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.cv-accordion-content-inner p {
+	margin-bottom: 12px;
+	font-size: 14px;
+}
+
+.cv-accordion-content-inner p:last-child {
+	margin-bottom: 0;
+}
+
+.cv-accordion-content-inner ul,
+.cv-accordion-content-inner ol {
+	margin: 12px 0;
+	padding-left: 25px;
+}
+
+.cv-accordion-content-inner li {
+	margin-bottom: 8px;
+	font-size: 14px;
+}
+
+.cv-accordion-content-inner strong {
+	color: #2c3e50;
+	font-weight: 600;
+	font-size: 14px;
+}
+
+.cv-accordion-content-inner h1,
+.cv-accordion-content-inner h2,
+.cv-accordion-content-inner h3,
+.cv-accordion-content-inner h4 {
+	margin-top: 15px;
+	margin-bottom: 10px;
+	color: #2c3e50;
+}
+
+.cv-accordion-content-inner h1:first-child,
+.cv-accordion-content-inner h2:first-child,
+.cv-accordion-content-inner h3:first-child,
+.cv-accordion-content-inner h4:first-child {
+	margin-top: 0;
+}
+
+/* Asegurar que el wrapper ocupe todo el ancho disponible */
+.woocommerce-order-details .cv-policies-accordion-wrapper,
+.woocommerce-order-details__section .cv-policies-accordion-wrapper,
+.woocommerce-table--order-details ~ .cv-policies-accordion-wrapper,
+.woocommerce .cv-policies-accordion-wrapper,
+.woocommerce-checkout .cv-policies-accordion-wrapper,
+.woocommerce-thankyou .cv-policies-accordion-wrapper,
+.entry-content .cv-policies-accordion-wrapper,
+.woocommerce-order-details__section table ~ .cv-policies-accordion-wrapper,
+.woocommerce-checkout .woocommerce-order-details .cv-policies-accordion-wrapper,
+.woocommerce-thankyou .woocommerce-order-details .cv-policies-accordion-wrapper {
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+	display: block !important;
+	float: none !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	position: relative !important;
+	left: 0 !important;
+	right: 0 !important;
+}
+
+/* Forzar ancho completo en contenedores padres de la página de confirmación */
+.woocommerce-order-details,
+.woocommerce-order-details__section,
+.woocommerce .col2-set,
+.woocommerce .woocommerce-order-details,
+.woocommerce-thankyou .woocommerce-order-details,
+.woocommerce-checkout .woocommerce-order-details,
+.woocommerce .col2-set .col-1,
+.woocommerce .col2-set .col-2 {
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+}
+
+/* Específico para la página de confirmación (order-received) */
+.woocommerce-thankyou .woocommerce-order-details,
+.woocommerce-thankyou .woocommerce-order-details__section,
+.woocommerce-thankyou .col2-set,
+.woocommerce-thankyou .col2-set .col-1,
+.woocommerce-thankyou .col2-set .col-2 {
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+	float: none !important;
+	display: block !important;
+}
+
+/* Asegurar que las tablas no limiten el ancho */
+.woocommerce-order-details table,
+.woocommerce-order-details__section table {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* Forzar ancho completo en cualquier contenedor que pueda estar limitando */
+body.woocommerce-checkout .cv-policies-accordion-wrapper,
+body.woocommerce-thankyou .cv-policies-accordion-wrapper,
+body.woocommerce-order-received .cv-policies-accordion-wrapper {
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+	display: block !important;
+	clear: both !important;
+	float: none !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+/* Forzar ancho completo incluso dentro de contenedores con ancho limitado */
+.woocommerce-thankyou .col2-set .col-1 .cv-policies-accordion-wrapper,
+.woocommerce-thankyou .col2-set .col-2 .cv-policies-accordion-wrapper,
+.woocommerce-checkout .col2-set .col-1 .cv-policies-accordion-wrapper,
+.woocommerce-checkout .col2-set .col-2 .cv-policies-accordion-wrapper,
+.woocommerce .col2-set .col-1 .cv-policies-accordion-wrapper,
+.woocommerce .col2-set .col-2 .cv-policies-accordion-wrapper {
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+	display: block !important;
+	float: none !important;
+	clear: both !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	position: relative !important;
+	left: 0 !important;
+	right: 0 !important;
+}
+
+/* Asegurar que el contenedor padre también tenga el ancho completo cuando contiene el acordeón */
+.woocommerce-thankyou .col2-set:has(.cv-policies-accordion-wrapper),
+.woocommerce-checkout .col2-set:has(.cv-policies-accordion-wrapper),
+.woocommerce .col2-set:has(.cv-policies-accordion-wrapper) {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* Responsive - Solo para móviles */
+@media (max-width: 768px) {
+	.cv-policies-accordion-wrapper {
+		margin: 20px 0;
+		border-radius: 8px;
+	}
+	
+	.cv-policies-store-title {
+		font-size: 16px;
+		padding: 14px 18px;
+	}
+	
+	.cv-accordion-header {
+		padding: 14px 18px;
+	}
+	
+	.cv-accordion-title {
+		font-size: 14px;
+	}
+	
+	.cv-accordion-header i.fas {
+		font-size: 14px;
+	}
+	
+	.cv-accordion-content-inner {
+		padding: 15px 18px;
+		font-size: 13px;
+	}
+	
+	.cv-accordion-content-inner p {
+		font-size: 13px;
+	}
+	
+	.cv-accordion-content-inner li {
+		font-size: 13px;
+	}
+}
+
+/* Animación suave */
+@keyframes slideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.cv-accordion-item.active .cv-accordion-content-inner {
+	animation: slideDown 0.3s ease;
+}
+
